@@ -16,7 +16,7 @@ class AbstractBox
         @content = ""
    
     toHTML: () ->
-        "<font color="red">Abstract box</font> (please report)"
+        "<font color=\"red\">Abstract box</font> (please report)"
 
 
 class TextBox extends AbstractBox
