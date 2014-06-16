@@ -1,17 +1,59 @@
 doctype html
 
-link(rel="stylesheet",href="boxstyle1.css",type="text/css")
+link(rel="stylesheet", href="boxstyle1.css",type="text/css")
+// link(rel="stylesheet", href="bower_components/jquery.ui/themes/base/jquery.ui.core.css")
+link(rel="stylesheet", href="bower_components/jquery.ui/themes/base/jquery.ui.all.css")
+link(rel="stylesheet", href="jquery-ui-1.10.4.custom/css/vader/jquery-ui-1.10.4.custom.css")
+
+script(src="bower_components/jquery/dist/jquery.js", type="text/javascript")
+script(src="bower_components/jquery.ui/ui/jquery.ui.core.js", type="text/javascript")
+script(src="bower_components/jquery.ui/ui/jquery.ui.widget.js", type="text/javascript")
+script(src="bower_components/jquery.ui/ui/jquery.ui.menu.js", type="text/javascript")
+script(src="bower_components/jquery.ui/ui/jquery.ui.button.js", type="text/javascript")
+
+script(src="example1.js")
+
+div#mainMenuBar.menuBar
+
+  div#mainMenu
+    button#fileMenuButton.menuButton
+      | File
+    button#editMenuButton.menuButton
+      | Edit
+
+  ul#fileMenu.menu
+    li: a(href="#") New
+    li: a(href="#") Open
+    li
+    li: a(href="#") Make a copy...
+    li: a(href="#") Rename...
+    li: a(href="#") Save
+    li
+    li: a(href="#") Download as
+        ul
+          li: a(href="#") IPython (.iypnb)
+          li: a(href="#") JSon (.json)
+          li: a(href="#") Jargon (.jargon) 
+          li: a(href="#") HTML (.html)
+    li
+    li: a(href="#") Close
+
+  ul#editMenu.menu
+    li: a(href="#") Copy box
+    li: a(href="#") Cut box
+    li: a(href="#") Delete box
+    li: a(href="#") Paste box above
+    li: a(href="#") Paste box below
+    li
+    li: a(href="#") Insert box above
+    li: a(href="#") Insert box below
+    li
+    li: a(href="#") Move box up
+    li: a(href="#") Move box down
 
 
-ul#menu
-  li: a(href="#"): Item 1
-  li: a(href="#"): Item 2
-  li: a(href="#"): Item 3
-  ul
-    li: a(href="#"): Item 3.1
-    li: a(href="#"): Item 3.2
-    li: a(href="#"): Item 3.3
- 
+
+
 div#box1.boxlib.box.htmlview
   | Hello <strong>cruel</strong> cruel world !
 

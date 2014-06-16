@@ -27,5 +27,5 @@ def autorefresh(cmd, files, watch_delay=0.3):
 
 
 if __name__ == "__main__":
-    autorefresh("sh ./make-example1.sh", {"boxstyle1.styl", "example1.jade"})
+    autorefresh("make", {"boxstyle1.styl", "example1.jade", "example1.coffee"})
 
