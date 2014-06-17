@@ -3,7 +3,7 @@ JADE=jade
 STYLUS=stylus
 COFFEE=coffee
 
-EXAMPLE1_FILES= boxstyle1.css example1.html example1.js
+EXAMPLE1_FILES= boxstyle1.css example1.html boxlib.js example1.js
 
 all: example1
 

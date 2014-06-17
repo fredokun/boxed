@@ -1,9 +1,9 @@
 doctype html
 
-link(rel="stylesheet", href="boxstyle1.css",type="text/css")
 // link(rel="stylesheet", href="bower_components/jquery.ui/themes/base/jquery.ui.core.css")
 link(rel="stylesheet", href="bower_components/jquery.ui/themes/base/jquery.ui.all.css")
 link(rel="stylesheet", href="jquery-ui-1.10.4.custom/css/vader/jquery-ui-1.10.4.custom.css")
+link(rel="stylesheet", href="boxstyle1.css",type="text/css")
 
 script(src="bower_components/jquery/dist/jquery.js", type="text/javascript")
 script(src="bower_components/jquery.ui/ui/jquery.ui.core.js", type="text/javascript")
@@ -11,6 +11,7 @@ script(src="bower_components/jquery.ui/ui/jquery.ui.widget.js", type="text/javas
 script(src="bower_components/jquery.ui/ui/jquery.ui.menu.js", type="text/javascript")
 script(src="bower_components/jquery.ui/ui/jquery.ui.button.js", type="text/javascript")
 
+script(src="boxlib.js")
 script(src="example1.js")
 
 div#mainMenuBar.menuBar
@@ -22,7 +23,7 @@ div#mainMenuBar.menuBar
       | Edit
 
   ul#fileMenu.menu
-    li: a(href="#") New
+    li#fileMenuNew: a(href="#") New
     li: a(href="#") Open
     li
     li: a(href="#") Make a copy...
@@ -45,20 +46,14 @@ div#mainMenuBar.menuBar
     li: a(href="#") Paste box above
     li: a(href="#") Paste box below
     li
-    li: a(href="#") Insert box above
-    li: a(href="#") Insert box below
+    li#editMenuInsertBefore: a(href="#") Insert box before
+    li#editMenuInsertAfter: a(href="#") Insert box after
     li
     li: a(href="#") Move box up
     li: a(href="#") Move box down
 
 
+div#boxed.boxlib.boxed
+    | Boxes come here ...
 
-
-div#box1.boxlib.box.htmlview
-  | Hello <strong>cruel</strong> cruel world !
-
-
-div#box2.boxlib.box.textedit
-  textarea
-    | Edit me.
 

@@ -27,5 +27,5 @@ def autorefresh(cmd, files, watch_delay=0.3):
 
 
 if __name__ == "__main__":
-    autorefresh("make", {"boxstyle1.styl", "example1.jade", "example1.coffee"})
+    autorefresh("make", {"boxstyle1.styl", "example1.jade", "boxlib.coffee", "example1.coffee"})
 
