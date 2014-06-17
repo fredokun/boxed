@@ -22,25 +22,28 @@ class BoxLib.BoxEd
         console.log("Insert box: #{position}")
         boxId = "box" + @boxes.length
         box = BoxLib.buildBox(@defaultBoxKind, boxId)
+        #console.log("box.html = " + box.html())
         @boxMap[boxId] = box
         if @selectedBox == -1
-                $("#boxed").append(box.html)    
+                $("#boxed").append(box.html())    
                 @boxes.push box
         else
             switch position
               when "before"
-                 $(@boxes[@selectBox].id).insertBefore(box.html)
+                 $(@boxes[@selectBox].id).insertBefore(box.html())
                  @boxes.insertBefore(@selectedBox)
                  @selectBox(@selectedBox)
               when "after"
-                 $(@boxes[@selectBox].id).insertAfter(box.html)
+                 $(@boxes[@selectBox].id).insertAfter(box.html())
                  @boxes.insertAfter(@selectedBox)
                  @selectBox(@selectedBox+1)
 
          
 class BoxLib.Box
-     construtor: (@kind, @id) ->
-      @html = """
+     constructor: (@kind, @id) ->
+
+     html:  ->
+              """
               <div id="#{@id}" class="boxlib #{@kind}-box">
                    <div id=\"#{@id}-control class="boxlib #{@kind}-box-control"/>
                    <div id=\"#{@id}-header class="boxlib #{@kind}-box-header"/>
@@ -50,7 +53,7 @@ class BoxLib.Box
               """ # "
                         
 class BoxLib.MarkdownBox extends BoxLib.Box
-    constructor: (@id) ->
-                super("markdown",@id)
+    constructor: (id) ->
+                super("markdown",id)
     
 
