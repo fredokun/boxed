@@ -64,7 +64,7 @@ class BoxLib.MarkdownBox extends BoxLib.Box
         $("##{@id}-content").append("<textarea id=\"#{@id}-markdown-edit\" class=\"boxlib #{@kind}-box-content\"/>")
         @codeMirror = CodeMirror.fromTextArea(document.getElementById("#{@id}-markdown-edit", {
                                                 autofocus: true
-                                                mode: "markdown"
+                                                mode: "text/markdown"
                                               }));
         
 
