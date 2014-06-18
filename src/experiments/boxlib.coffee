@@ -42,6 +42,19 @@ class BoxLib.BoxEd
                  @boxes.insertAfter(@selectedBox)
                  @selectBox(@selectedBox+1)
 
+###
+#
+# Generic operations on boxes :
+# - commit   (start processing...)
+# - edit     (start editing...)
+# - hide/show
+# - edit metadata
+# - enable/disable   (editable or not)
+# - copy/cut/delete/clear
+# - insert after/insert before
+# - focus management
+# - selection management
+###
          
 class BoxLib.Box
      constructor: (@kind, @id) ->
@@ -55,6 +68,13 @@ class BoxLib.Box
                    <div id="#{@id}-footer" class="boxlib #{@kind}-box-footer"/>
               </div>
               """ # "
+
+###
+#
+# Specific operations on Markdown boxes
+# - hide code/show view on commit
+# - live preview  (top/down  or left/right)
+###
                         
 class BoxLib.MarkdownBox extends BoxLib.Box
     constructor: (id) ->
@@ -68,3 +88,24 @@ class BoxLib.MarkdownBox extends BoxLib.Box
                                               }));
         
 
+###
+#
+# Specific operations on Section boxes
+# - hide code/show view on commit
+# - auto-toc   (update/show a computed table of contents)
+#
+####
+
+
+
+###
+#
+# Specific operations on Live-coding boxes
+# - evaluate code/show outputs and last return value on commit
+# - show output index if evaluated
+# - live-coding  (top/down or left/right)
+#
+# Supported live-coding languages:
+# - javascript
+# - coffeescript
+###

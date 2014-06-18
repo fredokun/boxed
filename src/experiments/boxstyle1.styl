@@ -3,6 +3,14 @@ border-radius()
   -moz-border-radius: arguments
   border-radius: arguments
 
+.CodeMirror
+  border: 1px solid #eee
+  height: auto
+
+.CodeMirror-scroll
+  overflow-y: hidden
+  overflow-x: auto
+
 .boxlib
    &.box
      border-radius: 5px
@@ -17,6 +25,7 @@ border-radius()
 #mainMenuBar
   position: fixed
   top: 8px
+  z-index: 2
 
 #fileMenu
   width: 200px
@@ -26,9 +35,14 @@ border-radius()
 
 .menuButton
   font-size: x-small
+  z-index: 1
 
 #boxed
   margin-top: 50px
   width: auto
   height: auto
+  z-index: 0
 
+.markdown-box-content .CodeMirror-scroll
+  min-height: 1em
+  
