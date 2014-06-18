@@ -44,16 +44,16 @@ $ ->
           # toggle menu
           $(menuId).toggle()
 
-### no required ?
-#          if $(menuId).is(":visible")
-#            $("#boxed *").prop("disabled", true)
-#          else
-#            $("#boxed *").prop("disabled", false)
-###
-# 
+    ### not required ?
+    #          if $(menuId).is(":visible")
+    #            $("#boxed *").prop("disabled", true)
+    #          else
+    #            $("#boxed *").prop("disabled", false)
+    ###
+
   closeMenus = () ->
-          for menuId in menuIds
-                $(menuId).hide()
+    for menuId in menuIds
+        $(menuId).hide()
 
 
 ##          $("#boxed *").attr("disabled", false)
