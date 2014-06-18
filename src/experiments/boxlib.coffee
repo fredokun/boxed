@@ -61,13 +61,23 @@ class BoxLib.Box
 
      html:  ->
               """
-              <div id="#{@id}" class="boxlib #{@kind}-box">
-                   <div id="#{@id}-control" class="boxlib #{@kind}-box-control"/>
-                   <div id="#{@id}-header" class="boxlib #{@kind}-box-header"/>
-                   <div id="#{@id}-content" class="boxlib #{@kind}-box-content"/>
-                   <div id="#{@id}-footer" class="boxlib #{@kind}-box-footer"/>
+              <div id="#{@id}" class="boxlib box #{@kind}-box">
+                   <div id="#{@id}-control" class="boxlib box-control #{@kind}-box-control">
+                      <button id="#{@id}-commit" class="boxlib box-control-button box-control-button-commit">
+                        Commit
+                      </button>
+                      <button id="#{@id}-menu" class="boxlib box-control-button box-control-button-menu">
+                        Menu
+                      </button>
+                   </div>
+                   <div id="#{@id}-header" class="boxlib box-header #{@kind}-box-header"/>
+                   <div id="#{@id}-content" class="boxlib box-content #{@kind}-box-content"/>
+                   <div id="#{@id}-footer" class="boxlib box-footer #{@kind}-box-footer"/>
               </div>
               """ # "
+
+      commit: ->
+        console.log "Commit on abstract box (please report)"
 
 ###
 #
@@ -81,12 +91,23 @@ class BoxLib.MarkdownBox extends BoxLib.Box
         super("markdown",id)
 
     installBox: () ->
-        $("##{@id}-content").append("<textarea id=\"#{@id}-markdown-edit\" class=\"boxlib #{@kind}-box-content\"/>")
+        $("##{@id}-content").append("<textarea id=\"#{@id}-markdown-edit\" class=\"boxlib #{@kind}-box-edit\"/>")
+        $("##{@id}-content").append("<div id=\"#{@id}-markdown-view\" class=\"boxlib #{@kind}-box-view\"/>")
+        $("##{@id}-commit").on("click", () => @commit())
         @codeMirror = CodeMirror.fromTextArea(document.getElementById("#{@id}-markdown-edit", {
                                                 autofocus: false
                                                 mode: "text/markdown"
                                               }));
+
+    commit: () ->
+        # console.log "Markdown box to commit ..."
+        md_input = @codeMirror.getValue()
+        # console.log "markdown input = #{md_input}"
+        html_output = marked(md_input)
+        # console.log "html output = #{html_output}"
         
+        $("##{@id}-markdown-view").append(html_output)
+        $("##{@id}-content .CodeMirror").hide()
 
 ###
 #
