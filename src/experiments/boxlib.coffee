@@ -93,11 +93,16 @@ class BoxLib.MarkdownBox extends BoxLib.Box
     installBox: () ->
         $("##{@id}-content").append("<textarea id=\"#{@id}-markdown-edit\" class=\"boxlib #{@kind}-box-edit\"/>")
         $("##{@id}-content").append("<div id=\"#{@id}-markdown-view\" class=\"boxlib #{@kind}-box-view\"/>")
-        $("##{@id}-commit").on("click", () => @commit())
+        $("##{@id}-commit").one("click", () => @commit())
         @codeMirror = CodeMirror.fromTextArea(document.getElementById("#{@id}-markdown-edit", {
                                                 autofocus: false
                                                 mode: "text/markdown"
                                               }));
+
+    edit: () ->
+        $("##{@id}-markdown-view").hide()
+        $("##{@id}-content .CodeMirror").show()
+        $("##{@id}-commit").one("click", () => @commit())
 
     commit: () ->
         # console.log "Markdown box to commit ..."
@@ -106,8 +111,12 @@ class BoxLib.MarkdownBox extends BoxLib.Box
         html_output = marked(md_input)
         # console.log "html output = #{html_output}"
         
+        $("##{@id}-markdown-view").empty()
         $("##{@id}-markdown-view").append(html_output)
         $("##{@id}-content .CodeMirror").hide()
+        $("##{@id}-markdown-view").show()
+        $("##{@id}-markdown-view").one("dblclick", () => @edit())
+        $("##{@id}-commit").one("click", () => @edit())
 
 ###
 #
