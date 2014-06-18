@@ -9,6 +9,18 @@
         @splice.apply(@,[index+1, 0].concat(items))
         return @
 
+# some enhancement of jQuery (from: http://stackoverflow.com/a/9614662/2753530)
+
+jQuery.fn.visible = ->
+    @css('visibility', 'visible')
+
+jQuery.fn.invisible = ->
+    @css('visibility', 'hidden')
+
+jQuery.fn.visibilityToggle = ->
+    @css('visibility', (i, visibility) ->
+        if (visibility == 'visible') then 'hidden' else 'visible')
+
 # then initialization of JQuery shortcut
 
 (($) ->

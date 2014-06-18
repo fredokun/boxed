@@ -64,10 +64,10 @@ class BoxLib.Box
               <div id="#{@id}" class="boxlib box #{@kind}-box">
                    <div id="#{@id}-control" class="boxlib box-control #{@kind}-box-control">
                       <button id="#{@id}-commit" class="boxlib box-control-button box-control-button-commit">
-                        Commit
+                        <span class="fa fa-eye"></span>
                       </button>
                       <button id="#{@id}-menu" class="boxlib box-control-button box-control-button-menu">
-                        Menu
+                        <span class="fa fa-bars"></span>
                       </button>
                    </div>
                    <div id="#{@id}-header" class="boxlib box-header #{@kind}-box-header"/>
@@ -102,6 +102,8 @@ class BoxLib.MarkdownBox extends BoxLib.Box
     edit: () ->
         $("##{@id}-markdown-view").hide()
         $("##{@id}-content .CodeMirror").show()
+        $("##{@id}-commit").visible()
+        $("##{@id}-menu").visible()
         $("##{@id}-commit").one("click", () => @commit())
 
     commit: () ->
@@ -115,8 +117,9 @@ class BoxLib.MarkdownBox extends BoxLib.Box
         $("##{@id}-markdown-view").append(html_output)
         $("##{@id}-content .CodeMirror").hide()
         $("##{@id}-markdown-view").show()
-        $("##{@id}-markdown-view").one("dblclick", () => @edit())
-        $("##{@id}-commit").one("click", () => @edit())
+        $("##{@id}").one("dblclick", () => @edit())
+        $("##{@id}-commit").invisible()
+        $("##{@id}-menu").invisible()
 
 ###
 #
