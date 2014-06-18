@@ -32,12 +32,12 @@ class BoxLib.BoxEd
         else
             switch position
               when "before"
-                 $(@boxes[@selectBox].id).insertBefore(box.html())
+                 $(@boxes[@selectedBox].id).insertBefore(box.html())
                  box.installBox()
                  @boxes.insertBefore(@selectedBox)
                  @selectBox(@selectedBox)
               when "after"
-                 $(@boxes[@selectBox].id).insertAfter(box.html())
+                 $(@boxes[@selectedBox].id).insertAfter(box.html())
                  box.installBox()
                  @boxes.insertAfter(@selectedBox)
                  @selectBox(@selectedBox+1)
@@ -83,7 +83,7 @@ class BoxLib.MarkdownBox extends BoxLib.Box
     installBox: () ->
         $("##{@id}-content").append("<textarea id=\"#{@id}-markdown-edit\" class=\"boxlib #{@kind}-box-content\"/>")
         @codeMirror = CodeMirror.fromTextArea(document.getElementById("#{@id}-markdown-edit", {
-                                                autofocus: true
+                                                autofocus: false
                                                 mode: "text/markdown"
                                               }));
         
