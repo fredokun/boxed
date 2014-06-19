@@ -37,11 +37,13 @@ $ ->
   $("#fileMenu").menu({select: (event,ui) -> fileMenuSelect(boxedObj, ui.item[0].id)}).hide()
   $("#editMenu").menu({select: (event,ui) -> editMenuSelect(boxedObj, ui.item[0].id)}).hide()
 
-  $("#fileMenuButton").button()
+  $("#mainMenuBar").buttonset()
+
+  #$("#fileMenuButton").button()
   $("#fileMenuButton").click(
      () -> toggleMenu("#fileMenu"))
 
-  $("#editMenuButton").button()
+  #$("#editMenuButton").button()
   $("#editMenuButton").click(
      () -> toggleMenu("#editMenu"))
 

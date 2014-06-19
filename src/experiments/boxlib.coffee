@@ -25,7 +25,7 @@ class BoxLib.BoxEd
         #console.log("box.html = " + box.html())
         @boxMap[boxId] = box
         if @selectedBox == -1
-                $("#boxed").append(box.html())
+                $("#boxed").append(box.buildHTML())
                 box.installBox()
                 @selectedBox = @boxes.length - 1    
                 @boxes.push box
@@ -59,22 +59,25 @@ class BoxLib.BoxEd
 class BoxLib.Box
      constructor: (@kind, @id) ->
 
-     html:  ->
-              """
+     buildHTML:  ->
+              html = """
               <div id="#{@id}" class="boxlib box #{@kind}-box">
                    <div id="#{@id}-control" class="boxlib box-control #{@kind}-box-control">
-                      <button id="#{@id}-commit" class="boxlib box-control-button box-control-button-commit">
+                      <div id="#{@id}-control-buttons" class="boxlib box-control-buttons">
+                        <button id="#{@id}-commit" class="boxlib box-control-button box-control-button-commit">
                         <span class="fa fa-eye"></span>
-                      </button>
+                        </button>
                       <button id="#{@id}-menu" class="boxlib box-control-button box-control-button-menu">
                         <span class="fa fa-bars"></span>
                       </button>
+                      </div>
                    </div>
                    <div id="#{@id}-header" class="boxlib box-header #{@kind}-box-header"/>
                    <div id="#{@id}-content" class="boxlib box-content #{@kind}-box-content"/>
                    <div id="#{@id}-footer" class="boxlib box-footer #{@kind}-box-footer"/>
               </div>
               """ # "
+              return html
 
       commit: ->
         console.log "Commit on abstract box (please report)"
@@ -91,6 +94,7 @@ class BoxLib.MarkdownBox extends BoxLib.Box
         super("markdown",id)
 
     installBox: () ->
+        $("##{@id}-control-buttons").buttonset()
         $("##{@id}-content").append("<textarea id=\"#{@id}-markdown-edit\" class=\"boxlib #{@kind}-box-edit\"/>")
         $("##{@id}-content").append("<div id=\"#{@id}-markdown-view\" class=\"boxlib #{@kind}-box-view\"/>")
         $("##{@id}-commit").one("click", () => @commit())
@@ -100,6 +104,7 @@ class BoxLib.MarkdownBox extends BoxLib.Box
                                               }));
 
     edit: () ->
+        $("##{@id}-control").removeClass("box-view-mode")
         $("##{@id}-markdown-view").hide()
         $("##{@id}-content .CodeMirror").show()
         $("##{@id}-commit").visible()
@@ -120,6 +125,7 @@ class BoxLib.MarkdownBox extends BoxLib.Box
         $("##{@id}").one("dblclick", () => @edit())
         $("##{@id}-commit").invisible()
         $("##{@id}-menu").invisible()
+        $("##{@id}-control").addClass("box-view-mode")
 
 ###
 #

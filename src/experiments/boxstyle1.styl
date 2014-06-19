@@ -14,10 +14,20 @@ border-radius()
 .ui-menu
   font-size: x-small
 
+#mainLogo
+  float: left
+  margin-left: 12px
+  margin-right: 12px
+  margin-top: 4px
+
+//#mainMenu
+//  float: right
+
 #mainMenuBar
   position: fixed
   top: 8px
   z-index: 2
+  width: 100%
 
 #fileMenu
   width: 200px
@@ -37,11 +47,20 @@ border-radius()
 
 .box-control
   float: left  
+  background-color: rgb(245, 245, 245)
+
+  &.box-view-mode
+    background-color: white
 
 .box-control-button
   display: block
   vertical-align: middle
-  border-style: none 
+  border-style: none
+  
+  .ui-button-text
+    padding: 4px 
+    font-size: xx-small
+    background-color: rgb(245, 245, 245)
 
 .markdown-box
   margin-top: 2px
