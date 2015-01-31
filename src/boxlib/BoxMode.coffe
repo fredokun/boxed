@@ -9,6 +9,7 @@ BoxMode =
         EDIT_CONTROL : 1 
         EDIT_META : 2 
         EDIT_META_CONTROL : 3
+        EDIT_CONTENT : 4
 
 #Function that verify the type in arguments exists.
 isModed = (modeName) ->
