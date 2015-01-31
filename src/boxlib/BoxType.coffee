@@ -5,11 +5,11 @@
 
 #Declaration of the box types. If you need to add a new box type you juste have to add it there.
 BoxType = 
-        MARKDOWN :  0 ,    
+        MARKDOWN :  0 
         JAVASCRIPT : 1
 
-#Function of verifacation of the type.
+#Function that verify tha the type in argument exists.
 isTyped = (typeName) ->
-        type if key is typeName for key, type in BoxType
+        index if key is typeName for key, index in BoxType
         null
 

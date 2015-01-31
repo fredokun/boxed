@@ -4,10 +4,14 @@
 ##
 
 #Declaration of the box modes. If you want to create a new mode, just add one there.
-ModeBox =
-        VIEW : 0 ,
-        EDIT_CONTROL : 1 ,
-        EDIT_META : 2 ,
+BoxMode =
+        VIEW : 0 
+        EDIT_CONTROL : 1 
+        EDIT_META : 2 
         EDIT_META_CONTROL : 3
 
-#Function of verification 
+#Function that verify the type in arguments exists.
+isModed = (modeName) ->
+        index if mode is modeName for mode, index in BoxMode
+        null
+
