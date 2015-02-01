@@ -56,10 +56,11 @@ class Box
                 index = isTyped(type)
                 if index > -1 then @boxType = index
                 #else throw an error.
-                throw {
-                        code : 0,
-                        message : "Error type not defined!",
-                }
+                else
+                        throw {
+                                code : 0,
+                                message : "Error type not defined!",
+                        }
                         
 
         #Set the mode of the box.
@@ -67,10 +68,11 @@ class Box
                 #If the mode exists the change the mode...
                 index = isModed(mode)
                 if index > -1 then @boxMode = index
-                throw {
-                        code : 1,
-                        message : "Error type mode definded"
-                }
+                else
+                        throw {
+                                code : 1,
+                                message : "Error type mode definded"
+                        }
         
 
 
