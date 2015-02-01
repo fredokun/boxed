@@ -29,14 +29,51 @@ class Box
                 @userMetaData
 
         #Getter of the attribute 'controlMetaData'.
+        getControlMetaData : ->
                 @controlMetaData
 
-        #Getter of the attribute 'boxType'.
+        #Getter of the type of the box.
         getBoxType : ->
                 @boxType
 
-        #Getter of the attribute 'boxMode'.
+        #Getter of the mode of the box.
         getBoxMode : ->
-                return @boxMode
+                @boxMode
+
+        #Setter of the content
+        setContent : (nContent) ->
+                @content = nContent 
+        
+        #Setter of the attribute 'userMetaData'.
+        setUserMetaData : ->
+
+        #Setter of the attribute 'controleMetaData'.
+        setControlMetaData : ->
+        
+        #Set the type of the box.
+        setBoxType : (type) ->
+                #If the type exists then change the type... 
+                index = isTyped(type)
+                if index > -1 then @boxType = index
+                #else throw an error.
+                throw {
+                        code : 0,
+                        message : "Error type not defined!",
+                }
+                        
+
+        #Set the mode of the box.
+        setBoxMode : (mode) ->
+                #If the mode exists the change the mode...
+                index = isModed(mode)
+                if index > -1 then @boxMode = index
+                throw {
+                        code : 1,
+                        message : "Error type mode definded"
+                }
+        
+
+
+        
 
         

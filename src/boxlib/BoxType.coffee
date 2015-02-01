@@ -11,5 +11,5 @@ BoxType =
 #Function that verify tha the type in argument exists.
 isTyped = (typeName) ->
         index if key is typeName for key, index in BoxType
-        null
+        -1
 

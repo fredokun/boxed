@@ -14,5 +14,5 @@ BoxMode =
 #Function that verify the type in arguments exists.
 isModed = (modeName) ->
         index if mode is modeName for mode, index in BoxMode
-        null
+        -1
 
