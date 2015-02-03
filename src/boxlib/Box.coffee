@@ -55,24 +55,14 @@ class Box
                 #If the type exists then change the type... 
                 index = isTyped(type)
                 if index > -1 then @boxType = index
-                #else throw an error.
-                else
-                        throw {
-                                code : 0,
-                                message : "Error type not defined!",
-                        }
-                        
+                else throw error
 
         #Set the mode of the box.
         setBoxMode : (mode) ->
-                #If the mode exists the change the mode...
+                #If the mode exists the change the mode...  index =
                 index = isModed(mode)
-                if index > -1 then @boxMode = index
-                else
-                        throw {
-                                code : 1,
-                                message : "Error type mode definded"
-                        }
+                if index < -1 then @boxMode = index
+                then throw error
         
 
 
