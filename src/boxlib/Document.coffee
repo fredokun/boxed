@@ -46,7 +46,7 @@ class Document extends BoxAdministrator
                         index = @indexes["#{boxSrc}"]
                         @boxes.splice(index+1,0,newBox)
 
-                        @indexes["#{newBox.getId()}"] = index+1
+                        @indexes["#{newBox.getId()}"] = index
 
-                        for i in [index+2 .. @boxes.length-1]
+                        for i in [index+1 .. @boxes.length-1]
                                 @indexes["#{@boxes[i].getId()}"]++

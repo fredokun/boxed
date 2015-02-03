@@ -1,0 +1,22 @@
+{
+  "name": "boxed",
+  "version": "0.0.1",
+  "description": "Structured editing on the web",
+  "keywords": [
+    "editor",
+    "web"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "grunt-contrib-coffee": "~0.12.0",
+    "grunt-contrib-jade": "~0.14.1",
+    "jquery": "~2.1.3"
+  }
+}
