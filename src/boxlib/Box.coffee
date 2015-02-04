@@ -62,7 +62,7 @@ class Box
                 #If the mode exists the change the mode...  index =
                 index = isModed(mode)
                 if index < -1 then @boxMode = index
-                then throw error
+                else throw error
         
 
 
