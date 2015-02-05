@@ -3,13 +3,15 @@
 #For the moment, only MARKDOWN and JAVASCRIPT are present.
 ##
 
-#Declaration of the box types. If you need to add a new box type you juste have to add it there.
-BoxType = 
-        MARKDOWN :  0 
-        JAVASCRIPT : 1
+define ['BoxType'], (BoxType) ->
 
-#Function that verify tha the type in argument exists.
-isTyped = (typeName) ->
-        index if key is typeName for key, index in BoxType
-        -1
+        #Declaration of the box types. If you need to add a new box type you juste have to add it there.
+        BoxType = 
+                MARKDOWN :  0 
+                JAVASCRIPT : 1
+
+        #Function that verify tha the type in argument exists.
+        isTyped = (typeName) ->
+                index if key is typeName for key, index in BoxType
+                -1
 
