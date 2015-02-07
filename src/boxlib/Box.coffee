@@ -1,7 +1,6 @@
 ###
 #
 # Boxlib #
-#
 # The library about Boxed' boxes.
 #
 ###
@@ -45,10 +44,12 @@ class Box
                 @content = nContent 
         
         #Setter of the attribute 'userMetaData'.
-        setUserMetaData : ->
+        setUserMetaData : (nMeta) ->
+                @userMetaData = nMeta
 
         #Setter of the attribute 'controleMetaData'.
-        setControlMetaData : ->
+        setControlMetaData : (nMeta) ->
+                @controlMetaData = nMeta
         
         #Set the type of the box.
         setBoxType : (type) ->

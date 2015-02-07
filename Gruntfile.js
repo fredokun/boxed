@@ -13,11 +13,27 @@ module.exports = function(grunt){
 		}
 	    }
 	},
+	jade : {
+	    compile : {
+		files : {
+		    './final/HTMLbox/testBoxStyle.html' : './src/testStyl/testBoxStyle.jade'
+		}
+	    }
+	},
+	stylus : {
+	    compile : {
+		files : {
+		    './final/css/box.css' : './src/style/box.styl'
+		}
+	    }
+	},
 	clean : ['./src/boxlib/*~','./final','*~']
     });
 
     grunt.loadNpmTasks('grunt-contrib-coffee');
+    grunt.loadNpmTasks('grunt-contrib-jade');
+    grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-clean');
     
-    grunt.registerTask('default',['coffee']);
+    grunt.registerTask('default',['coffee','jade','stylus']);
 };
