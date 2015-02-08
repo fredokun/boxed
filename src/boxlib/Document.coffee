@@ -4,7 +4,7 @@
 #
 ##
 
-class Document extends BoxAdministrator
+class window.Document extends BoxAdministrator
 
         #Constructor
         contructor : (@name) ->

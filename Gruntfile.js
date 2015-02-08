@@ -9,21 +9,24 @@ module.exports = function(grunt){
 		    './final/scripts/Document.js':'./src/boxlib/Document.coffee',
 		    './final/scripts/BoxMode.js':'./src/boxlib/BoxMode.coffee',
 		    './final/scripts/BoxType.js':'./src/boxlib/BoxType.coffee',
-		    './final/scripts/Box.js':'./src/boxlib/Box.coffee'
+		    './final/scripts/Box.js':'./src/boxlib/Box.coffee',
+		    './final/scripts/Controler.js':'./src/boxlib/Controler.coffee'
 		}
 	    }
 	},
 	jade : {
 	    compile : {
 		files : {
-		    './final/HTMLbox/testBoxStyle.html' : './src/testStyl/testBoxStyle.jade'
+		    './final/HTMLbox/testBoxStyle.html' : './src/testStyl/testBoxStyle.jade',
+		    './final/index.html' : './src/model/index.jade'
 		}
 	    }
 	},
 	stylus : {
 	    compile : {
 		files : {
-		    './final/css/box.css' : './src/style/box.styl'
+		    './final/css/box.css' : './src/style/box.styl',
+		    './final/css/general.css' : './src/style/general.styl'
 		}
 	    }
 	},

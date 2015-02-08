@@ -4,7 +4,7 @@
 ##
 
 #Declaration of the box modes. If you want to create a new mode, just add one there.
-BoxMode =
+BoxMode = 
         VIEW : 0 
         EDIT_CONTROL : 1 
         EDIT_META : 2 
@@ -16,3 +16,5 @@ isModed = (modeName) ->
         index if mode is modeName for mode, index in BoxMode
         -1
 
+module.exports = BoxMode
+module.exports = isModed

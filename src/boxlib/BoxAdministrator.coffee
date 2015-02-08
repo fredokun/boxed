@@ -4,7 +4,7 @@
 #
 ##
 
-class BoxAdministrator
+class window.BoxAdministrator
         #Constructor
         constructor : ->
                 @boxes = []          #Array that contains the boxes.

@@ -1,0 +1,16 @@
+{
+  "name": "boxed",
+  "version": "0.0.0",
+  "homepage": "https://github.com/gitSeed/boxed",
+  "authors": [
+    "gitSeed <patrick.andri@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

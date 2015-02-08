@@ -65,7 +65,7 @@ class Box
                 if index < -1 then @boxMode = index
                 else throw error
         
-
+module.exports = Box
 
         
 
