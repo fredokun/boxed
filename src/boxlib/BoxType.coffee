@@ -4,9 +4,7 @@
 ##
 
 #Declaration of the box types. If you need to add a new box type you juste have to add it there.
-window.BoxType = 
-        MARKDOWN :  0 
-        JAVASCRIPT : 1
+window.BoxType = { MARKDOWN :  0 , JAVASCRIPT : 1 }
 
 #Function that verify tha the type in argument exists.
 window.isTyped = (typeName) ->

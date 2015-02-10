@@ -4,7 +4,7 @@ module.exports = function(grunt){
 	coffee : {
 	    compile : {
 		files : {
-		    './final/scripts/Controler.js':['./src/boxlib/BoxMode.coffee','./src/boxlib/BoxType.coffee','./src/boxlib/Box.coffee','./src/boxlib/BoxAdministrator.coffee','./src/boxlib/Document.coffee','./src/boxlib/Backend.coffee','./src/boxlib/JavascriptBackend.coffee','./src/boxlib/MardownBackend.coffee','./src/boxlib/Controler.coffee']
+		    './final/scripts/Controler.js':['./src/boxlib/BoxMode.coffee','./src/boxlib/BoxType.coffee','./src/boxlib/Box.coffee','./src/boxlib/BoxAdministrator.coffee','./src/boxlib/Document.coffee','./src/boxlib/Backend.coffee','./src/boxlib/JavascriptBackend.coffee','./src/boxlib/MardownBackend.coffee','./src/boxlib/Controler.coffee'],
 		}
 	    }
 	},

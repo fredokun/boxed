@@ -4,6 +4,10 @@
 
 class window.JavascriptBackend extends Backend
 
+        constructor : ->
+                console.log('Javascript')
+                super
+
         #
         compile: (box) ->
                 controlMeta = box.getControlMetaData();

@@ -2,7 +2,10 @@
 #The backend that treat the Markdown Boxes.
 ##
 
-class MarkdownBackend extends Backend
+class window.MarkdownBackend extends Backend
+
+      constructor: ->
+      		   super
 
         #
         compile: (box) ->

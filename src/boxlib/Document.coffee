@@ -7,10 +7,11 @@
 class window.Document extends BoxAdministrator
 
         #Constructor
-        contructor : (@name) ->
+        constructor : (@name) ->
                 @currentBox = null
                 @userMetaData = {}
                 @controlMetaData = {}
+                super
 
         #Get the attribute name
         getName: ->

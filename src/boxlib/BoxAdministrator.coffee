@@ -28,4 +28,4 @@ class window.BoxAdministrator
         #Get a box from the collection.
         getBox : (boxId) ->
                 if boxId in @indexes then @boxes["#{@indexes[boxId]}"]
-                throw error  
+                else throw error  
