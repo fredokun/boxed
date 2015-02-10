@@ -2,7 +2,7 @@
 #The backend that treat the javacripts Boxes.
 ##
 
-class JavascriptBackend extends Backend
+class window.JavascriptBackend extends Backend
 
         #
         compile: (box) ->

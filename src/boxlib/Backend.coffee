@@ -4,7 +4,7 @@
 #
 ##
 
-class Backend extends BoxAdministrator
+class window.Backend extends BoxAdministrator
 
         #This method sens a error. It must be implemented by the backend languaage and be adapt to this.
         compile: (box) ->

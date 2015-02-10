@@ -14,8 +14,8 @@ class window.BoxAdministrator
         addBox : (box) ->
                 #We check if the object already exist in the collection.
                 if !(box.getId() in @indexes) 
-                        @box.push(box)
-                        @indexes["#{box.getId()}"] = @box.length-1
+                        @boxes.push(box)
+                        @indexes["#{box.getId()}"] = @boxes.length-1
                 else throw error
 
         #Remove a Box from a collection.

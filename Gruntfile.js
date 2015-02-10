@@ -4,13 +4,7 @@ module.exports = function(grunt){
 	coffee : {
 	    compile : {
 		files : {
-		    './final/scripts/Backend.js':'./src/boxlib/Backend.coffee',
-		    './final/scripts/BoxAdministrator.js':'./src/boxlib/BoxAdministrator.coffee',
-		    './final/scripts/Document.js':'./src/boxlib/Document.coffee',
-		    './final/scripts/BoxMode.js':'./src/boxlib/BoxMode.coffee',
-		    './final/scripts/BoxType.js':'./src/boxlib/BoxType.coffee',
-		    './final/scripts/Box.js':'./src/boxlib/Box.coffee',
-		    './final/scripts/Controler.js':'./src/boxlib/Controler.coffee'
+		    './final/scripts/Controler.js':['./src/boxlib/BoxMode.coffee','./src/boxlib/BoxType.coffee','./src/boxlib/Box.coffee','./src/boxlib/BoxAdministrator.coffee','./src/boxlib/Document.coffee','./src/boxlib/Backend.coffee','./src/boxlib/JavascriptBackend.coffee','./src/boxlib/MardownBackend.coffee','./src/boxlib/Controler.coffee']
 		}
 	    }
 	},
@@ -37,6 +31,7 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-jade');
     grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-coffee');
     
     grunt.registerTask('default',['coffee','jade','stylus']);
 };

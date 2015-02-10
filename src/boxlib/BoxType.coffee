@@ -4,14 +4,11 @@
 ##
 
 #Declaration of the box types. If you need to add a new box type you juste have to add it there.
-BoxType = 
+window.BoxType = 
         MARKDOWN :  0 
         JAVASCRIPT : 1
 
 #Function that verify tha the type in argument exists.
-isTyped = (typeName) ->
+window.isTyped = (typeName) ->
         index if key is typeName for key, index in BoxType
         -1
-
-module.exports = BoxType
-module.exports = isTyped

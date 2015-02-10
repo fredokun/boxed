@@ -5,7 +5,7 @@
 #
 ###
 
-class Box 
+class window.Box 
         
         #The box constructor takes
         constructor : (@id) -> 
@@ -64,8 +64,6 @@ class Box
                 index = isModed(mode)
                 if index < -1 then @boxMode = index
                 else throw error
-        
-module.exports = Box
 
         
 
