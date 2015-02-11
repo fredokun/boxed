@@ -29,7 +29,6 @@ class window.Controler
                 #Add the box to the document and the backends.
                 @doc.addBox(box)
                 bac = @backends[BoxType.JAVASCRIPT]
-                console.log( @backends );
                 bac.addBox(box)                
 
                 @doc.setCurrentBox( box.getId() );        
@@ -38,6 +37,9 @@ class window.Controler
         runBoxCallBack: (info) ->
                 switch info['action']
                         when "DRAW_BOX_END"
+
+                                cl = 'javascript' if info['boxType'] is 'JAVASCRIPT'
+
                                 $('#contains').append("<section class='box' id='#{info['id']}'>
                                 <nav class='boxTopMenu'>
                                 <ul class='mainMenu'>
@@ -51,10 +53,23 @@ class window.Controler
                                 <li><a href='#' /> Clean Box</li>
                                 </ul>
                                 </li></ul>
-                                </nav>        
+                                </nav>
+                                <section id='code' >
+                                </section
                                 </section>")
 
-        
-                
+
+                                myCodeMiror = CodeMirror( $("\##{info['id']} #code").get(0), { mode : cl  } ) 
+                        
+                        when "SELECT_BOX"
+                                prev = @doc.getCurrentBox()
+                                now = $('\##{info[id]}')
+                                if prev not null
+                                        id = prev.getId()
+                                        $('\##{id}').removeClass('boxSelect')
+                                        $('\##{id}}').addClass('box')
+
+                                $('\##{now}').removeClass('box')
+                                $('\##{now}').removeClass('boxSelect')                
 
 window.frame = new Controler() ;
