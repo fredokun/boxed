@@ -5,19 +5,36 @@
 #
 ###
 
+(($) ->
+) jQuery
+
 class window.Box 
         
         #The box constructor takes
-        constructor : (@id) -> 
+        constructor : (@id, @callback) -> 
                 @content = ""                     #The box content.
                 @userMetaData = {}                #
                 @controlMetaData = {}             #
                 @boxType = BoxType.JAVASCRIPT     #The Type of the Box: Automatically it's a javascript box.
                 @boxMode = BoxMode.EDIT_CONTENT   #The Mode of the Box: Automatically, the box is on mode editable.
+                info =
+                        action : "DRAW_BOX_END"
+                        id : @id
+                        boxType : "JAVASCRIPT"
+                        
+                @callback.fire(info)
 
         #Getter of the attribute 'id'.
         getId : ->
                 @id
+
+        #Box is Selected, it triggered the controler
+        getSelected : ->
+                info :
+                        action : "SELECT"
+                        id : @id
+                @callback.fire(info)
+
 
         #Getter of the attribute 'content'.
         getContent : ->

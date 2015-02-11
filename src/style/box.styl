@@ -1,15 +1,62 @@
 .box
   width 600px
   height 300px
+  font-family Arial
+  box-shadow 0px 0px 20px 0px #ffffff
+  .boxTopMenu
+    visibility hidden
+  &:hover
+    box-shadow 0px 0px 20px 0px #cfcfcf
+    .boxTopMenu
+      visibility visible
+
+.boxSelect
+  width 600px
+  height 300px
+  font-family Arial
+  box-shadow 0px 0px 20px 0px #ffffff
   box-shadow 0px 0px 20px 0px #cfcfcf
+  .boxTopMenu
+    visibility visible
 
 .boxTopMenu
   height 35px
   width 100%
-  ul
-    list
+ 
 
+ .mainMenu
+    float right
+    list-style none
+    position relative
+    margin 0px 10px 0px 0px
+    
+ul.subMenu
+  width 200px
+  background-color #ffffff
+  border 1px solid #cfcfcf
+  position absolute
+  top 33px
+  left -100px
+  list-style none
+  margin 0px
+  padding 0px
+  li
+    height 35px
+    text-align center
+    padding-top 10px
+    a
+      color #000000
+      text-decoration none
+      
 
 img.imgToMenu
   width 35px
   height 35px
+
+.mainMenu
+  .subMenu
+    visibility hidden
+  &:hover
+    .subMenu
+      visibility visible
+

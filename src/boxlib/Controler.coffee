@@ -16,13 +16,15 @@ class window.Controler
                                         @backends[index] = new MarkdownBackend()  
                                 when 'JAVASCRIPT'
                                         @backends[index] = new JavascriptBackend()
-                                        console.log('javscript')
                                 else console.log('error no type');
+
+                @callback = $.Callbacks()
+                @callback.add( this.runBoxCallBack ) 
 
         #Add a new (javascript) box to the Documment. In the same time, it's 
         addBoxEnd:  ->
                 #Creation of the box.
-                box = new Box(@ids)
+                box = new Box(@ids,@callback)
 
                 #Add the box to the document and the backends.
                 @doc.addBox(box)
@@ -30,22 +32,27 @@ class window.Controler
                 console.log( @backends );
                 bac.addBox(box)                
 
-                @doc.setCurrentBox( box.getId() );
-
-                console.log(this)
-
-                $("#contains").append("<section class='box' id='#{box.getId()}'>
-                <nav class='boxTopMenu'>
-                <ul class='ulMenu'>
-                <li class='itemTopMenu'>
-                <a src='#' />
-                <img src='../images/menu.gif' height='35px' height='35px' />
-                </li>
-                </ul>
-                </nav>        
-                </section>") ;
-                
+                @doc.setCurrentBox( box.getId() );        
                 @ids++
+
+        runBoxCallBack: (info) ->
+                switch info['action']
+                        when "DRAW_BOX_END"
+                                $('#contains').append("<section class='box' id='#{info['id']}'>
+                                <nav class='boxTopMenu'>
+                                <ul class='mainMenu'>
+                                <li>
+                                <img src='../images/menu.gif' class='imgToMenu' />
+                                <ul class='subMenu'>
+                                <li><a href='#' /> Change mode</li>
+                                <li><a href='#' /> Change Type</li>
+                                <li><a href='#' /> Insert Before</li>
+                                <li><a href='#' /> Insert After</li>
+                                <li><a href='#' /> Clean Box</li>
+                                </ul>
+                                </li></ul>
+                                </nav>        
+                                </section>")
 
         
                 

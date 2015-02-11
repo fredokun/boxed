@@ -12,5 +12,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "highlightjs": "~8.4.0",
+    "jquery": "~2.1.3"
+  }
 }

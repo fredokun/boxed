@@ -5,7 +5,6 @@
 class window.JavascriptBackend extends Backend
 
         constructor : ->
-                console.log('Javascript')
                 super
 
         #
