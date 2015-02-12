@@ -4,11 +4,11 @@
 #
 ##
 
-class window.Backend extends BoxAdministrator
+class window.Backend
 
-        constructor : () ->
-                super
+        constructor : ->
+                
 
         #This method sens a error. It must be implemented by the backend languaage and be adapt to this.
         compile : (idBox) ->
-              console.log('compile');  
+              throw error

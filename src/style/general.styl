@@ -22,6 +22,8 @@ header
   position absolute
   background-color #ffffff
   margin-right 100px
+  position relative
+  z-index 4
   ul
     list-style-type none
     margin 0px
@@ -41,7 +43,12 @@ header
   list-style-type none
   margin 0px
   padding 0px
-
-.topMenu
   float right
+  .subMenu
+    visibility hidden
+    z-index 0
+  &:hover
+    .subMenu
+      z-index 4
+      visibility visible
   

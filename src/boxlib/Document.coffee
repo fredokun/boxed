@@ -4,14 +4,35 @@
 #
 ##
 
-class window.Document extends BoxAdministrator
+class window.Document 
 
         #Constructor
         constructor : (@name) ->
                 @currentBox = null
                 @userMetaData = {}
                 @controlMetaData = {}
-                super
+                @boxes = []          #Array that contains the boxes.
+                @indexes = []        #Hash that contains the index of box in the collection array.
+
+        #Add a box in the collection of boxes.
+        addBox : (box) ->
+                #We check if the object already exist in the collection.
+                if !(box.getId() in @indexes) 
+                        @boxes.push(box)
+                        @indexes["#{box.getId()}"] = @boxes.length-1
+                else throw error
+
+        #Remove a Box from a collection.
+        removebox: (boxId) ->
+                if boxId in @indexes
+                        @boxes.splice(@indexes["#{boxId}"],1)   
+                        delete @boxes["#{boxId}"]
+                else throw error
+
+        #Get a box from the collection.
+        getBox : (boxId) ->
+                if boxId in @indexes then @boxes["#{@indexes[boxId]}"]
+                else throw error  
 
         #Get the attribute name
         getName: ->
@@ -27,8 +48,9 @@ class window.Document extends BoxAdministrator
 
         #Set select box (set the attribute 'currentBox').
         setCurrentBox : (idBox) ->
-                try current = this.getBox(idBox)                        
-                catch e then throw error
+                buffer = this.getBox(idBox)
+                buffer.getSelected()
+                @currentBox = buffer
 
         #Add a box before the select box.
         addBoxBefore : (boxSrc,newBox) ->

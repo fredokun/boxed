@@ -17,6 +17,7 @@ class window.Box
                 @controlMetaData = {}             #
                 @boxType = BoxType.JAVASCRIPT     #The Type of the Box: Automatically it's a javascript box.
                 @boxMode = BoxMode.EDIT_CONTENT   #The Mode of the Box: Automatically, the box is on mode editable.
+                @currentBox = null
                 info =
                         action : "DRAW_BOX_END"
                         id : @id
@@ -30,8 +31,8 @@ class window.Box
 
         #Box is Selected, it triggered the controler
         getSelected : ->
-                info :
-                        action : "SELECT"
+                info =
+                        action : "SELECT_BOX"
                         id : @id
                 @callback.fire(info)
 
@@ -81,6 +82,7 @@ class window.Box
                 index = isModed(mode)
                 if index < -1 then @boxMode = index
                 else throw error
+                
 
         
 
