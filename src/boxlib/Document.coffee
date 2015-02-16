@@ -14,13 +14,19 @@ class window.Document
                 @boxes = []          #Array that contains the boxes.
                 @indexes = []        #Hash that contains the index of box in the collection array.
 
+                @ids = 0 ;
+
         #Add a box in the collection of boxes.
-        addBox : (box) ->
+        addBox : (type) ->
+                #Creation of the box.
+                box = new Box(@ids,@callback)
+
                 #We check if the object already exist in the collection.
                 if !(box.getId() in @indexes) 
                         @boxes.push(box)
                         @indexes["#{box.getId()}"] = @boxes.length-1
                 else throw error
+                @ids++
 
         #Remove a Box from a collection.
         removebox: (boxId) ->

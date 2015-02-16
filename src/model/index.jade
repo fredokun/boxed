@@ -1,45 +1,24 @@
-doctype html
-html(lang='eng')
+html(lang='fr')
   head
-    title='Boxed'
-    link(rel='stylesheet' type='text/css' href='./css/general.css')
-    link(rel='stylesheet' type='text/css' href='./css/box.css')
-    
-
-    script(src="../bower_components/jquery/dist/jquery.js" type="text/javascript")
-
-    script(src="../bower_components/codemirror/lib/codemirror.js" type="text/javascript")
-    link(rel='stylesheet' type='text/css' href='../bower_components/codemirror/lib/codemirror.css')
-
-    script(type='text/javascript' src='./scripts/Controler.js')
+    title=BoXed
+    link(rel='stylesheet' href='css/general.css' style='text/css')
 
   body
-    header
-      nav.container
-        ul.topMenu
-          li 
-            a(href='#')
-              img(src='../images/menu.gif' width='35px' height='35px')
-          li
-            section.subMenu
-              ul
-                li 
-                  a(href='#') New Document
-                  hr
-                    
-                li 
-                  a(href='#' onclick='frame.addBoxEnd();') New Box
-                  hr
-
-                li 
-                  a(href='#') Load Document
-                  hr
-
-                li 
-                  a(href='#') Save Document
-                  hr
-
-                li 
-                  a(href='#') See Document
-
-    section#contains.container
+    nav.menu
+      section.container
+        ul
+          li.listMenu
+            img(src='../images/menu.gif')
+            ul.subMenu
+              li 
+                a(href='#') Add Box
+                  i#shortcut (raccourcis)
+              li 
+                a(href='#') Save Document
+                  i#shortcut (raccourcis)
+              li 
+                a(href='#') Load Document              
+                  i#shortcut (raccourcis)
+              
+      section.container#page
+        

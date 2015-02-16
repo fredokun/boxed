@@ -11,19 +11,17 @@
 class window.Box 
         
         #The box constructor takes
-        constructor : (@id, @callback) -> 
+        constructor : (@id) -> 
                 @content = ""                     #The box content.
                 @userMetaData = {}                #
                 @controlMetaData = {}             #
                 @boxType = BoxType.JAVASCRIPT     #The Type of the Box: Automatically it's a javascript box.
                 @boxMode = BoxMode.EDIT_CONTENT   #The Mode of the Box: Automatically, the box is on mode editable.
-                @currentBox = null
-                info =
+
+                toCallBack =
                         action : "DRAW_BOX_END"
                         id : @id
                         boxType : "JAVASCRIPT"
-                        
-                @callback.fire(info)
 
         #Getter of the attribute 'id'.
         getId : ->
@@ -31,11 +29,9 @@ class window.Box
 
         #Box is Selected, it triggered the controler
         getSelected : ->
-                info =
+                toCallback =
                         action : "SELECT_BOX"
                         id : @id
-                @callback.fire(info)
-
 
         #Getter of the attribute 'content'.
         getContent : ->

@@ -7,7 +7,6 @@ class window.Controler
         constructor: ->
                 #The new Document by default.
                 @doc = new Document("myDoc")
-                @ids = 0
                 #The collection of the Backends
                 @backends = []        
                 for key, index of BoxType
@@ -20,20 +19,15 @@ class window.Controler
 
 
         #Add a new (javascript) box to the Documment. In the same time, it's 
-        addBoxEnd:  ->
-                #Creation of the box.
-                box = new Box(@ids,@callback)
-
+        addBoxEnd:  (type) ->
                 #Add the box to the document and the backends.
-                @doc.addBox(box)
-                bac = @backends[BoxType.JAVASCRIPT]
-                bac.addBox(box)
-                console.log @doc
-                @doc.setCurrentBox(box.getId())
-                @ids++
+                @doc.addBox(type)
 
         selectBox: (idBox) ->
                 @doc.setCurrentBox(box.getId())
+
+        insertBoxBefore : (idBox) ->
+                @doc.addBoxBefore(idBox);
 
         runBoxCallBack: (info) ->
                 console.log "box add 1 "+this
@@ -51,11 +45,12 @@ class window.Controler
                                 <ul class='subMenu'>
                                 <li><a href='#' /> Change mode</li>
                                 <li><a href='#' /> Change Type</li>
-                                <li><a href='#' /> Insert Before</li>
+                                <li><a href='#' onclick='frame.insertBoxBefore()' /> Insert Before</li>
                                 <li><a href='#' /> Insert After</li>
                                 <li><a href='#' /> Clean Box</li>
                                 </ul>
-                                </li></ul>
+                                </li>
+                                <li>#{info['id']}</li></ul>
                                 </nav>
                                 <section id='code' >
                                 </section
