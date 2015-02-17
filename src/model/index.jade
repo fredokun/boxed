@@ -1,7 +1,12 @@
 html(lang='fr')
   head
     title=BoXed
+
     link(rel='stylesheet' href='css/general.css' style='text/css')
+    link(rel='stylesheet' href='css/box.css' style='text/css')
+      
+    script(src='../bower_components/jquery/dist/jquery.js' type='text/javascript')
+    script(src='scripts/draw.js' type='text/javascript')
 
   body
     nav.menu
@@ -11,14 +16,14 @@ html(lang='fr')
             img(src='../images/menu.gif')
             ul.subMenu
               li 
-                a(href='#') Add Box
-                  i#shortcut (raccourcis)
+                a(href='#' onclick='drawnBox(1)') Add Box
+                  i#shortcut (shortcut)
               li 
                 a(href='#') Save Document
-                  i#shortcut (raccourcis)
+                  i#shortcut (shortcut)
               li 
                 a(href='#') Load Document              
-                  i#shortcut (raccourcis)
+                  i#shortcut (shortcut)
               
-      section.container#page
+    section.container#page
         

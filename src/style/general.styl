@@ -56,4 +56,13 @@ li.listMenu
   &:hover
     ul.subMenu
       visibility visible
-    
+      -webkit-animation moveSub .5s
+      animation moveSub .5s
+
+@keyframes moveSub
+  from 
+    top 10px
+    opacity 0
+  to
+    top 40px
+    opacity 1

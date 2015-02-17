@@ -6,21 +6,21 @@ html(lang='fr')
     link(rel='stylesheet' type='text/css' href='../css/box.css')
 
   body
+
     section.box
-      nav.boxTopMenu
-        ul.mainMenu
-          li
-            img(src='../../images/menu.gif' height='35px' width='35px').imgToMenu
-            ul.subMenu
-                  li 
-                    a(href='#') Change mode
-                  li 
-                    a(href='#') Change Type
-                  li 
-                    a(href='#') Insert Before
-                  li 
-                    a(href='#') Insert After
-                  li
-                    a(href='#') Clean Box
-      p.
+      nav.boxMenu
+        ul
+          li.listBoxMenu #1
+          li.listBoxMenu
+            img(src='../../images/menu.gif')
+            ul.boxSubMenu
+              li 
+                a(href='#') Add Box Before
+                  i (shortcut)
+              li 
+                a(href='#') Add Box After
+                  i (shortcut)
+              li 
+                a(href='#') Change Box Type
+                  i (shortcut)
         
