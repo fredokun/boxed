@@ -6,12 +6,19 @@ $ ->
 #Function that works only on hte model. It drawn a box and put this in the model
         window.drawnBox = (id) ->
                 section = $ '<section>'
+                text = $ '<section>'
+                inText = $ '<section>'
 
                 section.addClass 'boxCreating'
+                text.attr 'id', 'text'
+
+                text.append inText
 
                 section.append drawMenu(id)
-                section.append drawInsideBox(id)
+                section.append text
                 section.attr 'id', id
+
+                
 
                 section.on("animationend webkitAnimationEnd Oanimationend msAnimationEnd", (() -> 
                         $(this).removeClass("boxCreating") 
@@ -19,9 +26,12 @@ $ ->
                 )
                 )
 
+                codeMiror = CodeMirror( ((elt) ->
+                        inText.replaceWith(elt)), { type : "markdown" } )
+
                 section.click -> drawSelect(id)
 
-                $('#page').append section      
+                $('#page').append section 
 
 
         drawMenu = (id) ->
@@ -121,11 +131,6 @@ $ ->
                 nav.addClass 'boxMenu'
 
                 nav
-
-        drawInsideBox = (id) ->
-                section = $ '<p>'
-                section.addClass 'boxInside'
-                section
 
         window.withdrawBox = (id) ->
                 $('#'+id).remove()
