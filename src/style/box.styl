@@ -1,14 +1,38 @@
 .box
+  width 100%
   margin 10px auto 0px auto
-  border 1px solid #c1c1c1
+  min-height 200px
 
-  -webkit-animation boxAppear 1.5s
-  animation boxAppear 1.5s
-  animation-fill-mode forwards
-  -webkit-animation-fill-mode forwards
+  border 1px solid #ffffff
 
+  -webkit-transition border linear .3s .3s
+  
   &:hover
-    border 1px solid #c1c1c1
+    border 1px solid #c2c2c2
+    -webkit-transition border linear .3s
+
+.boxCreating
+  margin 10px auto 0px auto
+  min-height 0px
+  width 0px
+  border 1px solid #c2c2c2
+
+  -webkit-animation BoxCreate 1s
+
+@keyframes BoxCreate
+  from
+    width 0px
+    min-height 0px
+    border 1px solid #ffffff
+  to
+    width 100%
+    min-height 200px
+    border 1px solid #c2c2c2
+
+.boxSelect
+  margin 10px auto 0px auto
+  border 1px solid #c2c2c2
+  min-height 200px
 
 nav.boxMenu
   height 40px
@@ -30,6 +54,7 @@ li.listBoxMenuLeft
   position relative
   padding 10px 0px 0px 10px
   font-family Arial
+  color #c2c2c2
 
 ul.boxSubMenu
   position absolute
@@ -50,30 +75,12 @@ ul.boxSubMenu
 
 li.listBoxMenu
   ul.boxSubMenu
+    transition visibility
     visibility hidden
   &:hover
     ul.boxSubMenu
       visibility visible
-      -webkit-animation moveBoxSub .5s
       animation moveBoxSub .5s
 
 .boxInside
   width 100%
-
-@keyframes moveBoxSub
-  from 
-    top 10px
-    opacity 0
-  to
-    top 40px
-    opacity 1
-
-@keyframes boxAppear
-  from
-    width 0
-    min-height 0
-    border 1px solid #c1c1c1
-  to
-    width 90%
-    min-height 200px
-      

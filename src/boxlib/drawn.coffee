@@ -7,11 +7,22 @@ $ ->
         window.drawnBox = (id) ->
                 section = $ '<section>'
 
-                section.addClass 'box'
+                section.addClass 'boxCreating'
 
                 section.append drawMenu(id)
                 section.append drawInsideBox(id)
-                $('#page').append section                
+                section.attr 'id', id
+
+                section.on("animationend webkitAnimationEnd Oanimationend msAnimationEnd", (() -> 
+                        $(this).removeClass("boxCreating") 
+                        $(this).addClass("box")
+                )
+                )
+
+                section.click -> drawSelect(id)
+
+                $('#page').append section      
+
 
         drawMenu = (id) ->
                 i1 = $ '<i>'
@@ -50,7 +61,7 @@ $ ->
 
                 a3.attr 'href','#'
                 a3.append 'Delete Box'
-                a3.click -> deleteBox(id)
+                a3.click -> withdrawBox(id)
                 a3.append i3
 
                 a4.attr 'href','#'
@@ -115,3 +126,10 @@ $ ->
                 section = $ '<p>'
                 section.addClass 'boxInside'
                 section
+
+        window.withdrawBox = (id) ->
+                $('#'+id).remove()
+        
+        window.drawSelect = (id) ->
+                $('#'+id).removeClass "box"
+                $('#'+id).addClass "boxSelect"
