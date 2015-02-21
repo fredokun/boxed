@@ -3,8 +3,12 @@ module.exports = function(grunt){
 	pkg : grunt.file.readJSON('package.json'),
 	coffee : {
 	    compile : {
+		options: {
+		    bare: true
+		},
 		files : {
-		    './final/scripts/Controler.js':['./src/boxlib/BoxMode.coffee','./src/boxlib/BoxType.coffee','./src/boxlib/Box.coffee','./src/boxlib/BoxAdministrator.coffee','./src/boxlib/Document.coffee','./src/boxlib/Backend.coffee','./src/boxlib/JavascriptBackend.coffee','./src/boxlib/MardownBackend.coffee','./src/boxlib/Controler.coffee'],
+		    './final/scripts/Boxed.js' : './src/boxlib/Boxed.coffee',
+		    './final/scripts/Controler.js':'./src/boxlib/Controler.coffee',
 		    './final/scripts/draw.js':'./src/boxlib/drawn.coffee'
 		}
 	    }
@@ -25,7 +29,17 @@ module.exports = function(grunt){
 		}
 	    }
 	},
-	clean : ['./src/boxlib/*~','./final','*~']
+	clean : ['./src/boxlib/*~','./final','*~'],
+	requirejs : {
+	    compile : {
+		options: {
+		    baseUrl: './final/scripts',
+		    mainConfigFile: './requireConfig.js',
+		    name: 'BoXed',
+		    out: './final/scripts/BoXed.js'
+		}
+	    }
+	}
     });
 
     grunt.loadNpmTasks('grunt-contrib-coffee');
@@ -33,6 +47,7 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-coffee');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
     
-    grunt.registerTask('default',['coffee','jade','stylus']);
+    grunt.registerTask('default',['coffee','jade','stylus','requirejs']);
 };

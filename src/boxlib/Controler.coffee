@@ -1,75 +1,179 @@
-(($) ->
-) jQuery
+##
+#
+# Class Controler. It's receving the event from the view  and performe different actions, on the Model and the View.
+#
+##
+define(['jquery'], (($) ->
 
-class window.Controler
+class Controler
 
-        #Create all the backends and a Document by default.
-        constructor: ->
-                #The new Document by default.
-                @doc = new Document("myDoc")
-                #The collection of the Backends
-                @backends = []        
-                for key, index of BoxType
-                        switch key
-                                when 'MARKDOWN'
-                                        @backends[index] = new MarkdownBackend()  
-                                when 'JAVASCRIPT'
-                                        @backends[index] = new JavascriptBackend()
-                                else console.log('error no type')
+        ##
+        # ALL THE OPERATIONS HERE ARE THE OPERATIONS PERFORM BY THE CONTROLER ON THE MODEL.
+        # IT'S THE BOX/DOCUMENT/BACKEND THAT SIGNALS THE CONTROLER THAT IT CAN UPDATE THE MODEL
+        # THANKFULLY TO THE CALLBACKS.
+        ##
 
 
-        #Add a new (javascript) box to the Documment. In the same time, it's 
-        addBoxEnd:  (type) ->
-                #Add the box to the document and the backends.
-                @doc.addBox(type)
+        #Constructor of the class controler. It inits a model, backends, and the callbacks necessary for the BoXed Project.
+        constructor : ->
+                #The model of the document.
+                @doc = null
+                #The list of all the backends.
+                @backends = []
+                @callbacks = null
 
-        selectBox: (idBox) ->
-                @doc.setCurrentBox(box.getId())
+        #Method that adding a box to the model after the box id put in parameter.
+        #id : The id of the box that serves of reference for the adding.
+        addBoxAfter: (id) ->
+                @doc.addBoxAfter(id)
 
-        insertBoxBefore : (idBox) ->
-                @doc.addBoxBefore(idBox);
+        #Method that adding a box to the model before the box id put in parameter.
+        #id : The id of the box that serve of reference for adding the box.
+        addAfter: (id) ->
+                @doc addBoxAfter(id)
 
-        runBoxCallBack: (info) ->
-                console.log "box add 1 "+this
-                switch info['action']
-                        when "DRAW_BOX_END"
+        #Method that delete the box with the if put in attribute.
+        removeBox: (id) ->
+                @doc removeBox
 
-                                cl = 'javascript' if info['boxType'] is 'JAVASCRIPT'
-                                console.log "box add "+@doc
+        ##
+        # THE FUNCTIONS HERE ARE THE FUCNTIONS THAT WILL BE ADD TO THE CALLBACK.
+        # THEY WILL BE CALL BY THE OTHER ELEMET OF THE MODEL.
+        #
 
-                                $('#contains').append("<section class='box' id='#{info['id']}' onclick='frame.selectBox(#{info['id']})' >
-                                <nav class='boxTopMenu'>
-                                <ul class='mainMenu'>
-                                <li>
-                                <img src='../images/menu.gif' class='imgToMenu' />
-                                <ul class='subMenu'>
-                                <li><a href='#' /> Change mode</li>
-                                <li><a href='#' /> Change Type</li>
-                                <li><a href='#' onclick='frame.insertBoxBefore()' /> Insert Before</li>
-                                <li><a href='#' /> Insert After</li>
-                                <li><a href='#' /> Clean Box</li>
-                                </ul>
-                                </li>
-                                <li>#{info['id']}</li></ul>
-                                </nav>
-                                <section id='code' >
-                                </section
-                                </section>")
+        drawBox : (id) ->
+                # Creation of the container of the box.
+                section = $ '<section>'
+                # Creation of the subsction that will contains the of the box.
+                text = $ '<section>'
+                # Creation of the section that will be trade for create a CodeMirrorBox.
+                inText = $ '<section>'
 
-                                myCodeMiror = CodeMirror( $("\##{info['id']} #code").get(0), { mode : cl  } )                    
-     
-                        when "SELECT_BOX"
-                                console.log @doc
-                                prev = @doc.getCurrentBox()
-                                now = $('\##{info[id]}')
-                                if prev not null
-                                        id = prev.getId()
-                                        $('\##{id}').removeClass('boxSelect')
-                                        $('\##{id}}').addClass('box')
+                # Adding the css that will make the appearation animation.
+                section.addClass 'boxCreating'
 
-                                $('\##{now}').removeClass('box')
-                                $('\##{now}').removeClass('boxSelect')
-                        else
-                                console.log "No Action..."
+                # Adding the trading section in the subction of the container.
+                text.append inText
 
-window.frame = new Controler() ;
+                # Creation of the top menu of the box.
+                i1 = $ '<i>'
+                i2 = $ '<i>'
+                i3 = $ '<i>'
+                i4 = $ '<i>'
+                i5 = $ '<i>'
+        
+                i1.attr 'id', 'shortcut'
+                i2.attr 'id', 'shortcut'
+                i3.attr 'id', 'shortcut'
+                i4.attr 'id', 'shortcut'
+                i5.attr 'id', 'shortcut'
+
+                i1.append '(shortcut)'
+                i2.append '(shortcut)'
+                i3.append '(shortcut)'
+                i4.append '(shortcut)'
+                i5.append '(shortcut)'
+
+                a1 = $ '<a>'
+                a2 = $ '<a>'
+                a3 = $ '<a>'
+                a4 = $ '<a>'
+                a5 = $ '<a>'
+                
+                a1.attr 'href','#'
+                a1.append 'Add Box Before'
+                a1.click -> AddBoxBefore(id)
+                a1.append i1
+
+                a2.attr 'href','#'
+                a2.append 'Add Box After'
+                a2.click -> AddBoxAfter(id)
+                a2.append i2
+
+                a3.attr 'href','#'
+                a3.append 'Delete Box'
+                a3.click -> withdrawBox(id)
+                a3.append i3
+
+                a4.attr 'href','#'
+                a4.append 'Change Type Box'
+                a4.click -> deleteBox(ChangeType(id))
+                a4.append i4
+
+                a5.attr 'href','#'
+                a5.append 'Change Mode Box'
+                a5.click -> deleteBox(ChangeMode(id))
+                a5.append i5
+
+                li21 = $ '<li>'
+                li22 = $ '<li>'
+                li23 = $ '<li>'
+                li24 = $ '<li>'
+                li25 = $ '<li>'
+
+                li21.append a1
+                li22.append a2
+                li23.append a3
+                li24.append a4
+                li25.append a5
+
+                ul2 = $ '<ul>'
+
+                ul2.append li21
+                ul2.append li22
+                ul2.append li23
+                ul2.append li24
+                ul2.append li25
+                ul2.addClass 'boxSubMenu'
+
+                li1 = $ '<li>' 
+                li2 = $ '<li>' 
+                li3 = $ '<li>' 
+            
+                li1.addClass 'listBoxMenuLeft'
+                li2.addClass 'listBoxMenu'
+
+                im = $ '<img>'
+                im.attr 'src','../images/menu.gif'
+
+                li2.append im
+
+                li1.append "##{id}"
+                li2.append ul2
+
+                ul = $ '<ul>'
+
+                ul.append li1
+                ul.append li2
+
+                nav = $ '<nav>'
+
+                nav.append ul
+                nav.addClass 'boxMenu'
+                
+                # Adding the navigation top bar to the Box.
+                section.append nav
+                # Adding the text section to the Box.
+                section.append text
+                #Put the id of the box to the Box
+                section.attr 'id', id
+
+                # Changing the css Box when the animation is over.
+                section.on("animationend webkitAnimationEnd Oanimationend msAnimationEnd", (() -> 
+                        $(this).removeClass("boxCreating") 
+                        $(this).addClass("box")
+                )
+                )
+
+                # Replace the subsection by a codemiror editor.
+                codeMiror = CodeMirror( ((elt) ->
+                        inText.replaceWith(elt)), { type : "markdown" } )
+
+                # Putting the event of selection of the box.
+                section.click -> drawSelect(id)
+
+                # Adding the box to the View.
+                $('#page').append section 
+                
+
+))
