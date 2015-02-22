@@ -23,9 +23,6 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                         # @boxes : The list of the boxes present in the document.
                         @boxes = []
 
-                        # @indexes : An Hashtable that can find a box in @boxes without looping in.
-                        @indexes = []
-
                         @userMetaData = {}
                         @controlMetaData = {}
 
@@ -44,27 +41,57 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                         # Add the box to the Document.
                         @boxes.push(box)
 
-                        # Updating indexes box.
-                        size = @boxes.length
-                        @indexes[ "#{box.getId()}" ] =  size-1 ;
-
                         # The Document send announce to the callback hads a box add.
                         info = 
                                 command : "ADD_BOX_END"
                                 box : box
 
                         # Active the callback.
-                        console.log('Emit event')
                         @callback.emitEvent('modelUpdapted',[info])
 
-                # Method that retrieves a box referenced by the parameter.
-                getBox : (id) ->
-                
-                        # If the 'id' do not exists in the indexes.
-                        if !("#{id}" in @indexes) then throw Error
+                # @method addBox : Method adding a box after box whose id was set parameter.
+                # @arg type : The type of box to be created.
+                # @arg id : The identifier of the box in which the new box will be put forward.
+                addBoxAfter : (type, id) ->
+                        console.log('debug1')
+                        # Recovery of the new box to add.
+                        box = new Box(this.getId(),type)
 
-                        @boxes[ @indexes["#{id}"] ]
-                
+                        # Retrieving the index of the box .
+                        index = this.getIndex(id)
+
+                        # Tests of the index recover.
+                        if index is -1 then return index
+
+                        # Added in the collection box.
+                        @boxes.splice(index+1,0,box)
+
+                        info =
+                                command : "ADD_BOX_AFTER"
+                                box : box
+                                id : id
+
+                        console.log('debug5')
+
+                        # Calling the update callback model.
+                        @callback.emitEvent('modelUpdapted',[info])                        
+
+
+                # Method that retrieves a box referenced by the parameter.
+                # @arg id : The identifier of the box to find.
+                # @return : The box corresponding to the identifier or null.
+                getBox : (id) ->
+                        box if box.getId() is id for box in @boxes
+
+                # Method retrieving the index of the box whose ID was set parameter.
+                # @arg id : The identifier of the box to find.
+                # @return : L'index de la boîte correspondant à l'identifiant ou -1.
+                getIndex : (id) ->
+                        cpt = 0 
+                        for box in @boxes
+                                if id is box.getId() then return cpt
+                                else cpt++
+                        return -1
                 
 
                 # GETTER OF THE DOCUMENT (observer)

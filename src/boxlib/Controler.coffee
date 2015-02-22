@@ -24,6 +24,10 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                 addBox: (type) ->
                         @doc.addbox(type,@callback)
 
+                # @method addBox : Method adding a box after box whose id was set parameter.
+                addBoxAfter : (type, id) ->
+                        @doc.addBoxAfter(type,id)
+
                 # @method callMe : The model callback function to advise that changes are needed on the model.
                 # @arg info : A Json object to the callback indicating what are the action to perform.
                 callMe : (info) ->
@@ -37,7 +41,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         # Getting Box for instantiate a box model with the same 'attributes' (mode/type/...)
                                         box = info.box
 
-                                        # Getting the box To add.
+                                        # The new box is drawn.
                                         drawnedBox = this.drawBox(box.getId())
 
                                         # Setting the type un the display of the Box.
@@ -45,7 +49,18 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
 
                                         # Add the box to the model.
                                         $("#page").append drawnedBox
-        
+
+                                when "ADD_BOX_AFTER"
+
+                                        # The new box is drawn.
+                                        boxed = this.drawBox(info.box.getId())
+                                        # Installation of content
+                                        this.setModelContentBox(boxed,info.box)
+
+                                        console.log( $("#"+info.id) )
+                                        
+                                        # Inserting the box before the box set parameter in the infrmation .
+                                        boxed.insertAfter( "#"+info.id )
 
                 setModelContentBox : ( boxed, box) ->   
               
@@ -60,13 +75,9 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                 
                                         # Content of the box is an editor.
                                         text = boxed.find("#content_"+box.getId())
-
-                                        console.log('i ve find the box content.')
         
                                         # Emptying the old contains of the box.
                                         text.empty()
-
-                                        console.log('i ve emprty the box.')
                 
                                         # Create a new Box that will serve of editor.
                                         buffer = $ '<textarea>'
@@ -74,16 +85,10 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         # Adding the buffer to the model.
                                         text.append buffer
 
-                                        console.log('i ve append the buffer.')
-                                        console.log(text)
-
                                         # Replacing the buffer of the editor
                                         CodeMirror( ((elt) ->
                                                 text.replaceWith(elt)
-                                        ), { mode : data.mime, value : data.values } )
-
-                                        console.log('i ve codemiror the buffer.')
-                                        
+                                        ), { mode : data.mime, value : data.values } )                                        
         
                 # @method drawBox : Method that can draw a box with its id, the type, and display
                 # @arg id : The id of the Box.
@@ -132,27 +137,27 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                 
                         a1.attr 'href','#'
                         a1.append 'Add Box Before'
-                        a1.click -> AddBoxBefore()
+                        #a1.click -> AddBoxBefore()
                         a1.append i1
         
                         a2.attr 'href','#'
                         a2.append 'Add Box After'
-                        a2.click -> AddBoxAfter(id)
+                        a2.click -> BoXed.addBoxAfter("markdown",id)
                         a2.append i2
 
                         a3.attr 'href','#'
                         a3.append 'Delete Box'
-                        a3.click -> withdrawBox(id)
+                        #a3.click -> withdrawBox(id)
                         a3.append i3
         
                         a4.attr 'href','#'
                         a4.append 'Change Type Box'
-                        a4.click -> deleteBox(ChangeType(id))
+                        #a4.click -> deleteBox(ChangeType(id))
                         a4.append i4
 
                         a5.attr 'href','#'
                         a5.append 'Change Mode Box'
-                        a5.click -> deleteBox(ChangeMode(id))
+                        #a5.click -> deleteBox(ChangeMode(id))
                         a5.append i5
 
                         li21 = $ '<li>'
