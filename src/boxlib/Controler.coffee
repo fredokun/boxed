@@ -44,7 +44,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         this.setModelContentBox( drawnedBox, box )
 
                                         # Add the box to the model.
-                                                $("#page").append drawnedBox
+                                        $("#page").append drawnedBox
         
 
                 setModelContentBox : ( boxed, box) ->   
