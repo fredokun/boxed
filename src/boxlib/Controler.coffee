@@ -28,6 +28,10 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                 addBoxAfter : (type, id) ->
                         @doc.addBoxAfter(type,id)
 
+                # @method addBox : Method adding a box after box whose id was set parameter.
+                addBoxBefore : (type, id) ->
+                        @doc.addBoxBefore(type,id)
+
                 # @method callMe : The model callback function to advise that changes are needed on the model.
                 # @arg info : A Json object to the callback indicating what are the action to perform.
                 callMe : (info) ->
@@ -57,10 +61,18 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         # Installation of content
                                         this.setModelContentBox(boxed,info.box)
 
-                                        console.log( $("#"+info.id) )
-                                        
-                                        # Inserting the box before the box set parameter in the infrmation .
+                                        # Inserting the box after the box set parameter in the infrmation .
                                         boxed.insertAfter( "#"+info.id )
+
+                                when "ADD_BOX_BEFORE"
+
+                                        # The new box is drawn.
+                                        boxed = this.drawBox(info.box.getId())
+                                        # Installation of content
+                                        this.setModelContentBox(boxed,info.box)
+
+                                        # Inserting the box before the box set parameter in the infrmation .
+                                        boxed.insertBefore( "#"+info.id )
 
                 setModelContentBox : ( boxed, box) ->   
               
@@ -137,7 +149,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                 
                         a1.attr 'href','#'
                         a1.append 'Add Box Before'
-                        #a1.click -> AddBoxBefore()
+                        a1.click -> BoXed.addBoxBefore("markdown",id)
                         a1.append i1
         
                         a2.attr 'href','#'

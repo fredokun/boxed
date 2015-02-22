@@ -53,7 +53,6 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                 # @arg type : The type of box to be created.
                 # @arg id : The identifier of the box in which the new box will be put forward.
                 addBoxAfter : (type, id) ->
-                        console.log('debug1')
                         # Recovery of the new box to add.
                         box = new Box(this.getId(),type)
 
@@ -71,11 +70,36 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                                 box : box
                                 id : id
 
-                        console.log('debug5')
+                        console.log(@boxes)
 
                         # Calling the update callback model.
                         @callback.emitEvent('modelUpdapted',[info])                        
 
+                addBoxBefore : (type, id) ->
+                # @method addBox : Method adding a box before box whose id was set parameter.
+                # @arg type : The type of box to be created.
+                # @arg id : The identifier of the box in which the new box will be put forward.
+                # Recovery of the new box to add.
+                        box = new Box(this.getId(),type)
+
+                        # Retrieving the index of the box .
+                        index = this.getIndex(id)
+
+                        # Tests of the index recover.
+                        if index is -1 then return index
+
+                        # Added in the collection box.
+                        @boxes.splice(index,0,box)
+
+                        info =
+                                command : "ADD_BOX_BEFORE"
+                                box : box
+                                id : id
+
+                        console.log(@boxes)
+
+                        # Calling the update callback model.
+                        @callback.emitEvent('modelUpdapted',[info])
 
                 # Method that retrieves a box referenced by the parameter.
                 # @arg id : The identifier of the box to find.
