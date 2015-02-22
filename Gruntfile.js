@@ -7,16 +7,16 @@ module.exports = function(grunt){
 		    bare: true
 		},
 		files : {
-		    './final/scripts/Boxed.js' : './src/boxlib/Boxed.coffee',
+		    './final/scripts/BoXed.js' : './src/boxlib/BoXed.coffee',
 		    './final/scripts/Controler.js':'./src/boxlib/Controler.coffee',
-		    './final/scripts/draw.js':'./src/boxlib/drawn.coffee'
+		    './final/scripts/Box.js':'./src/boxlib/Box.coffee',
+		    './final/scripts/Document.js':'./src/boxlib/Document.coffee',
 		}
 	    }
 	},
 	jade : {
 	    compile : {
 		files : {
-		    './final/HTMLbox/testBoxStyle.html' : './src/testStyl/testBoxStyle.jade',
 		    './final/index.html' : './src/model/index.jade'
 		}
 	    }

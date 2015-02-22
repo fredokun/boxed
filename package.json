@@ -5,11 +5,11 @@
   "license": "MIT",
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-browserify": "^3.3.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-coffee": "^0.12.0",
     "grunt-contrib-jade": "^0.14.1",
     "grunt-contrib-requirejs": "^0.4.4",
-    "grunt-contrib-stylus": "^0.20.0"
+    "grunt-contrib-stylus": "^0.20.0",
+    "wolfy87-eventemitter": "^4.2.11"
   }
 }

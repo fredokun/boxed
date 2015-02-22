@@ -1,81 +1,86 @@
 ##
 #
 # Class that is represent a Document.
+# Part of the model.
 #
 ##
 
-class window.Document 
+define(['Box','EventEmitter'],((Box,EventEmitter) ->
 
-        #Constructor
-        constructor : (@name) ->
-                @currentBox = null
-                @userMetaData = {}
-                @controlMetaData = {}
-                @boxes = []          #Array that contains the boxes.
-                @indexes = []        #Hash that contains the index of box in the collection array.
+        class Document
 
-                @ids = 0 ;
+                # @method Constructor of a document. The administrator of the Box.
+                # @arg name : The name of the Document.
+                # @arg callback : The callback of the Document.
+                constructor : (@name, @callback) ->
 
-        #Add a box in the collection of boxes.
-        addBox : (type) ->
-                #Creation of the box.
-                box = new Box(@ids,@callback)
+                        # @ids : The next id of the future created Box.
+                        @ids  = 0 
 
-                #We check if the object already exist in the collection.
-                if !(box.getId() in @indexes) 
+                        # @oldIds : When a box is delete its id saved in this variable, and put to an another id when we create a new one.
+                        @oldIds = []
+
+                        # @boxes : The list of the boxes present in the document.
+                        @boxes = []
+
+                        # @indexes : An Hashtable that can find a box in @boxes without looping in.
+                        @indexes = []
+
+                        @userMetaData = {}
+                        @controlMetaData = {}
+
+                        #The currently selected box.
+                        @currentBox = null 
+
+                # OPERATIONS OF THE DOCUMENT
+
+                # @method addBox : Method adding a new box to Document.
+                # @arg type : The type of the add box.
+                addbox : (type) ->
+        
+                        # Creating the box.
+                        box = new Box(this.getId(),type)
+
+                        # Add the box to the Document.
                         @boxes.push(box)
-                        @indexes["#{box.getId()}"] = @boxes.length-1
-                else throw error
-                @ids++
 
-        #Remove a Box from a collection.
-        removebox: (boxId) ->
-                if boxId in @indexes
-                        @boxes.splice(@indexes["#{boxId}"],1)   
-                        delete @boxes["#{boxId}"]
-                else throw error
+                        # Updating indexes box.
+                        size = @boxes.length
+                        @indexes[ "#{box.getId()}" ] =  size-1 ;
 
-        #Get a box from the collection.
-        getBox : (boxId) ->
-                if boxId in @indexes then @boxes["#{@indexes[boxId]}"]
-                else throw error  
+                        # The Document send announce to the callback hads a box add.
+                        info = 
+                                command : "ADD_BOX_END"
+                                box : box
 
-        #Get the attribute name
-        getName: ->
-                @name
+                        # Active the callback.
+                        console.log('Emit event')
+                        @callback.emitEvent('modelUpdapted',[info])
 
-        #Method that get the attribute class 'currentBox'.
-        getCurrentBox : ->
-                @currentBox
+                # Method that retrieves a box referenced by the parameter.
+                getBox : (id) ->
+                
+                        # If the 'id' do not exists in the indexes.
+                        if !("#{id}" in @indexes) then throw Error
 
-        #Mthos that set the name of the Document
-        setDocument : (newName)->
-                @name = newName
+                        @boxes[ @indexes["#{id}"] ]
+                
+                
 
-        #Set select box (set the attribute 'currentBox').
-        setCurrentBox : (idBox) ->
-                buffer = this.getBox(idBox)
-                buffer.getSelected()
-                @currentBox = buffer
+                # GETTER OF THE DOCUMENT (observer)
+                # Method that return a id avaible for a new Box
+                getId : ->
+                        # Creation of an varaible for the result.
+                        result = -1
+                        # If The class variable @oldIds had numbers, we 'shift' one in the result.
+                        if @oldIds.length > 0 then result = @oldIds.shift() 
+                        else 
+                                # Else we give a new id.
+                                result = @ids
+                                @ids++
 
-        #Add a box before the select box.
-        addBoxBefore : (boxSrc,newBox) ->
-                if @boxSrc in @indexes 
-                        index = @indexes["#{boxSrc}"]
-                        @boxes.splice(index,0,newBox)
+                        # Return the result.
+                        result
 
-                        @indexes["#{newBox.getId()}"] = index
-
-                        for i in [index+1..@boxes.length-1]
-                                @indexes["#{@boxes[i].getId()}"]++
-
-        #addBoxAfter the box selected.
-        addBoxAfter : (boxSrc,newBox) ->
-                if @boxSrc in @indexes 
-                        index = @indexes["#{boxSrc}"]
-                        @boxes.splice(index+1,0,newBox)
-
-                        @indexes["#{newBox.getId()}"] = index
-
-                        for i in [index+1 .. @boxes.length-1]
-                                @indexes["#{@boxes[i].getId()}"]++
+        return Document
+))

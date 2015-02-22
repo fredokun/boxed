@@ -4,10 +4,9 @@ html(lang='fr')
 
     link(rel='stylesheet' href='css/general.css' style='text/css')
     link(rel='stylesheet' href='css/box.css' style='text/css')
+    link(rel='stylesheet' href='./../bower_components/codemirror/lib/codemirror.css' style='text/css')
 
     script(src='../node_modules/grunt-contrib-requirejs/node_modules/requirejs/require.js' data-main='../final/scripts/BoXed' type='text/javascript')
-
-      
 
   body
     nav.menu
@@ -17,7 +16,7 @@ html(lang='fr')
             img(src='../images/menu.gif')
             ul.subMenu
               li 
-                a(href='#' onclick='BoXed.addBoxAfter(1)') Add Box
+                a(href='#' onclick='BoXed.addBox("markdown")') Add Box
                   i#shortcut (shortcut)
               li 
                 a(href='#') Save Document
