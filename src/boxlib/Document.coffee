@@ -27,7 +27,7 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                         @controlMetaData = {}
 
                         #The currently selected box.
-                        @currentBox = null 
+                        @current = null 
 
                 # OPERATIONS OF THE DOCUMENT
 
@@ -96,16 +96,37 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                                 box : box
                                 id : id
 
+                        # Calling the update callback model.
+                        @callback.emitEvent('modelUpdapted',[info])
+
+                # @method selectBox : Method to select a box on the model .
+                # @arg id  : The identifier of the selected box.
+                selectBox: (id) ->
+                        if @current is null then old = null
+                        else old = this.getBox( @current.getId() );
+
+                        @current = this.getBox(id)
+                        console.log(@current)
+
                         console.log(@boxes)
+
+                        info = 
+                                command : "SELECT_BOX"
+                                old : old
+                                current : @current
+
+                        console.log(info)
 
                         # Calling the update callback model.
                         @callback.emitEvent('modelUpdapted',[info])
 
-                # Method that retrieves a box referenced by the parameter.
+                # @method getbox : Method that retrieves a box referenced by the parameter.
                 # @arg id : The identifier of the box to find.
                 # @return : The box corresponding to the identifier or null.
                 getBox : (id) ->
-                        box if box.getId() is id for box in @boxes
+                        for box in @boxes
+                                if box.getId() is id then return box
+                        return null
 
                 # Method retrieving the index of the box whose ID was set parameter.
                 # @arg id : The identifier of the box to find.

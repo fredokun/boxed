@@ -32,6 +32,11 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                 addBoxBefore : (type, id) ->
                         @doc.addBoxBefore(type,id)
 
+                # @method selectBox : Method to select a box on the model .
+                # @arg id  : The identifier of the selected box.
+                selectBox : (id) ->
+                        @doc.selectBox(id)
+
                 # @method callMe : The model callback function to advise that changes are needed on the model.
                 # @arg info : A Json object to the callback indicating what are the action to perform.
                 callMe : (info) ->
@@ -73,6 +78,21 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
 
                                         # Inserting the box before the box set parameter in the infrmation .
                                         boxed.insertBefore( "#"+info.id )
+
+                                when "SELECT_BOX"
+
+                                        old = info.old
+                                        current = info.current
+
+                                        if info.old isnt null    
+
+                                                # Change style deselect box.
+                                                $('#'+old.getId()).removeClass("boxSelect")
+                                                $('#'+old.getId()).addClass("box")
+
+                                        # Change style select box.
+                                        $('#'+current.getId()).removeClass('box')
+                                        $('#'+current.getId()).addClass('boxSelect')
 
                 setModelContentBox : ( boxed, box) ->   
               
@@ -226,15 +246,14 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
         
                         #Put the id of the box to the Box
                         section.attr 'id', id
-        
+                        
+                        section.click -> BoXed.selectBox(id)
+
                         # Changing the css Box when the animation is over.
                         section.on("animationend webkitAnimationEnd Oanimationend msAnimationEnd", (() -> 
                                 $(this).removeClass("boxCreating") 
                                 $(this).addClass("box")
                         ))
-
-                        # Putting the event of selection of the box.
-                        section.click -> BoXed.selectBox(id)
 
                         section
 
