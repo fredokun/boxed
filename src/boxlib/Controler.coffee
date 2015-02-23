@@ -7,9 +7,9 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
 
         class Controler extends EventEmitter
 
-                # @method constructor : Builds a controller . It initializes the model . Inheriting the class ' EventEmitter ' the model knows only the controller that the class ' EventEmitter ' .
+        # @method constructor : Builds a controller . It initializes the model . Inheriting the class ' EventEmitter ' the model knows only the controller that the class ' EventEmitter ' .
                 constructor : ->
-
+        
                         # Adding the receiving action for the callback.
                         this.addListener('modelUpdapted',this.callMe)
 
@@ -19,7 +19,10 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         # The list of all the backends.
                         @backends = []
 
-                # @method addBox : Method adding a box at the end of the list of the box model.
+                        #
+                        @boxEditors = []
+
+                # @Method addBox : Method adding a box at the end of the list of the box model.
                 # @arg type : The type of box to be created.
                 addBox: (type) ->
                         @doc.addbox(type,@callback)
@@ -35,6 +38,10 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                 # @method selectBox : Method to select a box on the model .
                 # @arg id  : The identifier of the selected box.
                 selectBox : (id) ->
+                        current = @doc.getCurrent()
+                        if current isnt null
+                                mirror = @boxEditors["#{current.getId()}"] 
+                                current.setContent = mirror.getValue()
                         @doc.selectBox(id)
 
                 # @method callMe : The model callback function to advise that changes are needed on the model.
@@ -58,6 +65,8 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
 
                                         # Add the box to the model.
                                         $("#page").append drawnedBox
+                        
+                                        this.selectBox(box.getId())
 
                                 when "ADD_BOX_AFTER"
 
@@ -69,6 +78,8 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         # Inserting the box after the box set parameter in the infrmation .
                                         boxed.insertAfter( "#"+info.id )
 
+                                        this.selectBox(info.box.getId())
+
                                 when "ADD_BOX_BEFORE"
 
                                         # The new box is drawn.
@@ -76,8 +87,10 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         # Installation of content
                                         this.setModelContentBox(boxed,info.box)
 
-                                        # Inserting the box before the box set parameter in the infrmation .
+                                        # Inserting the box before the box set parameter in the information .
                                         boxed.insertBefore( "#"+info.id )
+
+                                        this.selectBox(info.box.getId())
 
                                 when "SELECT_BOX"
 
@@ -89,10 +102,13 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                                 # Change style deselect box.
                                                 $('#'+old.getId()).removeClass("boxSelect")
                                                 $('#'+old.getId()).addClass("box")
-
+                
                                         # Change style select box.
                                         $('#'+current.getId()).removeClass('box')
                                         $('#'+current.getId()).addClass('boxSelect')
+                        
+                                        console.log(current)
+                                        console.log(old)
 
                 setModelContentBox : ( boxed, box) ->   
               
@@ -113,14 +129,17 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                 
                                         # Create a new Box that will serve of editor.
                                         buffer = $ '<textarea>'
-
+        
                                         # Adding the buffer to the model.
                                         text.append buffer
 
                                         # Replacing the buffer of the editor
-                                        CodeMirror( ((elt) ->
-                                                text.replaceWith(elt)
-                                        ), { mode : data.mime, value : data.values } )                                        
+                                        if ! ( "@{box.getId()}" in @boxEditors) 
+                                                @boxEditors["#{box.getId()}"] = CodeMirror( ((elt) ->
+                                                        text.replaceWith(elt)
+                                                ), { mode : data.mime, value : data.values } )
+                                        else
+                                                text.replaceWith(@boxEditors["@{box.getId()}"])
         
                 # @method drawBox : Method that can draw a box with its id, the type, and display
                 # @arg id : The id of the Box.
@@ -132,10 +151,10 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         # Creation of the subsction that will contains the of the box.
                         text = $ '<section>'
                         text.attr('id', "content_"+id)
-        
+                
                         # Creation of the section that will be trade for create a CodeMirrorBox.
                         inText = $ '<section>'
-        
+
                         # Adding the css that will make the appearation animation.
                         section.addClass 'boxCreating'
 
@@ -148,7 +167,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         i3 = $ '<i>'
                         i4 = $ '<i>'
                         i5 = $ '<i>'
-        
+
                         i1.attr 'id', 'shortcut'
                         i2.attr 'id', 'shortcut'
                         i3.attr 'id', 'shortcut'
@@ -160,28 +179,32 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         i3.append '(shortcut)'
                         i4.append '(shortcut)'
                         i5.append '(shortcut)'
-                
+
                         a1 = $ '<a>'
                         a2 = $ '<a>'
                         a3 = $ '<a>'
                         a4 = $ '<a>'
                         a5 = $ '<a>'
-                                
+
                         a1.attr 'href','#'
                         a1.append 'Add Box Before'
-                        a1.click -> BoXed.addBoxBefore("markdown",id)
+                        a1.on "click", (event) -> 
+                                BoXed.addBoxBefore("markdown",id)
+                                event.stopPropagation()
                         a1.append i1
-        
+
                         a2.attr 'href','#'
                         a2.append 'Add Box After'
-                        a2.click -> BoXed.addBoxAfter("markdown",id)
+                        a2.on "click", (event)  -> 
+                                BoXed.addBoxAfter("markdown",id)
+                                event.stopPropagation()
                         a2.append i2
 
                         a3.attr 'href','#'
                         a3.append 'Delete Box'
                         #a3.click -> withdrawBox(id)
                         a3.append i3
-        
+
                         a4.attr 'href','#'
                         a4.append 'Change Type Box'
                         #a4.click -> deleteBox(ChangeType(id))
@@ -205,7 +228,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         li25.append a5
 
                         ul2 = $ '<ul>'
-                
+
                         ul2.append li21
                         ul2.append li22
                         ul2.append li23
@@ -216,15 +239,15 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         li1 = $ '<li>' 
                         li2 = $ '<li>' 
                         li3 = $ '<li>' 
-                            
+
                         li1.addClass 'listBoxMenuLeft'
                         li2.addClass 'listBoxMenu'
 
                         im = $ '<img>'
                         im.attr 'src','../images/menu.gif'
-                                
+
                         li2.append im
-        
+
                         li1.append "##{id}"
                         li2.append ul2
 
@@ -234,19 +257,19 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         ul.append li2
 
                         nav = $ '<nav>'
-        
+
                         nav.append ul
                         nav.addClass 'boxMenu'
-                
+
                         # Adding the navigation top bar to the Box.
                         section.append nav
 
                         # Adding the text section to the Box.
                         section.append text
-        
+
                         #Put the id of the box to the Box
                         section.attr 'id', id
-                        
+
                         section.click -> BoXed.selectBox(id)
 
                         # Changing the css Box when the animation is over.
@@ -258,5 +281,4 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         section
 
         return Controler
-
 ))

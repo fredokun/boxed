@@ -29,6 +29,11 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                         #The currently selected box.
                         @current = null 
 
+                #
+                #
+                getCurrent : ->
+                        @current 
+
                 # OPERATIONS OF THE DOCUMENT
 
                 # @method addBox : Method adding a new box to Document.
@@ -70,8 +75,6 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                                 box : box
                                 id : id
 
-                        console.log(@boxes)
-
                         # Calling the update callback model.
                         @callback.emitEvent('modelUpdapted',[info])                        
 
@@ -106,16 +109,11 @@ define(['Box','EventEmitter'],((Box,EventEmitter) ->
                         else old = this.getBox( @current.getId() );
 
                         @current = this.getBox(id)
-                        console.log(@current)
-
-                        console.log(@boxes)
-
+                  
                         info = 
                                 command : "SELECT_BOX"
                                 old : old
                                 current : @current
-
-                        console.log(info)
 
                         # Calling the update callback model.
                         @callback.emitEvent('modelUpdapted',[info])

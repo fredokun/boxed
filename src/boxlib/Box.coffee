@@ -7,8 +7,7 @@ define([],(() ->
 
         class Box 
 
-                # @m 
-                # @mi Constructor of the Box.
+                # @method constructor : 
                 # @arg @id : The id of the Box.
                 # @arg @type : The type of the Box (it can be MARKDOWN, JAVASCRIPT, for now)
                 constructor : (@id,@type) ->
@@ -28,7 +27,13 @@ define([],(() ->
                                 display : "EDITABLE"
                                 values : @content
 
+                
+
                 # OBSERVATORS OF THE BOX
+                # method setContent :
+                # arg value :
+                setContent : (newContent) ->
+                        @content = newContent
         
                 # Method that get the id of the Box.
                 getId : ->

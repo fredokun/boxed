@@ -4,11 +4,16 @@
 #
 ##
 
-class window.Backend
+define([],(() ->
 
-        constructor : ->
+        class Backend
+
+                # 
+                constructor : (@callback) ->
                 
 
-        #This method sens a error. It must be implemented by the backend languaage and be adapt to this.
-        compile : (idBox) ->
-              throw error
+                # 
+                # arg box :
+                chomp : (box) ->
+                      throw error
+))
