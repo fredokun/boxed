@@ -3,7 +3,7 @@
 # Class representing the controler API. It receives event the view that transfer model. This prevents Controller by an event sent by a callback.
 #
 ##
-define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmitter,CodeMirror) ->
+define(['jquery','Document','EventEmitter','CodeMirror','MarkdownBackend'], (($,Document,EventEmitter,CodeMirror,MarkdownBackend) ->
 
         class Controler extends EventEmitter
 
@@ -18,9 +18,14 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
         
                         # The list of all the backends.
                         @backends = []
+                        # 
+                        # 0 : MARKDOWN BACKEND
+                        @backends.push(new MarkdownBackend(this))
 
                         #
                         @boxEditors = []
+
+                # OPERATIONS CONTROL
 
                 # @Method addBox : Method adding a box at the end of the list of the box model.
                 # @arg type : The type of box to be created.
@@ -41,8 +46,26 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         current = @doc.getCurrent()
                         if current isnt null
                                 mirror = @boxEditors["#{current.getId()}"] 
-                                current.setContent = mirror.getValue()
+                                current.setContent( mirror.getValue() )
                         @doc.selectBox(id)
+
+                # @method commitBox : Method for compiling a box with suitable Backend
+                # @arg id : The identifier of the box to compile.
+                commitBox : (id) ->
+                        console.log('commit')
+                        box = @doc.getBox(id)
+                        console.log('mirror')
+                        mirror = @boxEditors["#{id}"] 
+                        box.setContent( mirror.getValue() )
+                        console.log('setContent')
+                        switch box.getType()
+        
+                                when "markdown"
+                                        console.log('markdown')
+                                        @backends[0].chomp(box)
+
+                                
+                
 
                 # @method callMe : The model callback function to advise that changes are needed on the model.
                 # @arg info : A Json object to the callback indicating what are the action to perform.
@@ -106,12 +129,17 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         # Change style select box.
                                         $('#'+current.getId()).removeClass('box')
                                         $('#'+current.getId()).addClass('boxSelect')
-                        
-                                        console.log(current)
-                                        console.log(old)
 
+                                when "UPDATE_USER_BOX"
+                                        
+                                        this.setModelContentBox( $("#"+info.box.getId()) , info.box)
+                                        
+
+                # @method setModelContentBox : Method to update the contents of the box.
+                # @boxed : The box as is in the view.
+                # @box : The box as is in the model.
                 setModelContentBox : ( boxed, box) ->   
-              
+
                         # Getting the control meta data.
                         data = box.getControlMetaData()
 
@@ -120,7 +148,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
 
                                 # If it's editable.
                                 when "EDITABLE"
-                
+
                                         # Content of the box is an editor.
                                         text = boxed.find("#content_"+box.getId())
         
@@ -128,7 +156,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         text.empty()
                 
                                         # Create a new Box that will serve of editor.
-                                        buffer = $ '<textarea>'
+                                        buffer = $ '<section>'
         
                                         # Adding the buffer to the model.
                                         text.append buffer
@@ -136,10 +164,27 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                                         # Replacing the buffer of the editor
                                         if ! ( "@{box.getId()}" in @boxEditors) 
                                                 @boxEditors["#{box.getId()}"] = CodeMirror( ((elt) ->
-                                                        text.replaceWith(elt)
+                                                        buffer.replaceWith(elt)
                                                 ), { mode : data.mime, value : data.values } )
                                         else
-                                                text.replaceWith(@boxEditors["@{box.getId()}"])
+                                                buffer.replaceWith(@boxEditors["@{box.getId()}"])
+
+                                when "COMPILE"
+
+                                        # Content of the box is an editor.
+                                        text = boxed.find("#content_"+box.getId())
+        
+                                        # Emptying the old contains of the box.
+                                        text.empty()
+                
+                                        # Create a new Box that will serve of editor.
+                                        buffer = $ '<section>'
+
+                                        buffer.attr 'type', data.mime
+                                        buffer.append data.values
+
+                                        text.append buffer
+
         
                 # @method drawBox : Method that can draw a box with its id, the type, and display
                 # @arg id : The id of the Box.
@@ -167,6 +212,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         i3 = $ '<i>'
                         i4 = $ '<i>'
                         i5 = $ '<i>'
+                        i6 = $ '<i>'
 
                         i1.attr 'id', 'shortcut'
                         i2.attr 'id', 'shortcut'
@@ -179,12 +225,14 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         i3.append '(shortcut)'
                         i4.append '(shortcut)'
                         i5.append '(shortcut)'
+                        i6.append '(shortcut)'
 
                         a1 = $ '<a>'
                         a2 = $ '<a>'
                         a3 = $ '<a>'
                         a4 = $ '<a>'
                         a5 = $ '<a>'
+                        a6 = $ '<a>'
 
                         a1.attr 'href','#'
                         a1.append 'Add Box Before'
@@ -215,17 +263,24 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         #a5.click -> deleteBox(ChangeMode(id))
                         a5.append i5
 
+                        a6.attr 'href','#'
+                        a6.append 'Compile'
+                        a6.click -> BoXed.commitBox(id)
+                        a6.append i6
+
                         li21 = $ '<li>'
                         li22 = $ '<li>'
                         li23 = $ '<li>'
                         li24 = $ '<li>'
                         li25 = $ '<li>'
+                        li26 = $ '<li>'
 
                         li21.append a1
                         li22.append a2
                         li23.append a3
                         li24.append a4
                         li25.append a5
+                        li26.append a6
 
                         ul2 = $ '<ul>'
 
@@ -234,6 +289,7 @@ define(['jquery','Document','EventEmitter','CodeMirror'], (($,Document,EventEmit
                         ul2.append li23
                         ul2.append li24
                         ul2.append li25
+                        ul2.append li26
                         ul2.addClass 'boxSubMenu'
 
                         li1 = $ '<li>' 

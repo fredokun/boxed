@@ -5,15 +5,17 @@
 ##
 
 define([],(() ->
-
         class Backend
 
-                # 
+                # @method constructor : Method to build a Backend.
                 constructor : (@callback) ->
                 
-
-                # 
-                # arg box :
+        
+                # @method chomp : It allows to transform the contents of the box in parsed content and vice versa.
+                # @arg box :
                 chomp : (box) ->
-                      throw error
+                        throw err
+
+        return Backend
+
 ))

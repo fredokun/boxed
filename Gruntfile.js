@@ -11,6 +11,8 @@ module.exports = function(grunt){
 		    './final/scripts/Controler.js':'./src/boxlib/Controler.coffee',
 		    './final/scripts/Box.js':'./src/boxlib/Box.coffee',
 		    './final/scripts/Document.js':'./src/boxlib/Document.coffee',
+		    './final/scripts/Backend.js':'./src/boxlib/Backend.coffee',
+		    './final/scripts/MarkdownBackend.js':'./src/boxlib/MarkdownBackend.coffee'
 		}
 	    }
 	},
