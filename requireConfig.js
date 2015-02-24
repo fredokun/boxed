@@ -1,10 +1,10 @@
 
 requirejs.config({
     shim : {
-	'Box' : ['EventEmitter'],
 	'Document' : ['Box'],
 	'MarkdownBackend' : ['Backend','commonmark'],
-	'Controler' : ['jquery','Document','EventEmitter','CodeMirror','MarkdownBackend'],
+	'markdown' : ['CodeMirror'],
+	'Controler' : ['jquery','Document','EventEmitter','MarkdownBackend','CodeMirror'],
 	'BoXed': ['Controler']
     },
     paths : {
@@ -17,6 +17,7 @@ requirejs.config({
 	EventEmitter : './../../node_modules/wolfy87-eventemitter/EventEmitter',    
 	Document : 'Document',
 	CodeMirror : './../../bower_components/codemirror/lib/codemirror',
+	markdown : './../../bower_components/codemirror/mode/markdown/markdown',
 	commonmark : './../../bower_components/commonmark/dist/commonmark' 
     }
 }) ;

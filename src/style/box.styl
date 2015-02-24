@@ -1,15 +1,21 @@
 .box
   width 100%
   margin 10px auto 0px auto
-  min-height 150px
+  min-height 100px
 
   border 1px solid #ffffff
 
   -webkit-transition border linear .3s .3s
+  transition border linear .3s .3s
+  -o-transition border linear .3s .3s
+  -moz-transition border linear .3s .3s
   
   &:hover
     border 1px solid #c2c2c2
     -webkit-transition border linear .3s
+    transition border linear .3s .3s
+    -o-transition border linear .3s .3s
+    -moz-transition border linear .3s .3s
 
 .boxCreating
   margin 10px auto 0px auto
@@ -18,6 +24,9 @@
   border 1px solid #c2c2c2
 
   -webkit-animation BoxCreate 1s
+  transition BoxCreate 1s
+  -o-transition BoxCreate 1s
+  -moz-transition BoxCreate 1s
 
 @keyframes BoxCreate
   from
@@ -26,13 +35,13 @@
     border 1px solid #ffffff
   to
     width 100%
-    min-height 150px
+    min-height 100px
     border 1px solid #c2c2c2
 
 .boxSelect
   margin 10px auto 0px auto
   border 1px solid #c2c2c2
-  min-height 200px
+  min-height 100px
 
 nav.boxMenu
   height 40px
@@ -96,9 +105,11 @@ li.listBoxMenu
 .boxInside
   width 100%
 
-#text
-  width 100%
-  min-height 15Opx
-  margin auto
-  position relative
-  z-index 1 
+
+.box
+.boxCreating
+.boxSelect
+.content
+  min-height 100px
+  .compileCode
+    padding 25px

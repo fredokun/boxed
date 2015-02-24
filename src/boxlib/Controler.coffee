@@ -3,7 +3,7 @@
 # Class representing the controler API. It receives event the view that transfer model. This prevents Controller by an event sent by a callback.
 #
 ##
-define(['jquery','Document','EventEmitter','CodeMirror','MarkdownBackend'], (($,Document,EventEmitter,CodeMirror,MarkdownBackend) ->
+define(['jquery','Document','EventEmitter','MarkdownBackend','CodeMirror'], (($,Document,EventEmitter,MarkdownBackend,CodeMirror) ->
 
         class Controler extends EventEmitter
 
@@ -52,16 +52,12 @@ define(['jquery','Document','EventEmitter','CodeMirror','MarkdownBackend'], (($,
                 # @method commitBox : Method for compiling a box with suitable Backend
                 # @arg id : The identifier of the box to compile.
                 commitBox : (id) ->
-                        console.log('commit')
                         box = @doc.getBox(id)
-                        console.log('mirror')
                         mirror = @boxEditors["#{id}"] 
                         box.setContent( mirror.getValue() )
-                        console.log('setContent')
                         switch box.getType()
         
-                                when "markdown"
-                                        console.log('markdown')
+                                when "markdown" 
                                         @backends[0].chomp(box)
 
                                 
@@ -165,7 +161,7 @@ define(['jquery','Document','EventEmitter','CodeMirror','MarkdownBackend'], (($,
                                         if ! ( "@{box.getId()}" in @boxEditors) 
                                                 @boxEditors["#{box.getId()}"] = CodeMirror( ((elt) ->
                                                         buffer.replaceWith(elt)
-                                                ), { mode : data.mime, value : data.values } )
+                                                ), { mode : data.mime, value : data.values, viewportMargin : Infinity } )
                                         else
                                                 buffer.replaceWith(@boxEditors["@{box.getId()}"])
 
@@ -184,6 +180,7 @@ define(['jquery','Document','EventEmitter','CodeMirror','MarkdownBackend'], (($,
                                         buffer.append data.values
 
                                         text.append buffer
+                                        buffer.addClass 'compileCode'
 
         
                 # @method drawBox : Method that can draw a box with its id, the type, and display
@@ -196,6 +193,7 @@ define(['jquery','Document','EventEmitter','CodeMirror','MarkdownBackend'], (($,
                         # Creation of the subsction that will contains the of the box.
                         text = $ '<section>'
                         text.attr('id', "content_"+id)
+                        text.addClass 'content'
                 
                         # Creation of the section that will be trade for create a CodeMirrorBox.
                         inText = $ '<section>'
