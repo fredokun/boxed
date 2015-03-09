@@ -1,0 +1,115 @@
+.box
+  width 100%
+  margin 10px auto 0px auto
+  min-height 100px
+
+  border 1px solid #ffffff
+
+  -webkit-transition border linear .3s .3s
+  transition border linear .3s .3s
+  -o-transition border linear .3s .3s
+  -moz-transition border linear .3s .3s
+  
+  &:hover
+    border 1px solid #c2c2c2
+    -webkit-transition border linear .3s
+    transition border linear .3s .3s
+    -o-transition border linear .3s .3s
+    -moz-transition border linear .3s .3s
+
+.boxCreating
+  margin 10px auto 0px auto
+  min-height 0px
+  width 0px
+  border 1px solid #c2c2c2
+
+  -webkit-animation BoxCreate 1s
+  transition BoxCreate 1s
+  -o-transition BoxCreate 1s
+  -moz-transition BoxCreate 1s
+
+@keyframes BoxCreate
+  from
+    width 0px
+    min-height 0px
+    border 1px solid #ffffff
+  to
+    width 100%
+    min-height 100px
+    border 1px solid #c2c2c2
+
+.boxSelect
+  margin 10px auto 0px auto
+  border 1px solid #c2c2c2
+  min-height 100px
+
+nav.boxMenu
+  height 40px
+  
+nav.boxMenu
+  ul
+    margin 0 0 0 0
+    padding 0 0 0 0
+    list-style-type none
+
+li.listBoxMenu
+  display inline-block
+  position relative
+  float right
+
+li.listBoxMenuLeft
+  float left
+  display inline-block
+  position relative
+  padding 10px 0px 0px 10px
+  font-family Arial
+  color #c2c2c2
+
+ul.boxSubMenu
+  position absolute
+  border 1px solid #C2C2C2
+  width 250px
+  top 40px
+  left -150px
+  li 
+    height 30px
+    padding 17px 10px 10px 10px
+    text-align center
+    margin 0px 20px 0px 20px
+    a
+      text-align justify
+      i#shortcut
+        font-size 8pt
+        float right
+
+li.listBoxMenu
+  ul.boxSubMenu
+    transition opacity linear .3s, top linear .3s, visibility linear .3s
+    -webkit-transition opacity linear .3s, top linear .3s, visibility linear .3s
+    -o-transition opacity linear .3s, top linear .3s, visibility linear .3s
+    -moz-transition opacity linear .3s, top linear .3s, visibility linear .3s
+
+    background-color #ffffff
+    opacity 0
+    visibility hidden
+    top 10px
+    z-index 100
+
+  &:hover
+    ul.boxSubMenu
+      visibility visible
+      opacity 1
+      top 45px
+      z-index 100
+
+.boxInside
+  width 100%
+
+
+.box
+.boxCreating
+.boxSelect
+.content
+  min-height 100px
+  .compileCode
+    padding 25px

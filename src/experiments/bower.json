@@ -1,0 +1,31 @@
+{
+  "name": "boxed-experiments",
+  "version": "0.0.1",
+  "homepage": "https://github.com/fredokun/boxed",
+  "authors": [
+    "Fredokun"
+  ],
+  "description": "Some experiments before BoxEd",
+  "keywords": [
+    "boxes",
+    "notebook"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "jquery.ui": "~1.10.4",
+    "marked": "~0.3.2",
+    "MathJax": "~2.4.0",
+    "codemirror": "~4.2.0",
+    "font-awesome": "~4.1.0",
+    "highlightjs": "~8.0.0"
+  }
+}
