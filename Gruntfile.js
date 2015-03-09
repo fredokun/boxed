@@ -1,55 +1,66 @@
 module.exports = function(grunt){
-    grunt.initConfig({
-	pkg : grunt.file.readJSON('package.json'),
-	coffee : {
-	    compile : {
-		options: {
-		    bare: true
+	grunt.initConfig({
+		pkg : grunt.file.readJSON('package.json'),
+		coffee : {
+			compile : {
+				options: {
+					bare: true
+				},
+				files : {
+				}
+			}
 		},
-		files : {
-		    './final/scripts/BoXed.js' : './src/boxlib/BoXed.coffee',
-		    './final/scripts/Controler.js':'./src/boxlib/Controler.coffee',
-		    './final/scripts/Box.js':'./src/boxlib/Box.coffee',
-		    './final/scripts/Document.js':'./src/boxlib/Document.coffee',
-		    './final/scripts/Backend.js':'./src/boxlib/Backend.coffee',
-		    './final/scripts/MarkdownBackend.js':'./src/boxlib/MarkdownBackend.coffee'
-		}
-	    }
-	},
-	jade : {
-	    compile : {
-		files : {
-		    './final/index.html' : './src/model/index.jade'
-		}
-	    }
-	},
-	stylus : {
-	    compile : {
-		files : {
-		    './final/css/box.css' : './src/style/box.styl',
-		    './final/css/general.css' : './src/style/general.styl'
-		}
-	    }
-	},
-	clean : ['./src/boxlib/*~','./final','*~'],
-	requirejs : {
-	    compile : {
-		options: {
-		    baseUrl: './final/scripts',
-		    mainConfigFile: './requireConfig.js',
-		    name: 'BoXed',
-		    out: './final/scripts/BoXed.js'
-		}
-	    }
-	}
-    });
+		jade : {
+			pretty : {
+				files : {
+				},
+				options	 : {
+					pretty : true
+				}
+			}
+		},
+		stylus : {
+			compile : {
+				files : {
+				}
+			}
+		},
+		clean : ['./src/boxlib/*~','./final','*~'],
+		requirejs : {
+			compile : {
+				options: {
+					baseUrl: './final/scripts',
+					mainConfigFile: './requireConfig.js',
+					name: 'BoXed',
+					out: './final/scripts/BoXed.js'
+				}
+			}
+		},
+		auto_install: {
+   			local: {},
+    		subdir: {
+      			options: {
+        			cwd: '',
+        			stdout: true,
+        			stderr: true,
+        			failOnError: true,
+        			npm: '--production'
+      			}	
+    		}
+  		}
+	});
 
-    grunt.loadNpmTasks('grunt-contrib-coffee');
-    grunt.loadNpmTasks('grunt-contrib-jade');
-    grunt.loadNpmTasks('grunt-contrib-stylus');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-coffee');
-    grunt.loadNpmTasks('grunt-contrib-requirejs');
-    
-    grunt.registerTask('default',['coffee','jade','stylus','requirejs']);
+	grunt.loadNpmTasks('grunt-contrib-jade');
+	grunt.loadNpmTasks('grunt-contrib-stylus');
+	grunt.loadNpmTasks('grunt-contrib-coffee');
+
+	grunt.loadNpmTasks('grunt-contrib-clean');
+
+	grunt.loadNpmTasks('grunt-auto-install');
+
+	grunt.loadNpmTasks('grunt-contrib-requirejs');
+
+	grunt.registerTask('default',['auto_install','coffee','jade','stylus','requirejs']);
+
 };
+
