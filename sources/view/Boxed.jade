@@ -1,0 +1,28 @@
+doctype html
+
+html(lang="eng")
+  head
+    title=Boxed
+    link(rel="stylesheet" type="text/css" href="./css/index.css")
+    link(rel="stylesheet" type="text/css" href="./css/index.css")
+
+    script(src='../node_modules/grunt-contrib-requirejs/node_modules/requirejs/require.js' data-main='./scripts/Boxed' type='text/javascript')
+    
+    script(src='./../bower_components/jquery/dist/jquery.js' type='text/javascript')
+    script(src='./scripts/MouseListenner.js' type='text/javascript')
+      
+  body
+    header
+      section.container
+        ul.menu
+          li.elem#addBox
+            a.menuLink(href='#') Add Markdown Box
+              #img(src='../sources/images/addBox.png')
+          li.elem#addBoxJavascript
+            a.menuLink(href='#') Add Javascript Box
+              #img(src='../sources/images/addBox.png')
+
+    section.page
+      section.container
+
+        
