@@ -5,7 +5,7 @@ requirejs.config({
 	"CodeBox" : ["Box"],
 	"Backend" : [],
 	"LinkedBox" : [],
-	"Presentor" : ["jquery","EventEmitter","cm/lib/CodeMirror"],
+	"Presentor" : ["jquery","EventEmitter","cm/lib/codemirror"],
 	"MarkdownBox" : ["DocumentBox"],
 	"JavascriptBox" : ["CodeBox"],
 	"Document" : ["LinkedBox","MarkdownBox","JavascriptBox"],

@@ -2,7 +2,7 @@
 #
 ##
 
-define(["Codebox"],((CodeBox) ->
+define(["CodeBox"],((CodeBox) ->
         
         ##Service[JavascriptBox]
         #@class[JavascriptBox]
