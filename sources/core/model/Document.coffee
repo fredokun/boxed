@@ -1,194 +1,168 @@
 ##
-#
+# The main element of the model, the Document. The container of all the boxes.
 ##
+define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdAlreadyExists"],((JavascriptBox,MarkdownBox,DoublyChainedList,NotDefineObject,IdAlreadyExists)->
 
-define(["LinkedBox","MarkdownBox","JavascriptBox"],((LinkedBox,MarkdownBox,JavascriptBox) ->
-        
-        ##service[Document]
-        #@class[Document] :
-        class Document
+    #@service[Document]
+    #@class[Document]
+    class Document
 
-                ##contructor[init] : String -> [Document]
-                #@method[Document] : Methot that inits a new Document.
-                #@param[name][String] : The name od the create Document.
-                constructor : (@name) ->
-                        #@param[name][String] : The Document's name.
-                        #@param[boxes][LinkedBox] : List of boxes contents in the Document.
-                        @boxes = null
+        #@constructor[init]: String -> [Document]
+        #@method[Document]: Method for constructing a document.
+        #@arg[name][String]: The name of the document is created.
+        #@return[Document]: The newly created document.
+        constructor : (@name) ->
+            #@param[name][String] : The document name.
+            #@param[boxesOrder][DoublyChainedList]: Boxes list.
+            @boxesOrder = null 
 
-                        #@param[select][Box] : The box selected.
-                        @select = null
+            #@param[boxesMap][HashMap<String,Box>]: A hash table containing all the boxes of the document traceable by their identifiers.
+            @boxesMap = {}
 
-                        #@param[boxMap][HashMap<String,LinkedBox>] : A map of al the boxes contents in the Document.
-                        @boxMap = {}
+            #@param[boxSelect][Box]: The box selected by the user on the document.
+            @boxSelect = null
 
-                        #@para[ids][int] : A value that serves to create new ids for box.
-                        @ids = 0
+            #@param[idGenerator][int]: 
+            @idGenerator = 0 
 
-                ##operation[appendBox] : [Document] x String -> [Box]
-                ##pre[appendBox(t)] : requires t = "MARKDOWN"
-                #@method[appendBox] : Add a box to the Document and return this box.
-                #@arg[type][String] : The type of the Box to add.
-                #@return[Box] : The new Box created.
-                appendBox: (type) ->
-                        box = null
-                        id = this.genId()
+            #@param[userMetaData][JSONObject]: 
+            @userMetaData = {}
 
-                        if id is null then return box
-        
-                        switch type
-                                when "MARKDOWN" then box = new MarkdownBox( id ) 
-                                when "JAVASCRIPT" then box = new JavascriptBox( id )                                         
-                                else 
-                                        console.log "[:(] Error! The type '#{type}' is not managed... [):]"
-                                        return box
+        getSelectBox : ->
+            @boxSelect
 
-                        link = new LinkedBox(box) 
+        #@operator[appendBoxEnd]: [Document] -> [Box]
+        #@method[appendBox]: Method adding a box at the end of the document.
+        #@param[type][String]: The type of the add box.
+        #@param[Box]: The newly added box.
+        appendBoxEnd: (type) ->
+            try 
+                box = null 
+                switch type
+                    when "JAVASCRIPT" then box = new JavascriptBox( this.genId() )
+                    when "MARKDOWN" then box = new MarkdownBox( this.genId() )
+                    else 
+                        throw new NotDefineObject("Document","appendBoxEnd",type)
 
-                        if @boxes is null then @boxes = link
-        
-                        link.setNext(@boxes)
-                        link.setPrevious(@boxes.getPrevious()) 
+                link = new DoublyChainedList(box)
+                if @boxesOrder is null then @boxesOrder = link
 
-                        if @boxes.getPrevious() isnt null then @boxes.getPrevious().setNext(link) ;
-                        @boxes.setPrevious(link)
+                link.setNext(@boxesOrder)
+                link.setPrevious(@boxesOrder.getPrevious())
 
-                        @boxMap["#{box.getId()}"] = link
+                if @boxesOrder.getPrevious() isnt null then @boxesOrder.getPrevious().setNext(link) ;
+                @boxesOrder.setPrevious(link)
 
-                        @select = box
+                @boxesMap["#{box.getId()}"] = link
+                @boxSelect = box
 
-                        return box 
+                return box
 
-                ##operation[appendBefore] : [Document] x String x String -> [Document]
-                #@method[appendBefore] : Add a before the box, that the id is put in parmeter.
-                #@arg[type][String] : The box type.
-                #@arg[id][String] : The box id of the box we add to put before.
-                #@return[appendBefore]
-                appendBefore: (type,id) ->
-                        box = null ;
-                        switch (type) 
-                                when "MARKDOWN"  
-                                        myId = this.genId()
-                                        if id isnt null then box = new MarkdownBox(myId) 
-                                        else return null
-                                else 
-                                        console.log "[:(] Error! The type '#{type}' is not managed... [):]"
-                                        return box
+            catch e1
+                console.log e1.toString()
+                return null
 
-                        if ! ("#{id}" of @boxMap) 
-                                console.log "Error box #{id} not found"
-                                return null
+        #@operator[appendBoxEnd]: [Document] x String x Boolean -> [Box]
+        #@pre appendBox(D,t,b) boxesMap own id
+        #@method[appendBox]: Method adding another box after box whose identifier has been set as a parameter..
+        #@param[type][String]: The type of the add box.
+        #@param[id][String]: The identifier of the box used to anchor the position of the new box.
+        #@param[position][boolean]: A boolean indicating whether the box is to be added before (true) or after (false) the box whose ID was passed as a parameter.
+        #@param[Box]: The newly added box.
+        appendBoxPosition: (type,id,position) ->
+            try 
+                box = null 
+                switch type
+                    when "JAVASCRIPT" then box = new JavascriptBox( this.genId() )
+                    when "MARKDOWN" then box = new MarkdownBox( this.genId() )
+                    else 
+                        throw new NotDefineObject("Document","appendBoxPosition",type)
 
-                        link = @boxMap["#{id}"]
-                        n_link = new LinkedBox(box)
+                if! ( id of @boxesMap) then throw new BoxNotFound("Document","appendBoxAPosition",id)
 
-                        n_link.setNext( link ) 
-                        n_link.setPrevious( link.getPrevious() )
+                anchor = @boxesMap["#{id}"]
+                link = new DoublyChainedList(box)
 
-                        if @boxes.getBox().getId() isnt id then link.getNext().setNext( n_link ) 
-                        else 
-                                link.getPrevious().setNext( n_link )
-                                @boxes = n_link
+                if position is true
+                    
+                    link.setNext(anchor) 
+                    link.setPrevious( anchor.getPrevious() )
 
-                        link.setPrevious( n_link )
+                    anchor.getPrevious().setNext(link)
+                    anchor.setPrevious(link)
 
-                        @select = box
+                    if id is @boxesOrder.getElement().getId() then @boxesOrder = link
 
-                        if link.getBox().getId() is @boxes.getBox().getId() then @boxes = n_link 
+                else
 
-                        @boxMap["#{box.getId()}"] = n_link
-                        return box
+                    link.setPrevious(anchor)
+                    link.setNext(anchor.getNext())
 
-                ##operation[appendAfter] : [Document] x String x String -> [Document]
-                #@method[appendAfter] : Add a after the box, that the id is put in parmeter.
-                #@arg[type][String] : The box type.
-                #@arg[id][String] : The box id of the box we add to put after.
-                #@return[Box] : The new box created.
-                appendAfter: (type,id) ->
-                        box = null ;
-                        switch (type) 
-                                when "MARKDOWN"  
-                                        myId = this.genId()
-                                        if id isnt null then box = new MarkdownBox(myId) 
-                                        else return null
-                                else 
-                                        console.log "[:(] Error! The type '#{type}' is not managed... [):]"
-                                        return box
+                    anchor.getNext().setPrevious(link)
+                    anchor.setNext(link)
 
-                        if ! ("#{id}" of @boxMap) 
-                                console.log "Error box #{id} not found"
-                                return null
+                @select = box
+                @boxesMap["#{box.getId()}"] = link
+                return box
 
-                        link = @boxMap["#{id}"]
-                        n_link = new LinkedBox(box)
+            catch e1
+                console.log e1.toString()
+                return null
 
-                        n_link.setNext( link.getNext() )
-                        n_link.setPrevious( link )
+        #@operator[removeBox]: [Document] x String -> [Document]
+        #@method[removeBox]: Method of removing a paper box.
+        #@arg[id][String]: The identifier of the box to remove.
+        removeBox: (id) ->
+            if! (id of @boxesMap) then throw new NotDefineObject("Document","removeBox",id)
+            
+            if id is @boxesOrder.getElement().getId() 
+                if @boxesOrder.getNext().getElement().getId() is id then @boxesOrder = null
+                else @boxesOrder = @boxesOrder.getNext()
 
-                        link.getNext().setPrevious( n_link )
-                        link.setNext( n_link )
+            @boxesMap["#{id}"].removeLink()
+            delete @boxesMap["#{id}"]
 
-                        @select = box
+            if @boxSelect.getId() is id then @boxSelect = null
 
-                        @boxMap["#{box.getId()}"] = n_link
-                        return box
+            console.log @boxesOrder
 
-                ##operation[deleteBox] : [Document] x String -> [Document]
-                ##require[deleteBox(i)] : require boxMap own id
-                #@method[deleteBox] : Method that delete a box from the Document.
-                #@arg[id][String] : The id of the box to delete.
-                deleteBox : (id) ->
-                        if ! ( "#{id}" of @boxMap ) then return false
+        #@observator[setSelectBox]: [Document] x id -> [Document]
+        #@method[setSelectBox]: Method modifying the selected box on the document.
+        setSelectBox: (id) ->
+            if id is null then @boxSelect = null
+            else 
+                if! (id of @boxesMap) then throw new NotDefineObject("Document","setSelectBox",id)
+                else @boxSelect = @boxesMap["#{id}"].getElement()
 
-                        if "#{id}" is @boxes.getBox().getId() 
-                                if "#{id}" is @boxMap["#{id}"].getNext().getBox().getId() then @boxes = null
-                                else @boxes = @boxMap["#{id}"].getNext()
+        #@operator[setUserMetaData]: [Document] x String -> [Document]
+        #@method[setuserMetaData]: Method for changing the userMetaData class attribute.
+        setUserMetaData: (userMetaData) ->
+            @userMetaData = userMetaData
 
-                        @boxMap["#{id}"].deleteLink() ;
-                        delete @boxMap["#{id}"]
-                        
-                        console.log @boxes
+        #@observator[getBox]: [Document] x String -> [Box]
+        #@pre getBox(D,i) @boxMap own i
+        #@method[getBox]: 
+        #@arg[id][String]:
+        #@return[Box]:
+        getBox: (id) ->
+            if! (id of @boxesMap) then throw new NotDefineObject("Document","getBox",id)
+            return @boxesMap["#{id}"].getElement() 
 
-                        return true                        
-                
-                ##operation[selectBox] : [Document] x String -> [Document]
-                ##require[selectBox(i)] : require id own boxes
-                #@method[selectBox] : Method that select a box on the view/model.
-                #@arg[id][String] : The id of the box selected.
-                selectBox: (id) ->
-                        if ! ("#{id}" of @boxMap ) then return null
-                        @select = @boxMap["#{id}"].getBox()
-                        return @boxMap["#{id}"].getBox()
+        #@observator
+        getUserMetaData : () ->
+            return @userMetaData
 
-                ##operation[removeBox] : [Document] x [String] -> [Document]
-                #@method[removeBox] : Method that retrive a box from the Document.
-                #@arg[id][String] : A string that 
+        #@operator[genId]: [Document] -> int
+        #@pre require genId() not_own boxeMap.
+        #@return[int]: Method generates a unique identifier for a box.
+        genId: ->
+            save = null
+            if! ("#{@name}_#{@idGenerator}" of @boxesMap) then save = "#{@name}_#{@idGenerator}"
+            else 
+                throw new IdAlreadyExists("Document","genId",@idGenerator)
+            
+            @idGenerator++
+            return save
 
-                ##obervator[getSelect] : [Document] -> [Box]
-                #@method[getSelect] : Method that return a new box select.
-                getSelect: ->
-                        @select
-
-                ##observator[getBox] : [Document] x String -> [Box]
-                ##pre[getBox(i)] : require i own boxMap
-                #@method[getBox] : Method that search an return a box.
-                #@return[Box] : A box
-                getBox: (id) ->
-                        if ! ("#{id}" of @boxMap) then  return null
-                        return @boxMap["#{id}"].getBox()
-
-                ##operation[genId] : [Document] -> [String]
-                ##pre[genId()] : requires genId() not_own boxMap
-                #@method[genId] : Private method that generates a new String id for a create Box.
-                #@return[String] : The new Id created.
-                genId : ->
-                        result = "#{@name}_#{@ids}"
-                        if ! ( "#{result}" of @boxMap ) then @ids++
-                        else 
-                                console.log "[:(] Error! A box with this id '#{result}' already exists! [):]"
-                                return null
-
-                        return result
-
-        return Document
+    return Document
 ))

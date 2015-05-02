@@ -1,151 +1,212 @@
 ##
-#
+# The API's controller.
 ##
+define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitter"],((Documnent,JavascriptBackend,MarkdownBackend,Presentor,EventEmitter) ->
 
-define(["jquery","Document","MarkdownBackend","JavascriptBackend","Presentor","EventEmitter"],(($,Document,MarkdownBackend,JavascriptBackend,Presentor,EventEmitter) ->
+    #@service[Controler]
+    #@class[Controler]
+    class Controler extends EventEmitter
 
-        ##service[Controler]
-        #@class[Controler]
-        class Controler extends EventEmitter
+        #@constructor[init] -> [Controler]
+        #@method[Controler] : Method creating control API.
+        #@return[Controler] : The newly created controller.
+        constructor: ->
+            #@param[document][Documnent]
+            @document = new Documnent("boxed")
 
-                ##contructor[init] : -> [Controler]
-                #@class[Controler] : API's controler. Controms and generate actions.
-                constructor : ->
-                        super()
+            #@param[contentEditors][Hashtable<String><CodeMirrorEditor>]: Hashtable containing the list of editors of content.
+            @contentEditors = {}
 
-                        #@param[document][Document] : Document objet, the model of the API
-                        @document = new Document("newDoc")
-                        
-                        #@param[backendManager][HahsMap<String,Backend>] : Backends hashtble.
-                        @backendManager = {}
+            #@param[userMetaEditors][Hashtable<String,CodeMirrorEditor>]: Hashtable containing the list of editors of the userMetadata.
+            @userMetaEditors = {} 
 
-                        #@param[presentor][Presentor] : API's presentor. It will perform action on the DOM.
-                        @presentor = new Presentor(this)
+            #@param[backendManager][Hashtable<String,Backend>]: Hashtable containing the list of the backends.
+            @backendManager = {}
 
-                        #@param[editor][HashMap<String,CMEditor>] : List of each Boxes' CodeMirror editor  object.
-                        @editors = {}
+            #@param[presontor][EventEmitter]: The EventEmitter 
+            this.addListener("putEditor",this.addContentEditor)
 
-                        @backendManager["MARKDOWN"] = new MarkdownBackend(@presentor) 
-                        @backendManager["JAVASCRIPT"] = new JavascriptBackend(@presentor) 
+            @presentor = new Presentor(this)
 
-                        this.addListener("the_backstage",this.addEditor)
+            @backendManager["JAVASCRIPT"] = new JavascriptBackend()
+            @backendManager["MARKDOWN"] = new MarkdownBackend()
+    
+            this.addListener("putEditor",this.addContentEditor)
 
-                ##operation[appendBox] : [Controler] x String -> [Controler]
-                #@method[appendBox] : Method that add a box of type 'type' to the document.
-                #@arg[type][String] : The type of the box.
-                appendBox : (type) ->
-                        box = @document.appendBox(type)
-                        data =
-                                order:"ADD_END"
-                                box : box
-                        @presentor.emitEvent("in_scene",[data])
+        #@operator[appendBoxEnd]: [Controler] x String -> [Controler]
+        #@method[appendBoxEnd]: Add a box at the end of the document.
+        #@arg[type] : The type of the add box.
+        appendBoxEnd: (type) ->
+            this.updateBox( @document.getSelectBox() )
+            box = @document.appendBoxEnd(type)
+            if box.length is 0 then return null
 
-                ##operation[selectBox] : [Controler] x String -> [Controler]
-                #@method[selectBox] : Method that select a box on the view.
-                #@arg[id][String] : A String indicating the id of the box selected.
-                selectBox : (id) ->
-                        old = @document.getSelect()
-                        if old isnt null then this.updateBox( old ) ;
+            data = 
+                order: "ADD_BOX"
+                position:"END"
+                result : @backendManager[box.getType()].chew(box)
 
-                        box = @document.selectBox(id) 
-                        if box is null then return null 
+            @presentor.emitEvent("update_view",[data])
 
-                        data = 
-                                order:"SLT_BOX"
-                                old:old
-                                box:box
+        #@operator[appendBox]: [Controler] x String  x Boolean -> [Controler]
+        #@method[appendBox]: Add a box at the end of the document.
+        #@arg[type] : The type of the add box.
+        #@arg[id] : The identifier of the box used to anchor the position of the new box.
+        #@param[position][boolean]: A boolean indicating whether the box is to be added before (true) or after (false) the box whose ID was passed as a parameter.      
+        appendBox: (type,id,position) ->
+            this.updateBox( @document.getSelectBox() )
+            box = @document.appendBoxPosition(type,id,position)
+            insert = null
 
-                        @presentor.emitEvent("in_scene",[data])
+            if box.length is 0 then return null
+            if position is true then insert = "BEFORE"
+            else insert = "AFTER"
 
-                ##operation[commitBox] : [Controler] x String -> [Controler]
-                #@method[commitBox] : Change the content of the box with its content compile.
-                #@arg[id][String] : The id of the box to compile.
-                commitBox: (id,mode) ->
-                        box = @document.getBox(id)
-                        if box is null then return null
+            data = 
+                order: "ADD_BOX"
+                position: insert
+                anchor: id
+                result: @backendManager[box.getType()].chew(box)
 
-                        this.updateBox box
+            @presentor.emitEvent("update_view",[data])
 
-                        switch mode
-                                when "COMMIT" then box.setMode(mode)
-                                when "EDITABLE"
-                                        @editors["#{box.getId()}"].setOption("mode", () ->
-                                                switch box.getType()
-                                                        when "JAVASCRIPT" then return "javascript"
-                                                        when "MARKDOWN" then return "markdown"
-                                                        else console.log "Error! The type is not managed"
-                                                return null
-                                        )
-                                        @editors["#{box.getId()}"].setValue(box.getContent())
-                                        box.setMode(mode)
-                                when "EDIT_USER_META"
-                                        box.setMode(mode) ;
-                                        @editors["#{box.getId()}"].setValue( JSON.stringify( box.getUserMetaData() ) )
-                                        @editors["#{box.getId()}"].setOption("mode","json")
-                                else return null
+        #@operation[selectBox]: [Controler] x String -> [Controler]
+        #@method[selectBox]: 
+        #@param[id][String]:
+        selectBox: (id) ->
+            this.updateBox( @document.getSelectBox() )
+            try
+                @document.setSelectBox(id)
 
-                        data =
-                                order:"CMT_BOX"
-                                box : box
-                                result : @backendManager[box.getType()].chew(box)
-                        @presentor.emitEvent("in_scene",[data])
+                data = 
+                    order: "SELECT_BOX",
+                    select: id
 
-                ##operation[addBefore] : [Controler] x String x String -> addBox
-                #@method[addBefore] : Method that adds a box before an id put in argument.
-                #@arg[type][String] : The type of the box.
-                #@arg[id][String] : The box which we had to put the new box before.
-                addBefore : (type,id) ->
-                        box = @document.getBox(id)
-                        toAppend = @document.appendBefore(type,id)
-                        data = 
-                                order : "ADD_BEF"
-                                box : toAppend
-                                bef_box : box
-                        @presentor.emitEvent("in_scene",[data])
+                @presentor.emitEvent("update_view",[data])
+            catch e1
+                console.log e1.toString()
 
-                ##operation[addAfter] : [Controler] x String x String -> addBox
-                #@method[addAfter] : Method that adds a box before an id put in argument.
-                #@arg[type][String] : The type of the box.
-                #@arg[id][String] : The box which we had to put the new box before.
-                addAfter : (type,id) ->
-                        box = @document.getBox(id)
-                        toAppend = @document.appendAfter(type,id)
-                        data = 
-                                order : "ADD_AFT"
-                                box : toAppend
-                                aft_box : box
-                        @presentor.emitEvent("in_scene",[data])
+        #@opeation[removeBox] : [Controler] x String -> [Controler]
+        #@method[removeBox] : 
+        #@arg[id][String] :
+        removeBox: (id) ->
+            this.updateBox( @document.getSelectBox() )
+            try
+                @document.removeBox(id)
+                delete @contentEditors["#{id}"] 
+                data = 
+                    order: "REMOVE_BOX"
+                    id : id
 
-                ##operation[deleteBox] : [Controler] x String -> [Controler] 
-                ##require[deleteBox(i)] : require document.deleteBox = true
-                #@method[deleteBox] : Method that remove a box.
-                #@arg[id][String] : The id of the Box.
-                removeBox : (id) ->
-                        if @document.deleteBox(id) is false then return null 
-                        delete @editors["#{id}"]
-                        data =
-                                order : "DEL_BOX"
-                                id : id
-                        @presentor.emitEvent("in_scene",[data])
+                @presentor.emitEvent("update_view",[data])
+            catch e
+                console.log e.toString()
         
-                ##operation[addEditor] : [Controler] x [CMEditor] x [String] -> [Controler]
-                ##pre[addEditor(CM,s)] : require s not_own editors
-                #@method[addEditor] : Add a box's CodeMirror editor to the param class editor.
-                addEditor: (editor,id) ->
-                        if! ("#{id}" of @editors ) 
-                                @editors["#{id}"] = editor
-                                editor.markClean()
-                        else console.log "[:(] Error! The box #{id} already have its editor! [):]"
+        #@operation[setModeBox]: [Controler] x String x String -> [Controler]
+        #@method[setModeBox]: 
+        #@arg[id][String]:
+        #@iarg[mode][String]:
+        setModeBox: (id,mode) ->
+            this.updateBox( @document.getSelectBox() )
+            try
+                box = @document.getBox(id)
+                data = null ;
 
-                ##operation[updateBox] : [Controler] x [Box] -> [Controler]
-                #@method[updateBox] : Method that update the content of the box.
-                #@arg[box][Box] : The box to update content.
-                updateBox : (box) ->
-                        if @editors["#{box.getId()}"].isClean() == false
-                                switch box.getMode() 
-                                        when "EDIT_USER_META" then box.setUserMetaData( JSON.parse( @editors["#{box.getId()}"].getValue() ) )
-                                        when "EDITABLE" then box.setContent( @editors["#{box.getId()}"].getValue() )
-                                @editors["#{box.getId()}"].markClean() 
+                if "#{mode}" is "COMMIT" and box.getMode() is "EDIT_USER_META"
+                    try
+                        box.setUserMetaData( JSON.parse( @userMetaEditors["#{id}"].getValue() ) )
+                        data = this.getUserMetaDataCommitOrder(box) 
+                        data['result']['message'] = "Save Success!"
+                    catch e
+                        data = this.getUserMetaDataCommitOrder(box)
+                        data['result']['message'] = "Syntax Error!"
+                    
+                else if "#{mode}" isnt "EDIT_USER_META"
+                    box.setMode(mode)
+                    data = this.getStandardCommitOrder(box) 
+                else 
+                    box.setMode(mode)
+                    data = this.getUserMetaDataCommitOrder(box)
 
-        return Controler
+                @presentor.emitEvent("update_view",[data])
+            catch e
+                console.log e.toString() 
+
+        #@operation[init] : [Controler] x String ->
+        #@method[init] : Method for initializing the application, by implementing UserMetaData publisher of the document.
+        #@arg[String]  : The identifier of the textarea that will serve as new editor for editing userMetaData oF Document.
+        init: (id) ->
+            data = 
+                order : "INIT"
+                result :
+                    id : id
+                    result : JSON.stringify( @document.getUserMetaData() )
+                    mime : "json"
+
+            @presentor.emitEvent("update_view",[data])
+
+        #@operation[setDocumentUserMetaData]: [Controler] x String -> [Controler]
+        #@method[setDocumentUserMetaData]: Method for changing UserMetaData.
+        #@arg[id][String] : The identifier of the textarea that will serve as new editor for editing userMetaData of Document.
+        setDocumentUserMetaData : (id) ->
+           data =
+                order : "SET_BOX"
+                result :
+                    id : id 
+                    mime : "json"
+                    mode : "EDIT_USER_META"
+
+            try
+                @document.setUserMetaData(JSON.parse(@userMetaEditors["#{id}"]))
+                data['result']['result'] = @document.getuserMetaData() 
+            catch e                
+                data['result']['result'] = @document.getuserMetaData()
+                data['result']['message'] = "Syntax Error!"
+
+            @presentor.emitEvent("update_view",[data])
+
+        getStandardCommitOrder: (box) ->
+            data = 
+                order : "SET_BOX"
+                result : @backendManager[box.getType()].chew(box)
+
+            return data
+
+        getUserMetaDataCommitOrder: (box) ->
+            data = 
+                order : "SET_BOX"
+                result : 
+                    id : box.getId()
+                    result : JSON.stringify( box.getUserMetaData() )
+                    mime : "json"
+                    mode : box.getMode()
+
+            return data
+
+        #@operation[addEditor] : [Controler] x [CMEditor] x [String] -> [Controler]
+        ##pre[addEditor(i,CM,w)] : require s not_own editors or userMetaEditors
+        #@method[addEditor] : Add a box's CodeMirror editor to the param class editor.
+        addContentEditor:(id,editor,wichEditor) ->
+            if wichEditor is true
+                if! ("#{id}" of @contentEditors ) 
+                    @contentEditors[id] = editor
+                    @contentEditors[id].markClean()
+                else console.log "Error! The box #{id} already have its contentEditor!"
+            else
+                if! ("#{id}" of @userMetaEditors ) 
+                    @userMetaEditors["#{id}"] = editor
+                else console.log "Error! The box #{id} already have its userMetaEditors!"
+
+        ##operation[updateBox] : [Controler] x [Box] -> [Controler]
+        #@method[updateBox] : Method that update the content of the box.
+        #@arg[box][Box] : The box to update content.
+        updateBox : (box) ->
+            if box isnt null
+                if @contentEditors[box.getId()].isClean() == false
+                        switch box.getMode() 
+                                #when "EDIT_USER_META" then box.setUserMetaData( JSON.parse( @editors[box.getId()].getValue() ) )
+                                when "EDIT_CONTENT" then box.setContent( @contentEditors[box.getId()].getValue() )
+                        @contentEditors["#{box.getId()}"].markClean() 
+
+    return Controler
 ))

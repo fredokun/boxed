@@ -1,30 +1,34 @@
 ##
-#
+# Class defining the architecture of a backend.
 ##
+define(["Backend","commonmark"],((Backend,commonmark)->
+    #@service[MarkdownBackend]
+    #@class[MarkdownBackend]
+    class MarkdownBackend extends Backend
 
-define(["Backend","commonmark"],((Backend,commonmark) ->
+        #@contructor[init]: -> [MarkdownBackend]
+        #@MarkdownBackend: Method building a backend object type.
+        #@return: The newly built backend.
+        constructor: ->
+            super()
+            #@param[parser][commonMarkParser] : Markdown parser.
+            @parser = new commonmark.Parser()
 
-        ##service[Backend]
-        #@method[Backend] :
-        class MarkdownBackend extends Backend
+            #@param[writer][commonMarkParser] : Traductor of the parsed tree.
+            @writer = new commonmark.HtmlRenderer()
 
-                ##constructor[Backend] : -> [Backend]
-                #@method[Backend] : Creates a new backend.
-                constructor: ->
-                        super()
-                        
-                        #@param[parser][commonMarkParser] : Markdown parser.
-                        @parser = new commonmark.Parser()
+        #@operator[chew]: [MarkdownBackend] x [Box] -> [JSONObject]
+        #@method[chew]: Method taking a box and returning the contents of the box 'compiled' in Markdown.
+        #@arg[box][Box]: The box to compile.
+        #@return[JSONObject]: The contents of the compiled box.
+        chew: (box) ->
+            result =
+                id : box.getId()
+                type : "TEXT"
+                result : @writer.render( @parser.parse( box.getContent() ) )
+                mime : "markdown"
+                mode : box.getMode()
+            return result
 
-                        #@param[writer][commonMarkParser] : Traductor of the parsed tree.
-                        @writer = new commonmark.HtmlRenderer()
-
-                ##operator[chew] : [Backend] x [Box] -> JSONobjet
-                #@method[chew] : Method, takes a Box and return a JSON Object of the Box compile.
-                #@arg[box][Box] : The box to 'compile'.
-                #@return[JSONobject] : An object with the compile box content and its mime.
-                chew : (box) ->
-                        return @writer.render( @parser.parse( box.getContent() ) )
-
-        return MarkdownBackend
+    return MarkdownBackend
 ))

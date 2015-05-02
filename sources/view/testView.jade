@@ -1,0 +1,103 @@
+doctype html
+
+html(lang="eng")
+  head
+    title=Boxed
+    link(rel='stylesheet' type='text/css' href='./css/BoxedStyle.css')
+
+  body
+
+    section#shadeCover
+        section#docUserMeta
+            textarea#userMeta_docUserMetaData
+            section.boxMenu
+                 ul.listerMenu
+                    li.elemMenuId
+                        a(href='#') 
+                        img.menuIcon(src='./../sources/img/save.svg')
+                        div.commandName Save
+
+    header#globalMenu
+        section#menuContainer
+            ul.listerMenu
+                li.elemMenu
+                    a(href='#') 
+                        img.menuIcon(src='./../sources/img/plus.svg')
+                        div.commandName Add Box
+                    section.subMenu
+                        ul.listerMenu
+                            li.subElemMenu
+                                a(href='#') 
+                                    img.menuIcon(src='./../sources/img/box.svg')
+                                    div.commandName Markdown Box
+                            li.subElemMenu
+                                a(href='#') 
+                                    img.menuIcon(src='./../sources/img/box.svg')
+                                    div.commandName Javascript Box
+
+                li.elemMenu
+                    a(href='#')
+                        img.menuIcon(src='./../sources/img/save.svg')
+                        div.commandName Save document
+
+                li.elemMenu
+                    a(href='#')
+                        img.menuIcon(src='./../sources/img/archive.svg')
+                        div.commandName Load document
+
+    section#document
+      section#boxes
+
+        section.box
+            section.boxMenu
+                ul.listerMenu
+                    li.elemMenu
+                        a(href='#') 
+                            img.menuIcon(src='./../sources/img/arrow-with-circle-down.svg')
+                            div.commandName Add box after
+                        section.subMenu
+                            ul.listerMenu
+                                li.subElemMenu
+                                    a(href='#') 
+                                        img.menuIcon(src='./../sources/img/box.svg')
+                                        div.commandName Markdown Box
+                                li.subElemMenu
+                                    a(href='#') 
+                                        img.menuIcon(src='./../sources/img/box.svg')
+                                        div.commandName Javascript Box
+                    li.elemMenu
+                        a(href='#') 
+                            img.menuIcon(src='./../sources/img/arrow-with-circle-up.svg')
+                            div.commandName Add box before
+                        section.subMenu
+                            ul.listerMenu
+                                li.subElemMenu
+                                    a(href='#') 
+                                        img.menuIcon(src='./../sources/img/box.svg')
+                                        div.commandName Markdown Box
+                                li.subElemMenu
+                                    a(href='#') 
+                                        img.menuIcon(src='./../sources/img/box.svg')
+                                        div.commandName Javascript Box
+
+                    li.elemMenu
+                        a(href='#') 
+                            img.menuIcon(src='./../sources/img/code.svg')
+                            div.commandName Edit MetaData
+
+                    li.elemMenu
+                        a(href='#') 
+                            img.menuIcon(src='./../sources/img/pencil.svg')
+                            div.commandName Edit Content Box
+
+                    li.elemMenu
+                        a(href='#') 
+                            img.menuIcon(src='./../sources/img/cross.svg')
+                            div.commandName Remove box
+
+                    li.elemMenuId
+                        a(href='#') 
+                            img.menuIcon(src='./../sources/img/shareable.svg')
+                            div.commandName.id boxName
+                    
+            section.boxContent

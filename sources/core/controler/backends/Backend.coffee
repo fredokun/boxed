@@ -1,25 +1,21 @@
 ##
-#
+# Class defining the architecture of a backend.
 ##
+define(["NotDefineFunction"],((NotDefineFunction)->
+    #@service[Backend]
+    #@class[Backend]
+    class Backend
 
-define([],(() ->
+        #@contructor[init]: -> [Backend]
+        #@Backend: Method building a backend object type.
+        #@return: The newly built backend.
+        constructor: ->
 
-        ##service[Backend]
-        #@class[Backend] :
-        class Backend
+        #@operator[chew]: [Backend] x [Box] -> [JSONObject]
+        #@method[chew]: Method taking a box and returning the contents of the box 'compiled'.
+        #@return[JSONObject]: The contents of the compiled box.
+        chew: (box) ->
+            throw new NotDefineFunction("Backend","chew")
 
-                ##constructor[Backend] : -> [Backend]
-                #@method[Backend] : Creates a new backend.
-                constructor: ->
-                        
-
-                ##operator[chew] : [Backend] x [Box] -> JSONobjet
-                #@method[chew] : Abstract method, takes a Box and return a JSON Object of the Box compile.
-                #@arg[box][Box] : The box to 'compile'.
-                #@return[JSONobject] : An object with the compile box content and its mime.
-                chew : (box) ->
-                        console.log "[:(] Error! This Backend didn't chew! [):]"
-                        return null
-
-        return Backend
+    return Backend
 ))

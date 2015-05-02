@@ -1,283 +1,269 @@
 ##
-#
+# Class representing the presenter. The element linking the view and the controller.
 ##
 
 define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown","cm/mode/javascript/javascript"],(($,EventEmitter,CodeMirror) ->
 
-        ##service[Presentor]
-        #@class[Presnetor]
-        class Presentor extends EventEmitter
-                
-                ##constructor[init] : callback  -> [Presentor]
-                #@method[Presentor] : Creates a new Presentor.
-                #@arg[callback] : The callback that permits to the Presentor to send event to the Controler.
-                constructor : (@callback) ->
-                        super() 
-                        #@param[callback][EventEmitter]
-                        this.addListener("in_scene",this.takeRole)
-                
-                ##operator[takeRole] : [Presentor] x JSONobject -> [Presentor]
-                #@method[takeRole] : Takes a JSONobject request and treats it.
-                #@arg[data][JSONobject] : Object that contains the informations to perform actions on the DOM.
-                takeRole : (data) ->
-                        switch data["order"]                                        
-                                when "SLT_BOX"
-                                        this.selectBox(data)
-                                when "CMT_BOX"
-                                        this.changeContent(data)
-                                when "ADD_BEF","ADD_END","ADD_AFT"
-                                        box = this.drawBox(data["box"])
-                                        select = $(".boxSelect")
-                                        if select isnt null 
-                                                select.removeClass 'boxSelect'
-                                                select.attr 'class', 'box'
+    #@class[presntor]
+    #@service[Presentor]
+    #refine[Presentor]EventEmitter
+    class Presentor extends EventEmitter
 
-                                        if data["order"] is "ADD_BEF" then $("##{data['bef_box'].getId()}").before(box) 
-                                        else if data["order"] is "ADD_AFT" then $("##{data['aft_box'].getId()}").after(box) 
-                                        else if data["order"] is "ADD_END" then $(".page .container").append box
+        #@constructor[init] -> [EventEmitter] -> [Presentor]
+        #@method[Presentor]: Creating a method Presenter type of object.
+        constructor: (@callback) ->
+            #@param[callback]: The callback allows the presenter to point and send the new editor to create controller.
+            super()
+            this.addListener("update_view",this.updateView)
 
-                                when "DEL_BOX"
-                                        $("##{data['id']}").remove()
-                                
-                                else console.log "[:(] Error! Order not managed... [):]"
+        updateView: (data) ->
+            switch data["order"] 
+                when "ADD_BOX"
 
-                ##operation[changeContent] : [Presentor] x [JSONobject] -> [Presentor]
-                #@method[changeContent] : Change the content of the box according to the box mode.
-                #@arg[data][JSONObject] : The informations that would be useful for perform the changement.
-                changeContent: (data) ->
-                        switch data["box"].getMode()
-                                when "COMMIT"
-                                        #$("##{data.box.getId()}_commit").show()
-                                        #$("##{data.box.getId()}_standard").hide()                                        
+                    if data['position'] is 'END' 
+                        $('#document #boxes').append this.drawBox(data['result'])
 
-                                        $("##{data.box.getId()}_editor").hide()                                        
-                                        $("##{data.box.getId()}_result").show()             
+                    else if data['position'] is 'AFTER'  
+                        $("##{data['anchor']}").after this.drawBox(data['result'])
+                    else if data['position'] is 'BEFORE' then $("##{data['anchor']}").before(this.drawBox(data['result']))
+                    else return null
 
-                                        $("##{data.box.getId()}_result").empty()
+                    @callback.emitEvent("putEditor",[ data['result']['id'], this.drawEditor(data['result']['id'],data['result']['mime'],data['result']['result']), true ])
 
-                                        console.log data["box"].isCodable()
+                    this.unSelectBox()
+                    this.selectBox( "#{data['result']['id']}" )
 
-                                        if data["box"].isCodable() is true
-                                                value = $ "<section>"
-                                                result = $ "<section>"
+                when "SELECT_BOX"
+                    this.unSelectBox()
+                    this.selectBox(data['select'])
 
-                                                #myContentView = data['box'].getContent()
-                                                #console.log "CONTENT COPIED #{myContentView}"
-                                                #console.log "source #{data['box'].getContent()}"
-                                                #myContentView.replace("\n","<br/>",g) ;
-                                                #myContentView.replace("\t","      ",g) ;
+                when "REMOVE_BOX"
+                    $("##{data['id']}").remove() 
 
-                                                value.append data['box'].getContent() #myContentView
-                                                result.append data['result'] 
+                when "SET_BOX"
+                    if data['result']['mode'] is "EDIT_CONTENT" then this.editContent(data['result'])
+                    else if data['result']['mode'] is "COMMIT" then this.editCommit(data['result'])
+                    else if data['result']['mode'] is "EDIT_USER_META" 
+                        if this.editUser(data['result']) is true 
+                            @callback.emitEvent("putEditor",[ data['result']['id'], this.drawUserMetaEditor(data['result']['id'],data['result']['mime'],data['result']['result']), false ])
+                            
+                    else 
+                            console.log "COMMAND '#{data['result']['mode']}' not manage!"
+                            return null
 
-                                                console.log data['box'].getContent()
-                                                console.log data['result'] 
+                    this.unSelectBox()
+                    this.selectBox( "#{data['result']['id']}" )
 
-                                                $("##{data.box.getId()}_result").append value
-                                                $("##{data.box.getId()}_result").append result
-                                        else 
-                                                $("##{data.box.getId()}_result").append data["result"]
+                when "INIT"
+                    @callback.emitEvent("putEditor",[ data['result']['id'], this.drawUserMetaEditor(data['result']['id'],data['result']['mime'],data['result']['result']), false ])
 
-                                when "EDITABLE"
-                                        $("##{data.box.getId()}_result").empty()
+                else
+                    console.log "This command '#{data['order']}' is not manage."
 
-                                        $("##{data.box.getId()}_editor").show()                                        
-                                        $("##{data.box.getId()}_result").hide()
 
-                                when "EDIT_USER_META"
-                                        $("##{data.box.getId()}_result").empty()
+        editUser: (result) ->
+            $("#editorPanel_#{result['id']}").removeClass "contentVisible"
+            $("#editorPanel_#{result['id']}").addClass "contentHidden"
 
-                                        $("##{data.box.getId()}_editor").show()                                        
-                                        $("##{data.box.getId()}_result").hide()
-                                        
-                ##opeation[selectBox] : [Presentor] x [JSONObject] -> [Presentor]
-                #@method[selectBox] : Method that change the box css : select to not_select on inverse.
-                #@arg[data][JSONobject] : The informations need for perfom the chagement.
-                selectBox : (data) ->        
-                        if data["old"] isnt null 
-                                $("##{data['old'].getId()}").removeClass "boxSelect"
-                                $("##{data['old'].getId()}").attr "class", "box"
-                        $("##{data['box'].getId()}").removeClass "box"
-                        $("##{data['box'].getId()}").attr "class", "boxSelect"                        
+            $("#resultPanel_#{result['id']}").removeClass "contentVisible"
+            $("#resultPanel_#{result['id']}").addClass "contentHidden"
 
-                ##opeation[drawBox] : [Presentor]x[Box] -> [DOM]
-                #@method[drawBox] : Private method used for draned a box on the model.
-                #@arg[tobox][Box] : The box to add to the model.
-                #@return[DOM] : The Dom to add to the view.
-                drawBox: (tobox) ->                        
-                        box = $ "<section>"
-                        box.attr "class", "boxSelect"
-                        box.attr "id", "#{tobox.getId()}"
+            editorJSON = $("#userMetaData_#{result['id']}")
+            theReturn = false 
 
-                        menu = this.menu(tobox.getId())
-                        content = this.editContent(tobox)
+            if editorJSON.length is 0
+                editorJSON = this.createEditorJSON(result['id'])
+                $("box_content_#{result['id']}").append editorJSON
+                theReturn = true
 
-                        box.append menu
-                        box.append content
+            if! ("message" of result) is false 
+                $("#message_compil_userMeta_#{result['id']}").empty()
+                $("#message_compil_userMeta_#{result['id']}").append result['message']
+            else $("#message_compil_userMeta_#{result['id']}").empty()
 
-                        box.on "click", (event) ->
-                                Boxed.selectBox(tobox.getId())
-                                event.stopPropagation()                                
-                        return box
+            editorJSON.removeClass "contentHidden"
+            editorJSON.addClass "contentVisible"
+            return theReturn
 
-                menu: (id) ->
-                        menu = $ "<section>"
+        createEditorJSON: (id) ->
+            editorJSON = $ "<section id='userMetaData_#{id}'>"
+            commiteMessage = $ "<section id='message_compil_userMeta_#{id}'>"
+            textarea = $ "<textarea id='userMeta_#{id}'>"
 
-                        menu.attr "class","boxMenu"                        
+            editorJSON.append commiteMessage
+            editorJSON.append textarea
+
+            $("#box_content_#{id}").append editorJSON
+
+            return editorJSON
+
+        editContent: (result) ->
+            $("#editorPanel_#{result['id']}").removeClass "contentHidden"
+            $("#editorPanel_#{result['id']}").addClass "contentVisible"
+
+            $("#resultPanel_#{result['id']}").removeClass "contentVisible"
+            $("#resultPanel_#{result['id']}").addClass "contentHidden"
+
+            if $("#userMetaData_#{result['id']}").length isnt 0
+                $("#userMetaData_#{result['id']}").removeClass "contentVisible"
+                $("#userMetaData_#{result['id']}").addClass "contentHidden"
+
+                $("#message_compil_userMeta_#{result['id']}").empty()
+
+
+        editCommit : (result) ->
+            $("#editorPanel_#{result['id']}").removeClass "contentVisible"
+            $("#editorPanel_#{result['id']}").addClass "contentHidden"
+
+            $("#resultPanel_#{result['id']}").removeClass "contentHidden"
+            $("#resultPanel_#{result['id']}").addClass "contentVisible"
+
+            if $("#userMetaData_#{result['id']}").length isnt 0 
+                $("#userMetaData_#{result['id']}").removeClass "contentVisible"
+                $("#userMetaData_#{result['id']}").addClass "contentHidden"
+
+                $("#message_compil_userMeta_#{result['id']}").empty()
+
+            $("#resultPanel_#{result['id']}").empty() 
+
+            if result['type'] is "CODE" then this.getCommitCode(result)
+            else if result['type'] is "TEXT" then this.getCommitText(result)
+
+        getCommitText : (result) ->
+            $("#resultPanel_#{result['id']}").append result['result']
+
+        getCommitCode: (result) ->
+            codebox = $ "<section class='codeBox'>"
+            textbox = $ "<section class='textBox'>"
+
+            codebox.append result['content'] 
+            textbox.append result['result']
+            $("#resultPanel_#{result['id']}").append codebox
+            $("#resultPanel_#{result['id']}").append textbox
+
+        unSelectBox: () ->
+            selectedMenu =  $(".visible")
+            selectedContent =  $(".select")
+
+            if selectedMenu.length is 0 then return null
+
+            selectedMenu.removeClass 'visible'
+            selectedMenu.addClass 'unvisible'
                         
-                        standard = this.standardMenu(id)
-                        commit = this.commitMenu(id)
+            if selectedContent.length isnt 0 then selectedContent.removeClass 'select'
 
-                        menu.append standard
-                        #menu.append commit
+        selectBox: (id) ->
+            if id is null then return null
+            $("#box_menu_#{id}").removeClass 'unvisible'
+            $("#box_menu_#{id}").addClass 'visible'
 
-                        #commit.hide()
+            $("#box_content_#{id}").addClass 'select'
 
-                        return menu
+        drawBox: (data) ->
+            container = $ "<section class='box' id='#{data['id']}'>"
+            menu = this.drawBoxMenu(data['id'])
+            boxContainer = this.drawBoxContainer(data)
 
-                commitMenu : (id) ->
-                        commit = $ "<section id='#{id}_commit'>"
-                        ul = $ "<ul class='menu'>"
-                        li1 = $ "<li class='elem' id='commitBox'>"
-                        li2 = $ "<li class='elem' id='removeBox'>"
-                        img1 = $ "<img src='./../sources/images/commit.png' class='imgBoxMenu'>"
-                        img2 = $ "<img src='./../sources/images/delBox.png' class='imgBoxMenu'>"
+            container.append menu
+            container.append boxContainer
 
-                        a1 = $ "<a href='#'>"
-                        a2 = $ "<a href='#'>"
+            container.on "click", (event) ->
+                Boxed.selectBox("#{data['id']}")
+                event.stopPropagation()
 
-                        a1.append img1
-                        a2.append img2
+            return container
 
-                        li1.append a1
-                        li2.append a2
+        drawBoxMenu: (id) ->
+            box = $ "<section class='boxMenu' id='box_menu_#{id}'>"
+            listMenu = $ "<ul class='listerMenu'>"
 
-                        ul.append li1
-                        ul.append li2
+            list1 = this.drawItemMenu(id,"Add box after","./../sources/img/arrow-with-circle-down.svg", null,"elemMenu")
+            list1.append this.drawBoxSubMenu(id,false)
 
-                        a1.on "click", (event) ->
-                                Boxed.commitBox(id)
-                                event.stopPropagation()
+            list2 = this.drawItemMenu(id,"Add box before","./../sources/img/arrow-with-circle-up.svg", null,"elemMenu")
+            list2.append this.drawBoxSubMenu(id,true)
 
-                        a2.on "click", (event) ->
-                                Boxed.removeBox(id)
-                                event.stopPropagation()
+            listMenu.append list1
+            listMenu.append list2
 
-                        commit.append ul
-                        return commit
+            listMenu.append this.drawItemMenu(id,"Edit MetaData","./../sources/img/code.svg",(() -> 
+                Boxed.setModeBox(id,"EDIT_USER_META")
+            ),"elemMenu")
+            listMenu.append this.drawItemMenu(id,"Edit Content Box","./../sources/img/pencil.svg", (()->
+                Boxed.setModeBox(id,"EDIT_CONTENT")
+            ),"elemMenu")
+            listMenu.append this.drawItemMenu(id,"Commit Box","./../sources/img/flash.svg", (()->
+                Boxed.setModeBox(id,"COMMIT")
+            ),"elemMenu")
+            listMenu.append this.drawItemMenu(id,"Remove box","./../sources/img/cross.svg", (()->
+                Boxed.removeBox(id)
+            ),"elemMenu")
+            listMenu.append this.drawItemMenu(id,"#{id}","./../sources/img/shareable.svg",null,"elemMenuId")
 
-                standardMenu: (id) ->
-                        std = $ "<section id='#{id}_standard'>"
-                        
-                        ul = $ "<ul class='menu'>"
+            box.append listMenu
 
-                        li1 = $ "<li class='elem' id='commitBox'>"
-                        li2 = $ "<li class='elem' id='removeBox'>"
-                        li3 = $ "<li class='elem_left' id='boxId'>"
-                        li4 = $ "<li class='elem' id='addBefore'>"
-                        li5 = $ "<li class='elem' id='addAfter'>"
-                        li6 = $ "<li class='elem' id='setUserMetaData'>"
-                        li7 = $ "<li class='elem' id='editable'>"
+            return box
 
-                        a1 = $ "<a href='#'>"
-                        a2 = $ "<a href='#'>"
-                        a4 = $ "<a href='#'>"
-                        a5 = $ "<a href='#'>"
-                        a6 = $ "<a href='#'>"
-                        a7 = $ "<a href='#'>"
+        drawBoxSubMenu: (id,position) ->
+            subMenu = $ "<section class='subMenu' >"
+            listMenu = $ "<ul class='listerMenu'>"
 
-                        #img1 = $ "<img src='./../sources/images/commit.png' class='imgBoxMenu'>"
-                        #img2 = $ "<img src='./../sources/images/delBox.png' class='imgBoxMenu'>"
-                        #img4 = $ "<img src='./../sources/images/addBox.png' class='imgBoxMenu'>"
-                        #img5 = $ "<img src='./../sources/images/addBox.png' class='imgBoxMenu'>"
-                        #img6 = $ "<img src='./../sources/images/setMetaUser.png' class='imgBoxMenu'>"
+            listMenu.append listMenu.append this.drawItemMenu(id,"Markdown Box","./../sources/img/box.svg", (()->
+                Boxed.appendBox("MARKDOWN",id,position)
+            ),"subElemMenu")
 
-                        a1.on "click", (event) ->
-                                Boxed.commitBox(id,"COMMIT")
-                                event.stopPropagation()
+            listMenu.append this.drawItemMenu(id,"Javascript Box","./../sources/img/box.svg", (()->
+                Boxed.appendBox("JAVASCRIPT",id,position)
+            ),"subElemMenu")
 
-                        a2.on "click", (event) ->
-                                Boxed.removeBox(id)
-                                event.stopPropagation()
+            subMenu.append listMenu
+            return subMenu
 
-                        a4.on "click", (event) ->
-                                Boxed.addBefore("MARKDOWN",id)
-                                event.stopPropagation()
+        #
+        #
+        drawItemMenu: (id,name,img,fun,style) ->
+            element = $ "<li class='#{style}'>"
+            link = $ "<a href='#'>"
+            img = "<img class='menuIcon' src='#{img}' alt='x'>"
+            link.on "click", (event) ->
+                if fun isnt null then fun()
+                event.stopPropagation()
 
-                        a5.on "click", (event) ->
-                                Boxed.addAfter("MARKDOWN",id)
-                                event.stopPropagation()
+            link.append img
+            link.append name
+            element.append link
 
-                        a6.on "click", (event) ->
-                                Boxed.commitBox(id,"EDIT_USER_META")
-                                event.stopPropagation()
+            return element
 
-                        a7.on "click", (event) ->
-                                Boxed.commitBox(id,"EDITABLE")
-                                event.stopPropagation()
+        drawBoxContainer: (data) ->
+            container = $ "<section class='boxContent' id='box_content_#{data['id']}'>"
 
-                        a1.append "+ Commit" #img1
-                        a2.append "+ Delete" #img2
-                        a4.append "+ Add Before" #img4
-                        a5.append "+ Add After" #img5
-                        a6.append "+ Edit User Meta Data" #img5
-                        a7.append "+ Edit Box"
+            resultPanel = $ "<section id='resultPanel_#{data['id']}' class='contentHidden'>"
+            resultPanel.attr "type","#{data['mime']}"
+            editorPanel = $ "<section id='editorPanel_#{data['id']}' class='contentVisible'>"
+            textArea = $ "<textarea id='textarea_#{data['id']}'>"
 
-                        li1.append a1                                                
-                        li4.append a4
-                        li5.append a5
-                        li2.append a2
-                        li6.append a6
-                        li7.append a7
-                        li3.append id
+            editorPanel.append textArea
+            container.append editorPanel
+            container.append resultPanel
 
-                        ul.append li3
-                        ul.append li1
-                        ul.append li2
-                        ul.append li4
-                        ul.append li5
-                        ul.append li6
-                        ul.append li7
+            return container
 
-                        std.append ul
+        drawEditor: (id,mime,value) ->
+            editor = CodeMirror.fromTextArea(document.getElementById("textarea_#{id}"), {
+                value: "#{value}",
+                mode: mime
+            })
+            return editor 
 
-                        return std
+        drawUserMetaEditor: (id,mime,value) ->
+            editor = CodeMirror.fromTextArea(document.getElementById("userMeta_#{id}"), {
+                value: "#{value}",
+                mode: mime
+            })
+            return editor 
 
-                editContent : (box) ->
-                        mime = null
 
-                        switch box.getMode()
-                                when "MARKDOWN" then mime = "markdown"
-                                when "JAVASCRIPT" then mime = "javascript"
+    return Presentor
 
-                        content = $ "<section>"
-                        content.attr "class","content"
-                        content.attr "id","content_#{box.getId()}"
-
-                        codeLayer = $ "<section id='#{box.getId()}_editor'>"
-                        resultLayer = $ "<section id='#{box.getId()}_result'>"
-
-                        resultLayer.attr "type","#{mime}"
-
-                        codeLayer.show()
-                        resultLayer.hide()
-
-                        area = $ "<textarea>"
-                        codeLayer.append area
-
-                        content.append codeLayer
-                        content.append resultLayer
-                        
-                        editor = CodeMirror( (elt) -> 
-                                area.replaceWith(elt)
-                        , {
-                                value: box.getContent() 
-                                mode: mime
-                                cursorBlinkRate:100
-                        }) ;
-
-                        @callback.emitEvent("the_backstage",[editor,box.getId()])
-                        content
-
-        return Presentor                
 ))

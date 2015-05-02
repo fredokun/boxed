@@ -1,78 +1,89 @@
 ##
-#
+# Class representing a 'Box' editing.
 ##
+define(["NotDefineFunction","NotDefineObject"],((NotDefineFunction,NotDefineObject) ->
 
-define([],(() ->
-        
-        ##service[Box]
-        #@class[Box]
-        class Box
-                
-                ##contructor[init] : [id] -> [Box]
-                #@method[Box] : Method creator of Box.
-                #@arg[id][String] : The identifier of the Box.
-                constructor: (@id) ->
-                       #@param[id][String] : The identifier of the Box.
-                       #@param[mode][String] : The mode of the Box.
-                        @mode = "EDITABLE"
+  #@service[Box]
+  #@class[Box]
+  class Box
 
-                        #@param[content][String] : Text contents in the box.
-                        @content = ""
+    #@constructor[Box][init] : -> [Box]
+    #@method[Box][Box] : Method creating a doubly linked list item.
+    #@arg[Box][id][String] : The unique identifier of the box.
+    #@return[Box] : A newly created empty box.
+    constructor : (@id) ->
+      #@param[id][String] : The unique identifier of the box.
+      #@param[content][String] : Contained in the box.
+      @content = "" 
 
-                        #@param[userMetaData][JSONObject] : An object that contains the meta user datas.
-                        @userMetaData = {}
+      #param[userMetaData][JSONObject] : The metadata of the box.
+      @userMetaData = {}
 
+      #param[mode][String] : The display mode of the box.
+      @mode = "EDIT_CONTENT"
 
-                ##operation[setMode] : [Box] x String -> [Box]
-                ##pre[setMode(m)] : m = "COMMIT" or m = "EDITABLE"
-                #@method[setMode] : Method that sets the value of the class parameter 'mode'.
-                #@arg[mode][String] : The new box's mode.
-                setMode: (mode) ->
-                        switch mode
-                                when "COMMIT", "EDITABLE", "EDIT_USER_META" then @mode = mode
-                                else console.log "[:(] Mode not managed... [):]"
-                
-                ##operation[setUserMetaData] : [Box] x JSONObject -> [Box]
-                #@method[setUserMetaData] : Set the value of the attribute class userMetadata.
-                setUserMetaData : (myJson) ->
-                        @userMetaData = myJson                         
+    #@observator[Box][getId] : [Box] -> String
+    #@method[Box][getId] : Class method that returns the value of 'id' attribute.
+    #@return[String] : The value of the identifier of the box.
+    getId : -> 
+      @id
 
-                ##operation[setContent] : [Box] x String -> [Box]
-                #@method[setContent] : Method that sets the value of the class parameter 'content'.
-                #@param[content][string] : The new content's value.
-                setContent: (content) ->
-                        @content = content 
+    #@observator[getContent] : [Box] -> String
+    #@method[getContent] : Class method that returns the value of 'content' attribute.
+    #@return[String] : The value of the content of the box.
+    getContent : -> 
+      @content
 
-                ##observator[getMode] : [Box] -> String
-                ##invariant[getMode()] : getMode() = "COMMIT" or getMode() = "EDITABLE"
-                #@method[getMode] : Method that return the value of the class parameter 'mode'.
-                #@return[String] : The mode's value.
-                getMode: ->
-                        @mode
+    #@observator[getMode] : [Box] -> String
+    #@method[getMode] : Class method that returns the value of 'mode' attribute.
+    #@return[String] : The value of the content of the box.
+    getMode : -> 
+      @mode
 
-                ##observator[getContent] : [Box] -> String
-                #@method[getContent] : Method that return the value of the class parameter 'content'.
-                #@return[String] : The content's value.
-                getContent: ->
-                        @content
+    #@observator[getUserMetaData] : [Box] -> String
+    #@method[getUserMetaData] : Class method that sets the value of 'userMetaData' attribute.
+    #@param[data][String] : Set the value of the attribute mode.
+    getUserMetaData : -> 
+      @userMetaData
 
-                ##observator[getId] : [Box] -> String
-                #@method[getId] : Method the return the value of the class parameter 'id' ;
-                #@return[String] : String representing the value of the attribute class Box.
-                getId: ->
-                        @id
+    #@observator[Box][setId] : [Box] -> String
+    #@method[Box][setId] : Class method that sets the value of 'id' attribute.
+    #@param[data][String] : Set the value of the attribute 'id'.
+    setId : (data) -> 
+      @id = data
 
-                ##observator[getUserMetaData] : [Box] -> JSONObject
-                #@method[getuserMetaData] : Teyure the value of the class attribute : userMetaData.
-                #@return[JSONObjet] : The value of the class attribute userMetaData.
-                getUserMetaData : ->
-                        @userMetaData
+    #@observator[setContent] : [Box] -> String
+    #@method[setContent] : Class method that sets the value of 'content' attribute.
+    #@param[data][String] : Set the value of the attribute 'content'.
+    setContent : (data) -> 
+      @content = data
 
-                ##observator[isCodable] : [Box] -> boolean
-                #@method[isCodable] : Method signaling if the box is a CodeBox.
-                #@return[boolean] : True if it is a CodeBox, false else.
-                isCodable : ->
-                        false
+    #@observator[setMode] : [Box] -> String
+    ##@pre setMode(B,m) require m = EDIT_CONTENT or m = COMMIT or m = EDIT_USER_META
+    #@method[setMode] : Class method that sets the value of 'mode' attribute.
+    #@param[    data][String] : Set the value of the attribute 'mode'.
+    setMode : (data) -> 
+      switch data
+        when "EDIT_CONTENT", "COMMIT", "EDIT_USER_META" then @mode = data
+        else throw new NotDefineObject("Box","setMode",data)
 
-        return Box
+    #@observator[setUserMetaData] : [Box] -> String
+    #@method[setUserMetaData] : Class method that sets the value of 'userMetaData' attribute.
+    #@param[data][JSONObject] : Set the value of the attribute 'userMetaData'.
+    setUserMetaData : (data) -> 
+      @userMetaData = data
+
+    #@observator[getType] : [CodeBox] -> String
+    #@method[getType] : Method that returns the type of the box.
+    #@return[String] : The type of the box.
+    getType : ->
+      throw new NotDefineFunction("Box","getType")
+
+    #@operator[toString] : [Box] -> [Box]
+    #@method[toString] : Method printing on the standard output value of the object.
+    toString : ->
+      console.log this
+
+  return Box
+
 ))

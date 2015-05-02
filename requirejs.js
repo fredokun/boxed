@@ -13,13 +13,13 @@ requirejs.config({
     "Document":["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdAlreadyExists"],
     "MarkdownBackend" : ["Backend","commonmark"],
     "JavascriptBackend" : ["Backend"],
-    "Controler" : ["jquery","Document","MarkdownBackend","JavascriptBackend","Presentor","EventEmitter"],
+    "Controler" : ["Documnent","JavascriptBackend","MarkdownBackend","Presentor","EventEmitter"],
     "Boxed" : ["Controler"]
     },
     paths : {
-    "IdAlreadyExists":"IdAlreadyExists",
     "NotDefineFunction": "NotDefineFunction",
     "NotDefineObject": "NotDefineObject",
+    "IdAlreadyExists": "IdAlreadyExists",
     "jquery" : "./../bower_components/jquery/dist/jquery",
     "Box" : "Box",
     "DocumentBox":"DocumentBox",
