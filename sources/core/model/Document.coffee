@@ -124,8 +124,6 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
 
             if @boxSelect.getId() is id then @boxSelect = null
 
-            console.log @boxesOrder
-
         #@observator[setSelectBox]: [Document] x id -> [Document]
         #@method[setSelectBox]: Method modifying the selected box on the document.
         setSelectBox: (id) ->

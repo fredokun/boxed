@@ -90,7 +90,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@method[removeBox] : 
         #@arg[id][String] :
         removeBox: (id) ->
-            this.updateBox( @document.getSelectBox() )
+            this.selectBox(id)
             try
                 @document.removeBox(id)
                 delete @contentEditors["#{id}"] 
@@ -107,7 +107,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@arg[id][String]:
         #@iarg[mode][String]:
         setModeBox: (id,mode) ->
-            this.updateBox( @document.getSelectBox() )
+            this.selectBox(id)
             try
                 box = @document.getBox(id)
                 data = null ;
@@ -157,14 +157,19 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
                     mode : "EDIT_USER_META"
 
             try
-                @document.setUserMetaData(JSON.parse(@userMetaEditors["#{id}"]))
-                data['result']['result'] = @document.getuserMetaData() 
+                @document.setUserMetaData(JSON.parse(@userMetaEditors["#{id}"].getValue()))
+                data['result']['result'] = @document.getUserMetaData() 
+                data['result']['message'] = "Saving Success!"
             catch e                
-                data['result']['result'] = @document.getuserMetaData()
+                data['result']['result'] = @document.getUserMetaData()
                 data['result']['message'] = "Syntax Error!"
 
             @presentor.emitEvent("update_view",[data])
 
+        #@
+        #@method[getStandardCommitOrder]:
+        #@arg[box][Box]:
+        #@return[JSONObject] :
         getStandardCommitOrder: (box) ->
             data = 
                 order : "SET_BOX"
@@ -172,6 +177,10 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             return data
 
+        #@
+        #@method[getStandardCommitOrder]:
+        #@arg[box][Box]:
+        #@return[JSONObject] :
         getUserMetaDataCommitOrder: (box) ->
             data = 
                 order : "SET_BOX"

@@ -16,6 +16,8 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             super()
             this.addListener("update_view",this.updateView)
 
+        #@operator[updateView]: [Presentor] x [JSONObject] -> [Presentor]
+        #@method[updateView]: Method called by the callback, where the manufacturer wants to send an event to Presentor.
         updateView: (data) ->
             switch data["order"] 
                 when "ADD_BOX"
@@ -60,7 +62,9 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                 else
                     console.log "This command '#{data['order']}' is not manage."
 
-
+        #@operator[editUser]: [Presentor] x [JSONObject] -> [Presentor]
+        #@method[edtUser] : Method creating and displaying an editor UserMetadata of the box.
+        #@arg[result] : The JsonObject containing all the necessary information for displaying or creating the user metaData editor of the box.
         editUser: (result) ->
             $("#editorPanel_#{result['id']}").removeClass "contentVisible"
             $("#editorPanel_#{result['id']}").addClass "contentHidden"
@@ -77,9 +81,12 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                 theReturn = true
 
             if! ("message" of result) is false 
+                console.log result['message'] 
+                console.log $("#message_compil_userMeta_#{result['id']}")
                 $("#message_compil_userMeta_#{result['id']}").empty()
                 $("#message_compil_userMeta_#{result['id']}").append result['message']
-            else $("#message_compil_userMeta_#{result['id']}").empty()
+            else 
+                $("#message_compil_userMeta_#{result['id']}").empty()
 
             editorJSON.removeClass "contentHidden"
             editorJSON.addClass "contentVisible"
@@ -252,14 +259,16 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
         drawEditor: (id,mime,value) ->
             editor = CodeMirror.fromTextArea(document.getElementById("textarea_#{id}"), {
                 value: "#{value}",
-                mode: mime
+                mode: mime,
+                viewportMargin : Infinity
             })
             return editor 
 
         drawUserMetaEditor: (id,mime,value) ->
             editor = CodeMirror.fromTextArea(document.getElementById("userMeta_#{id}"), {
-                value: "#{value}",
-                mode: mime
+                value : "#{value}",
+                mode : mime,
+                height : Infinity
             })
             return editor 
 

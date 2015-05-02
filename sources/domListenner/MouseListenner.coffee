@@ -25,11 +25,17 @@ $ ->
         if $("#userMetaData_document .CodeMirror").length is 0
                 Boxed.init("document")
 
+        $("#userMetaData_document").removeClass "contentHidden"
+        $("#userMetaData_document").addClass "contentVisible"
+
         event.stopPropagation() 
 
     $("#shadeCover").on "click", (event) ->
         $("#shadeCover").removeClass "contentVisible"
         $("#shadeCover").addClass "contentHidden"
+
+        $("#userMetaData_document").removeClass "contentVisible"
+        $("#userMetaData_document").addClass "contentHidden"
         event.stopPropagation() ;
 
     $("#shadeCover").addClass "contentHidden"
@@ -39,6 +45,10 @@ $ ->
 
     $("#setDocumentUserMetaData").on "click", (event) ->
         Boxed.setDocumentUserMetaData("document") 
+
+        $("#userMetaData_document").removeClass "contentHidden"
+        $("#userMetaData_document").addClass "contentVisible"
+        $("#message_compil_userMeta_document").empty()
         
 
 
