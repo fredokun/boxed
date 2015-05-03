@@ -115,3 +115,6 @@ node_modules/
 
 # Grunt usually preprocesses files such as coffeescript, compass... inside the .tmp directory
 .tmp/
+
+final/
+scripts/
