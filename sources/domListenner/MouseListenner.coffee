@@ -73,11 +73,7 @@ $ ->
         event.stopPropagation()
 
     $("#save").on "click", (event) ->
-        Boxed.saveDocument( $("#fileNameSave").text() )
+        Boxed.saveDocument( $("#fileNameSave").val() )
         event.stopPropagation()
 
     $("#shadeCover").addClass "contentHidden"
-    
-        
-
-

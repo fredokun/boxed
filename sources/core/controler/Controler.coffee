@@ -172,24 +172,30 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         saveDocument: (fileName) ->
             console.log "there1"
 
-            a = $ "<a id='test'>" ;
-            $("#boxes").append a;
+            #a = $ "<a id='test'>" ;
+            #$("#boxes").append a;
 
-            console.log "there2"
+            #console.log "there2"
 
-            blob = new Blob([ @document.exportJSON() ], {type: "octet/stream"})
-            url = window.URL.createObjectURL(blob) ;
+            #blob = new Blob([ JSON.stringify( @document.exportJSON() ) ], {type: "text/plain"})
+            data = 
+                order : "DD_FILE"
+                fileName : "#{fileName}.json"
+                result : JSON.stringify( @document.exportJSON() )
 
-            console.log "there3"
+            #url = window.URL.createObjectURL(blob) ;
 
-            a.attr "href", url;
-            a.attr "download", fileName
-            a.click() 
+            #console.log "there3"
 
-            console.log "there4"
-            window.URL.revokeObjectURL(url);
+            #a.attr "href", url;
+            #a.attr "download", fileName
 
-            $("#test").append "HERE"
+            #console.log "there4"
+            #window.URL.revokeObjectURL(url+"json");
+
+            @presentor.emitEvent("update_view",[data])
+
+            #
 
         #@method[getStandardCommitOrder]:
         #@arg[box][Box]:

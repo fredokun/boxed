@@ -59,6 +59,21 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                 when "INIT"
                     @callback.emitEvent("putEditor",[ data['result']['id'], this.drawUserMetaEditor(data['result']['id'],data['result']['mime'],data['result']['result']), false ])
 
+                when "DD_FILE"
+                    a = $ "<a id='test'>" 
+                    $("#saveFileShade").append a
+
+                    a.append "Download"
+
+                    blob = new Blob([ JSON.stringify( data['result'] ) ], {type: "text/plain"})
+                    url = window.URL.createObjectURL(blob) ;
+
+                    a.attr "href", url;
+                    a.attr "download", data['fileName']
+
+                    window.URL.revokeObjectURL(url+".json");
+                   
+
                 else
                     console.log "This command '#{data['order']}' is not manage."
 
@@ -77,7 +92,7 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
             if editorJSON.length is 0
                 editorJSON = this.createEditorJSON(result['id'])
-                $("box_content_#{result['id']}").append editorJSON
+                $("#box_content_#{result['id']}").append editorJSON
                 theReturn = true
 
             if! ("message" of result) is false 
