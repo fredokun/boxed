@@ -27,7 +27,10 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
 
             #@param[userMetaData][JSONObject]: 
             @userMetaData = {}
-
+        
+        #@observator[getSelectBox]: [Document] -> Box
+        #@method: Method that returns the value of the class attribute 'boxSelect'.
+        #@return[Box]: The value of the selected box.
         getSelectBox : ->
             @boxSelect
 
@@ -149,6 +152,12 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
         #@observator
         getUserMetaData : () ->
             return @userMetaData
+
+        exportJSON: () ->
+            data = 
+                test: 1
+                test: 2
+            return data
 
         #@operator[genId]: [Document] -> int
         #@pre require genId() not_own boxeMap.

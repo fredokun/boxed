@@ -166,7 +166,31 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             @presentor.emitEvent("update_view",[data])
 
-        #@
+        #@operator[saveDocument]: [Controler] -> [Controler]
+        #@method[saveDocument] :Method to create a file representing the document in JSON format.
+        #@arg[fileName]: The name of the new document.
+        saveDocument: (fileName) ->
+            console.log "there1"
+
+            a = $ "<a id='test'>" ;
+            $("#boxes").append a;
+
+            console.log "there2"
+
+            blob = new Blob([ @document.exportJSON() ], {type: "octet/stream"})
+            url = window.URL.createObjectURL(blob) ;
+
+            console.log "there3"
+
+            a.attr "href", url;
+            a.attr "download", fileName
+            a.click() 
+
+            console.log "there4"
+            window.URL.revokeObjectURL(url);
+
+            $("#test").append "HERE"
+
         #@method[getStandardCommitOrder]:
         #@arg[box][Box]:
         #@return[JSONObject] :
@@ -177,7 +201,6 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             return data
 
-        #@
         #@method[getStandardCommitOrder]:
         #@arg[box][Box]:
         #@return[JSONObject] :

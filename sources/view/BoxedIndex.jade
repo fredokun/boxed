@@ -17,7 +17,7 @@ html(lang="eng")
   body
     
     section#shadeCover
-        section#userMetaData_document
+        section#userMetaData_document.shadeElement
             section#message_compil_userMeta_document
             textarea#userMeta_document
             section.boxMenu
@@ -26,6 +26,19 @@ html(lang="eng")
                         a#setDocumentUserMetaData(href='#') 
                           img.menuIcon(src='./../sources/img/save.svg')
                           div.commandName Save
+
+        section#saveFileShade.shadeElement
+            section.titleShade
+              Please insert the file name:
+            input#fileNameSave.inputText(type='text')
+            a#save(href="#")
+              img.menuIcon(src='./../sources/img/save.svg')
+              div.commandName Save document
+
+        section#loadFileShade.shadeElement
+            Please insert the file name:
+            text(id="fileNameLoad")
+            a#load(href="#")
 
     header#globalMenu
         section#menuContainer
@@ -46,12 +59,12 @@ html(lang="eng")
                                     div.commandName Javascript Box
 
                 li.elemMenu
-                    a(href='#')
+                    a#saveDocument(href='#')
                         img.menuIcon(src='./../sources/img/save.svg')
                         div.commandName Save document
 
                 li.elemMenu
-                    a(href='#')
+                    a#loadDocument(href='#')
                         img.menuIcon(src='./../sources/img/archive.svg')
                         div.commandName Load document
 

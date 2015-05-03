@@ -26,7 +26,12 @@ $ ->
                 Boxed.init("document")
 
         $("#userMetaData_document").removeClass "contentHidden"
+        $("#saveFileShade").removeClass "contentVisible"
+        $("#loadFileShade").removeClass "contentVisible"
+
         $("#userMetaData_document").addClass "contentVisible"
+        $("#saveFileShade").addClass "contentHidden"
+        $("#loadFileShade").addClass "contentHidden"    
 
         event.stopPropagation() 
 
@@ -35,20 +40,44 @@ $ ->
         $("#shadeCover").addClass "contentHidden"
 
         $("#userMetaData_document").removeClass "contentVisible"
+        $("#saveFileShade").removeClass "contentVisible"
+        $("#loadFileShade").removeClass "contentVisible"
+
         $("#userMetaData_document").addClass "contentHidden"
-        event.stopPropagation() ;
+        $("#saveFileShade").removeClass "contentHidden"
+        $("#loadFileShade").removeClass "contentHidden"
 
-    $("#shadeCover").addClass "contentHidden"
+        event.stopPropagation() 
 
-    $("#userMetaData_document").on "click", (event) ->
+    $(".shadeElement").on "click", (event) ->
         event.stopPropagation()
 
     $("#setDocumentUserMetaData").on "click", (event) ->
-        Boxed.setDocumentUserMetaData("document") 
-
-        $("#userMetaData_document").removeClass "contentHidden"
-        $("#userMetaData_document").addClass "contentVisible"
         $("#message_compil_userMeta_document").empty()
+        Boxed.setDocumentUserMetaData("document")     
+
+        event.stopPropagation()
+
+    $("#saveDocument").on "click", (event) ->
+        $("#shadeCover").removeClass "contentHidden"
+        $("#shadeCover").addClass "contentVisible"
+
+        $("#userMetaData_document").removeClass "contentVisible"
+        $("#saveFileShade").removeClass "contentHidden"
+        $("#loadFileShade").removeClass "contentVisible"
+
+        $("#userMetaData_document").addClass "contentHidden"
+        $("#saveFileShade").addClass "contentVisisble"
+        $("#loadFileShade").addClass "contentHidden"
+
+        event.stopPropagation()
+
+    $("#save").on "click", (event) ->
+        Boxed.saveDocument( $("#fileNameSave").text() )
+        event.stopPropagation()
+
+    $("#shadeCover").addClass "contentHidden"
+    
         
 
 

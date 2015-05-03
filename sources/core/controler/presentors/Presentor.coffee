@@ -92,6 +92,9 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             editorJSON.addClass "contentVisible"
             return theReturn
 
+        #@operator[createEditorJSON]: [Presentor] x String -> JSONObject
+        #@method[createEditorJSON]: Private method that returns the items to add to the DOM for adding a user Metadata editor.
+        #@return[JSONObject] : The new element to add to the DOM.
         createEditorJSON: (id) ->
             editorJSON = $ "<section id='userMetaData_#{id}'>"
             commiteMessage = $ "<section id='message_compil_userMeta_#{id}'>"
@@ -246,7 +249,7 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             container = $ "<section class='boxContent' id='box_content_#{data['id']}'>"
 
             resultPanel = $ "<section id='resultPanel_#{data['id']}' class='contentHidden'>"
-            resultPanel.attr "type","#{data['mime']}"
+            resultPanel.attr "type","text/html"
             editorPanel = $ "<section id='editorPanel_#{data['id']}' class='contentVisible'>"
             textArea = $ "<textarea id='textarea_#{data['id']}'>"
 
@@ -260,16 +263,16 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             editor = CodeMirror.fromTextArea(document.getElementById("textarea_#{id}"), {
                 value: "#{value}",
                 mode: mime,
-                viewportMargin : Infinity
             })
+            editor.setSize("100%","auto")
             return editor 
 
         drawUserMetaEditor: (id,mime,value) ->
             editor = CodeMirror.fromTextArea(document.getElementById("userMeta_#{id}"), {
                 value : "#{value}",
-                mode : mime,
-                height : Infinity
+                mode : mime
             })
+            editor.setSize("100%","auto")
             return editor 
 
 
