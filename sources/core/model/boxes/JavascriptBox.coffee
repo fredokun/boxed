@@ -20,5 +20,9 @@ define(["CodeBox"],((CodeBox)->
         getType : ->
             return "JAVASCRIPT"
 
+        exportJSON: ->
+            result = super
+            type = "JAVASCRIPT"
+
     return JavascriptBox
 ))

@@ -19,6 +19,10 @@ define(["DocumentBox"],((DocumentBox) ->
         #@return[String] : The type of the box.
         getType : ->
             return "MARKDOWN"
+
+        exportJSON: ->
+            result = super
+            type = "MARKDOWN"
             
     return MarkdownBox
 ))

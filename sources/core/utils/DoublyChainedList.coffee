@@ -17,6 +17,18 @@ define([],(() ->
             @next = null 
             @previous = null 
 
+         exportJSON: ->
+            buffer = @next
+            result = []
+
+            result.push @key
+
+            while @key.getId() isnt buffer.getElement().getId()
+                result.push buffer.getElement()
+                buffer = buffer.getNext()
+
+            return result
+
         #@observator[getNext] : [DoublyChainedList] -> [DoublyChainedList]
         #@method[getNext] : Method that returns the value of the class attribute 'next'.
         #@return[getNext] : The value of the class attribute 'next'.

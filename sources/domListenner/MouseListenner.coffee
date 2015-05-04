@@ -33,6 +33,8 @@ $ ->
         $("#saveFileShade").addClass "contentHidden"
         $("#loadFileShade").addClass "contentHidden"    
 
+        $("#FileLink").remove()
+
         event.stopPropagation() 
 
     $("#shadeCover").on "click", (event) ->
@@ -47,6 +49,8 @@ $ ->
         $("#saveFileShade").removeClass "contentHidden"
         $("#loadFileShade").removeClass "contentHidden"
 
+        $("#FileLink").remove()
+
         event.stopPropagation() 
 
     $(".shadeElement").on "click", (event) ->
@@ -55,6 +59,8 @@ $ ->
     $("#setDocumentUserMetaData").on "click", (event) ->
         $("#message_compil_userMeta_document").empty()
         Boxed.setDocumentUserMetaData("document")     
+
+        $("#FileLink").remove()
 
         event.stopPropagation()
 
@@ -69,6 +75,8 @@ $ ->
         $("#userMetaData_document").addClass "contentHidden"
         $("#saveFileShade").addClass "contentVisisble"
         $("#loadFileShade").addClass "contentHidden"
+
+        $("#FileLink").remove()
 
         event.stopPropagation()
 

@@ -170,32 +170,12 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@method[saveDocument] :Method to create a file representing the document in JSON format.
         #@arg[fileName]: The name of the new document.
         saveDocument: (fileName) ->
-            console.log "there1"
-
-            #a = $ "<a id='test'>" ;
-            #$("#boxes").append a;
-
-            #console.log "there2"
-
-            #blob = new Blob([ JSON.stringify( @document.exportJSON() ) ], {type: "text/plain"})
             data = 
                 order : "DD_FILE"
                 fileName : "#{fileName}.json"
                 result : JSON.stringify( @document.exportJSON() )
 
-            #url = window.URL.createObjectURL(blob) ;
-
-            #console.log "there3"
-
-            #a.attr "href", url;
-            #a.attr "download", fileName
-
-            #console.log "there4"
-            #window.URL.revokeObjectURL(url+"json");
-
             @presentor.emitEvent("update_view",[data])
-
-            #
 
         #@method[getStandardCommitOrder]:
         #@arg[box][Box]:

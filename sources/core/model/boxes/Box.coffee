@@ -79,6 +79,15 @@ define(["NotDefineFunction","NotDefineObject"],((NotDefineFunction,NotDefineObje
     getType : ->
       throw new NotDefineFunction("Box","getType")
 
+    exportJSON: ->
+      myBox = 
+        id : @id
+        content : @content
+        mode : @mode
+        userMetaData : @userMetaData
+
+      return myBox
+
     #@operator[toString] : [Box] -> [Box]
     #@method[toString] : Method printing on the standard output value of the object.
     toString : ->

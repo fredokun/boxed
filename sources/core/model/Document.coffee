@@ -149,27 +149,32 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
             if! (id of @boxesMap) then throw new NotDefineObject("Document","getBox",id)
             return @boxesMap["#{id}"].getElement() 
 
-        #@observator
+        #@observator[getUserMetaData]: [Document] -> [JSONObject]
         getUserMetaData : () ->
             return @userMetaData
 
+
         exportJSON: () ->
-            data = 
-                test: 1
-                test: 2
-            return data
+            doc = 
+                name : @name
+                userMetaData : @userMetaData
+
+            if @boxesOrder is null then doc['boxes'] = null
+            else doc['boxes'] = @boxesOrder.exportJSON()
+
+            if @boxSelect is null then doc['boxSelect'] = null
+            else doc['boxSelect'] = @boxesOrder.getId() 
+
+            return doc
 
         #@operator[genId]: [Document] -> int
         #@pre require genId() not_own boxeMap.
         #@return[int]: Method generates a unique identifier for a box.
         genId: ->
-            save = null
-            if! ("#{@name}_#{@idGenerator}" of @boxesMap) then save = "#{@name}_#{@idGenerator}"
-            else 
-                throw new IdAlreadyExists("Document","genId",@idGenerator)
+            while "#{@name}_#{@idGenerator}" of @boxesMap
+                @idGenerator++
             
-            @idGenerator++
-            return save
+            return "#{@name}_#{@idGenerator}"
 
     return Document
 ))

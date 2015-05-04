@@ -60,7 +60,7 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                     @callback.emitEvent("putEditor",[ data['result']['id'], this.drawUserMetaEditor(data['result']['id'],data['result']['mime'],data['result']['result']), false ])
 
                 when "DD_FILE"
-                    a = $ "<a id='test'>" 
+                    a = $ "<a id='FileLink'>" 
                     $("#saveFileShade").append a
 
                     a.append "Download"
