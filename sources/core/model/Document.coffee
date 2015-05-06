@@ -62,7 +62,7 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                 return box
 
             catch e1
-                console.log e1.toString()
+                console.log e1
                 return null
 
          #@operator[appendBoxEnd]: [Document] -> [Box]

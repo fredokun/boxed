@@ -194,21 +194,26 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@method[loadDocument]: 
         #@arg[file]:
         loadDocument : (file) ->
+            controler = this 
             try
                 reader = new FileReader()
                 reader.onload = (event) ->
+
                     result = event.target.result
-                    result = result.replace "/\\/g",''
+                    result = result.replace(/\\/g,'')
+                    result = result.replace(/^\"(.*)\"$/,"$1")
 
-                    console.log result
-
-                    saved = JSON.parse( event.target.result )
+                    saved = JSON.parse( result )
+                    console.log "name #{saved['name']}"
+                    console.log "user #{saved['userMetaData']}"
 
                     @document = @document = new Documnent(saved['name'])
                     @document.setUserMetaData( saved['userMetaData'] )
 
                     for box in saved['boxes']
-                        myBox = this.appendBoxSaved( box['id'],box['content'],box['mode'],box['id'],box['userMetaData'],box['type'] )
+                        myBox = controler.appendBoxSaved( box['id'],box['content'],box['mode'],box['id'],box['userMetaData'],box['type'] )
+
+                        console.log myBox
 
                         data = 
                             order: "ADD_BOX"
@@ -217,7 +222,8 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
                         @presentor.emitEvent("update_view",[data])
 
-                    this.selectBox( saved['boxSelect'] )
+                    console.log saved['boxSelect']
+                    controler.selectBox( saved['boxSelect'] )
 
                 reader.readAsText(file) 
             catch e

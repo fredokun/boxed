@@ -1,0 +1,29 @@
+#!/bin/bash 
+# 
+
+echo ">> [:)] Running script."
+npm list grunt | grep -q "empty" ;
+
+if [ $? -eq 0 ] ; then
+    echo ">> [:(] Grunt module not found!" ;
+    echo ">> [:)] Installing grunt module." ;
+   npm install grunt --save-dev ;
+
+   echo ">> [:)] Installing the grunt-auto-install."
+   npm install grunt-auto-install --save-dev
+   
+fi
+
+npm list bower | grep -q "empty" ;
+
+if [ $? -eq 0 ]; then 
+    echo ">> [:(] Bower module not found!";
+    echo ">> [:)] Installing bower module."
+    npm install bower --save-dev ;
+fi    
+
+echo ">> [:)] Running the auto installation."
+grunt auto_install
+
+echo ">> [:)] Running grunt."
+grunt

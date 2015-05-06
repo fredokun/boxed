@@ -101,8 +101,6 @@ $ ->
         event.stopPropagation()
 
     $( "#the-photo-file-field" ).change( () ->
-        console.log("File has been choose.")
-        console.log(this.files[0].size)
         Boxed.loadDocument(this.files[0])
     )
 
