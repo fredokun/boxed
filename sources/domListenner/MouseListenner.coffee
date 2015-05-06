@@ -80,8 +80,30 @@ $ ->
 
         event.stopPropagation()
 
+    $("#loadDocument").on "click", (event) ->
+        $("#shadeCover").removeClass "contentHidden"
+        $("#shadeCover").addClass "contentVisible"
+
+        $("#userMetaData_document").removeClass "contentVisible"
+        $("#saveFileShade").removeClass "contentVisible"
+        $("#loadFileShade").removeClass "contentHidden"
+
+        $("#userMetaData_document").addClass "contentHidden"
+        $("#saveFileShade").addClass "contentHidden"
+        $("#loadFileShade").addClass "contentVisible"
+
+        $("#FileLink").remove()
+
+        event.stopPropagation()
+
     $("#save").on "click", (event) ->
         Boxed.saveDocument( $("#fileNameSave").val() )
         event.stopPropagation()
+
+    $( "#the-photo-file-field" ).change( () ->
+        console.log("File has been choose.")
+        console.log(this.files[0].size)
+        Boxed.loadDocument(this.files[0])
+    )
 
     $("#shadeCover").addClass "contentHidden"

@@ -21,10 +21,11 @@ define([],(() ->
             buffer = @next
             result = []
 
-            result.push @key
+            result.push @key.exportJSON()
 
-            while @key.getId() isnt buffer.getElement().getId()
-                result.push buffer.getElement()
+            while @key.getId() isnt buffer.getElement().getId() 
+                console.log buffer.getElement().exportJSON()
+                result.push buffer.getElement().exportJSON()
                 buffer = buffer.getNext()
 
             return result

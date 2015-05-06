@@ -21,8 +21,16 @@ define(["DocumentBox"],((DocumentBox) ->
             return "MARKDOWN"
 
         exportJSON: ->
-            result = super
-            type = "MARKDOWN"
+            myBox = 
+                id : @id
+                content : @content
+                mode : @mode
+                userMetaData : @userMetaData
+                type: "MARKDOWN"
+
+            console.log myBox
+
+            return myBox
             
     return MarkdownBox
 ))

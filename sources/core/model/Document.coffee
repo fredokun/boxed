@@ -65,6 +65,37 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                 console.log e1.toString()
                 return null
 
+         #@operator[appendBoxEnd]: [Document] -> [Box]
+        #@method[appendBox]: Method adding a box at the end of the document.
+        #@param[type][String]: The type of the add box.
+        #@param[Box]: The newly added box.
+        appendBoxEnd: (type) ->
+            try 
+                box = null 
+                switch type
+                    when "JAVASCRIPT" then box = new JavascriptBox( this.genId() )
+                    when "MARKDOWN" then box = new MarkdownBox( this.genId() )
+                    else 
+                        throw new NotDefineObject("Document","appendBoxEnd",type)
+
+                link = new DoublyChainedList(box)
+                if @boxesOrder is null then @boxesOrder = link
+
+                link.setNext(@boxesOrder)
+                link.setPrevious(@boxesOrder.getPrevious())
+
+                if @boxesOrder.getPrevious() isnt null then @boxesOrder.getPrevious().setNext(link) ;
+                @boxesOrder.setPrevious(link)
+
+                @boxesMap["#{box.getId()}"] = link
+                @boxSelect = box
+
+                return box
+
+            catch e1
+                console.log e1.toString()
+                return null
+
         #@operator[appendBoxEnd]: [Document] x String x Boolean -> [Box]
         #@pre appendBox(D,t,b) boxesMap own id
         #@method[appendBox]: Method adding another box after box whose identifier has been set as a parameter..
@@ -149,6 +180,12 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
             if! (id of @boxesMap) then throw new NotDefineObject("Document","getBox",id)
             return @boxesMap["#{id}"].getElement() 
 
+        #@operator[setName] : 
+        #@method[setName] :
+        #@arg[String] :
+        setName: (name) ->
+            @name = name
+
         #@observator[getUserMetaData]: [Document] -> [JSONObject]
         getUserMetaData : () ->
             return @userMetaData
@@ -163,7 +200,7 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
             else doc['boxes'] = @boxesOrder.exportJSON()
 
             if @boxSelect is null then doc['boxSelect'] = null
-            else doc['boxSelect'] = @boxesOrder.getId() 
+            else doc['boxSelect'] = @boxSelect.getId() 
 
             return doc
 

@@ -39,7 +39,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         appendBoxEnd: (type) ->
             this.updateBox( @document.getSelectBox() )
             box = @document.appendBoxEnd(type)
-            if box.length is 0 then return null
+            if box is null then return null
 
             data = 
                 order: "ADD_BOX"
@@ -58,7 +58,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
             box = @document.appendBoxPosition(type,id,position)
             insert = null
 
-            if box.length is 0 then return null
+            if box is null then return null
             if position is true then insert = "BEFORE"
             else insert = "AFTER"
 
@@ -69,6 +69,17 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
                 result: @backendManager[box.getType()].chew(box)
 
             @presentor.emitEvent("update_view",[data])
+
+        appendBoxSaved : ( id,content,mode,userMetaData,type ) ->
+            box = @document.appendBoxEnd(type)
+            if box is null then return null
+
+            box.setId(id)
+            box.setContent(content)
+            box.setMode(mode)
+            box.setUserMetaData(userMetaData)
+
+            return box
 
         #@operation[selectBox]: [Controler] x String -> [Controler]
         #@method[selectBox]: 
@@ -175,7 +186,42 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
                 fileName : "#{fileName}.json"
                 result : JSON.stringify( @document.exportJSON() )
 
+            console.log JSON.stringify( @document.exportJSON() )
+
             @presentor.emitEvent("update_view",[data])
+
+        #@operator[operator][loadDocument]: 
+        #@method[loadDocument]: 
+        #@arg[file]:
+        loadDocument : (file) ->
+            try
+                reader = new FileReader()
+                reader.onload = (event) ->
+                    result = event.target.result
+                    result = result.replace "/\\/g",''
+
+                    console.log result
+
+                    saved = JSON.parse( event.target.result )
+
+                    @document = @document = new Documnent(saved['name'])
+                    @document.setUserMetaData( saved['userMetaData'] )
+
+                    for box in saved['boxes']
+                        myBox = this.appendBoxSaved( box['id'],box['content'],box['mode'],box['id'],box['userMetaData'],box['type'] )
+
+                        data = 
+                            order: "ADD_BOX"
+                            position:"END"
+                            result : @backendManager[myBox.getType()].chew(myBox)
+
+                        @presentor.emitEvent("update_view",[data])
+
+                    this.selectBox( saved['boxSelect'] )
+
+                reader.readAsText(file) 
+            catch e
+                console.log e
 
         #@method[getStandardCommitOrder]:
         #@arg[box][Box]:
@@ -187,9 +233,9 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             return data
 
-        #@method[getStandardCommitOrder]:
-        #@arg[box][Box]:
-        #@return[JSONObject] :
+        #@method[getStandardCommitOrder]: Private method retrieving JSON result of the commit method lorque mode is EDIT_USER_META.
+        #@arg[box][Box]: The box in which retrieve information.
+        #@return[JSONObject] : JSON containing the necessary information to display.
         getUserMetaDataCommitOrder: (box) ->
             data = 
                 order : "SET_BOX"

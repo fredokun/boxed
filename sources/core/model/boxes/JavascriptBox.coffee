@@ -21,8 +21,16 @@ define(["CodeBox"],((CodeBox)->
             return "JAVASCRIPT"
 
         exportJSON: ->
-            result = super
-            type = "JAVASCRIPT"
+            myBox = 
+                id : @id
+                content : @content
+                mode : @mode
+                userMetaData : @userMetaData
+                type: "JAVASCRIPT"
+
+            console.log myBox
+
+            return myBox
 
     return JavascriptBox
 ))
