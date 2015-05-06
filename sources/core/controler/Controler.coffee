@@ -70,12 +70,13 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             @presentor.emitEvent("update_view",[data])
 
-        appendBoxSaved : ( id,content,mode,userMetaData,type ) ->
+        appendBoxSaved : ( id,mode,userMetaData,type ) ->
             box = @document.appendBoxEnd(type)
-            if box is null then return null
+            if box is null 
+                console.log "Box is not null"
+                return null
 
             box.setId(id)
-            box.setContent(content)
             box.setMode(mode)
             box.setUserMetaData(userMetaData)
 
@@ -195,34 +196,35 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@arg[file]:
         loadDocument : (file) ->
             controler = this 
+            presentor = @presentor
+            backendManager = @backendManager
+            editors = @contentEditors
+
             try
                 reader = new FileReader()
                 reader.onload = (event) ->
 
                     result = event.target.result
-                    result = result.replace(/\\/g,'')
+                    result = result.replace(/\\"/g,'"')
                     result = result.replace(/^\"(.*)\"$/,"$1")
 
-                    saved = JSON.parse( result )
-                    console.log "name #{saved['name']}"
-                    console.log "user #{saved['userMetaData']}"
+                    saved = JSON.parse(result)
 
                     @document = @document = new Documnent(saved['name'])
                     @document.setUserMetaData( saved['userMetaData'] )
 
                     for box in saved['boxes']
-                        myBox = controler.appendBoxSaved( box['id'],box['content'],box['mode'],box['id'],box['userMetaData'],box['type'] )
-
-                        console.log myBox
+                        console.log "ID #{box['id']}"
+                        myBox = controler.appendBoxSaved(box['id'],box['mode'],box['userMetaData'],box['type'])
+                        editors[box['id']].setValue(box['content'])
 
                         data = 
                             order: "ADD_BOX"
                             position:"END"
-                            result : @backendManager[myBox.getType()].chew(myBox)
+                            result : backendManager[myBox.getType()].chew(myBox)
 
-                        @presentor.emitEvent("update_view",[data])
+                        presentor.emitEvent("update_view",[data])
 
-                    console.log saved['boxSelect']
                     controler.selectBox( saved['boxSelect'] )
 
                 reader.readAsText(file) 

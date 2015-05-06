@@ -72,10 +72,12 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
         appendBoxEnd: (type) ->
             try 
                 box = null 
+                console.log "type in appendBoxEnd #{type}"
                 switch type
                     when "JAVASCRIPT" then box = new JavascriptBox( this.genId() )
                     when "MARKDOWN" then box = new MarkdownBox( this.genId() )
-                    else 
+                    else
+                        console.log "NOT IN"
                         throw new NotDefineObject("Document","appendBoxEnd",type)
 
                 link = new DoublyChainedList(box)
@@ -93,7 +95,7 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                 return box
 
             catch e1
-                console.log e1.toString()
+                console.log e1
                 return null
 
         #@operator[appendBoxEnd]: [Document] x String x Boolean -> [Box]
@@ -189,7 +191,6 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
         #@observator[getUserMetaData]: [Document] -> [JSONObject]
         getUserMetaData : () ->
             return @userMetaData
-
 
         exportJSON: () ->
             doc = 
