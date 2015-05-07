@@ -70,13 +70,12 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             @presentor.emitEvent("update_view",[data])
 
-        appendBoxSaved : ( id,mode,userMetaData,type ) ->
+        appendBoxSaved : ( id,content,mode,userMetaData,type ) ->
             box = @document.appendBoxEnd(type)
-            if box is null 
-                console.log "Box is not null"
-                return null
+            if box is null then return null
 
             box.setId(id)
+            #box.setContent(content)
             box.setMode(mode)
             box.setUserMetaData(userMetaData)
 
@@ -195,37 +194,53 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@method[loadDocument]: 
         #@arg[file]:
         loadDocument : (file) ->
-            controler = this 
-            presentor = @presentor
+            controler = this
+            document = @document
             backendManager = @backendManager
-            editors = @contentEditors
-
             try
                 reader = new FileReader()
                 reader.onload = (event) ->
-
                     result = event.target.result
                     result = result.replace(/\\"/g,'"')
-                    result = result.replace(/^\"(.*)\"$/,"$1")
+                    #result = result.replace(/\\\\n/g,"\n")
+                    result = result.replace(/^"/,"").replace(/"$/,"")#.replace(/\#/g,"\\#")
 
-                    saved = JSON.parse(result)
+                    console.log result
 
-                    @document = @document = new Documnent(saved['name'])
-                    @document.setUserMetaData( saved['userMetaData'] )
+                    console.log result.charAt(114)
+                    console.log result.charAt(115)
+                    console.log result.charAt(116)
+                    console.log result.charAt(117)
+                    console.log result.charAt(118)
+                    console.log result.charAt(119)
+
+                    saved = JSON.parse( result )
+
+                    console.log saved
+
+
+                    
+
+                    console.log "name doc #{saved['name']}"
+                    console.log "selected Box #{saved['boxSelect']}"
+
+                    #document = @document = new Documnent(saved['name'])
+                    #document.setUserMetaData( saved['userMetaData'] )
+
+                    console.log saved['boxes']
 
                     for box in saved['boxes']
                         console.log "ID #{box['id']}"
-                        myBox = controler.appendBoxSaved(box['id'],box['mode'],box['userMetaData'],box['type'])
-                        editors[box['id']].setValue(box['content'])
+                        #myBox = controler.appendBoxSaved( box['id'],box['content'],box['mode'],box['userMetaData'],box['type'] )
 
-                        data = 
-                            order: "ADD_BOX"
-                            position:"END"
-                            result : backendManager[myBox.getType()].chew(myBox)
+                        #data = 
+                        #    order: "ADD_BOX"
+                        #    position:"END"
+                        #    result : backendManager[myBox.getType()].chew(myBox)
 
-                        presentor.emitEvent("update_view",[data])
+                        #presentor.emitEvent("update_view",[data])
 
-                    controler.selectBox( saved['boxSelect'] )
+                    #controler.selectBox( saved['boxSelect'] )
 
                 reader.readAsText(file) 
             catch e
