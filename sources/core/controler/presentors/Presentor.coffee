@@ -30,7 +30,7 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                     else if data['position'] is 'BEFORE' then $("##{data['anchor']}").before(this.drawBox(data['result']))
                     else return null
 
-                    @callback.emitEvent("putEditor",[ data['result']['id'], this.drawEditor(data['result']['id'],data['result']['mime'],data['result']['result']), true ])
+                    @callback.emitEvent("putEditor",[ data['result']['id'], this.drawEditor(data['result']['id'],data['result']['mime'],data['result']['content']), true ])
 
                     this.unSelectBox()
                     this.selectBox( "#{data['result']['id']}" )
@@ -47,8 +47,7 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                     else if data['result']['mode'] is "COMMIT" then this.editCommit(data['result'])
                     else if data['result']['mode'] is "EDIT_USER_META" 
                         if this.editUser(data['result']) is true 
-                            @callback.emitEvent("putEditor",[ data['result']['id'], this.drawUserMetaEditor(data['result']['id'],data['result']['mime'],data['result']['result']), false ])
-                            
+                            @callback.emitEvent("putEditor",[ data['result']['id'], this.drawUserMetaEditor(data['result']['id'],data['result']['mime'],data['result']['result']), false ])            
                     else 
                             console.log "COMMAND '#{data['result']['mode']}' not manage!"
                             return null
@@ -71,8 +70,17 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                     a.attr "href", url;
                     a.attr "download", data['fileName']
 
-                    window.URL.revokeObjectURL(url+".json");
-                   
+                    window.URL.revokeObjectURL(url+".json")
+
+                when "LOAD_BOX"
+                    $('#document #boxes').append this.drawBox(data['theBox'])
+                    @callback.emitEvent("putEditor",[ data['theBox']['id'], this.drawEditor(data['theBox']['id'],data['theBox']['mime'],data['theBox']['content']), true ])
+
+                    if data['theMeta']['result']['mode'] is "EDIT_CONTENT" then this.editContent(data['theMeta']['result'])
+                    else if data['theMeta']['result']['mode'] is "COMMIT" then this.editCommit(data['theMeta']['result'])
+                    else if data['theMeta']['result']['mode'] is "EDIT_USER_META" 
+                        if this.editUser(data['theMeta']['result']) is true 
+                            @callback.emitEvent("putEditor",[ data['theMeta']['result']['id'], this.drawUserMetaEditor(data['theMeta']['result']['id'],data['theMeta']['result']['mime'],data['theMeta']['result']['result']), false ])
 
                 else
                     console.log "This command '#{data['order']}' is not manage."
@@ -96,8 +104,6 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                 theReturn = true
 
             if! ("message" of result) is false 
-                console.log result['message'] 
-                console.log $("#message_compil_userMeta_#{result['id']}")
                 $("#message_compil_userMeta_#{result['id']}").empty()
                 $("#message_compil_userMeta_#{result['id']}").append result['message']
             else 
@@ -155,6 +161,7 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             else if result['type'] is "TEXT" then this.getCommitText(result)
 
         getCommitText : (result) ->
+            console.log " getCommitText function #{result['result']}"
             $("#resultPanel_#{result['id']}").append result['result']
 
         getCommitCode: (result) ->
@@ -276,20 +283,20 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
         drawEditor: (id,mime,value) ->
             editor = CodeMirror.fromTextArea(document.getElementById("textarea_#{id}"), {
-                value: "#{value}",
-                mode: mime,
+                mode: mime
             })
             editor.setSize("100%","auto")
+            editor.setValue(value)
             return editor 
 
         drawUserMetaEditor: (id,mime,value) ->
             editor = CodeMirror.fromTextArea(document.getElementById("userMeta_#{id}"), {
-                value : "#{value}",
                 mode : mime
             })
             editor.setSize("100%","auto")
-            return editor 
-
+            editor.setValue(value)
+            
+            return editor
 
     return Presentor
 

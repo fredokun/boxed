@@ -25,6 +25,7 @@ define(["Backend","commonmark"],((Backend,commonmark)->
             result =
                 id : box.getId()
                 type : "TEXT"
+                content : box.getContent()
                 result : @writer.render( @parser.parse( box.getContent() ) )
                 mime : "markdown"
                 mode : box.getMode()

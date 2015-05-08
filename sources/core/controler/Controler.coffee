@@ -75,7 +75,9 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
             if box is null then return null
 
             box.setId(id)
-            #box.setContent(content)
+            newContent = content.replace(/\\+n/g,"\n").replace(/\\+t/g,"\t")
+
+            box.setContent( newContent )
             box.setMode(mode)
             box.setUserMetaData(userMetaData)
 
@@ -186,8 +188,6 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
                 fileName : "#{fileName}.json"
                 result : JSON.stringify( @document.exportJSON() )
 
-            console.log JSON.stringify( @document.exportJSON() )
-
             @presentor.emitEvent("update_view",[data])
 
         #@operator[operator][loadDocument]: 
@@ -197,54 +197,42 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
             controler = this
             document = @document
             backendManager = @backendManager
+            presentor = @presentor
+
             try
                 reader = new FileReader()
                 reader.onload = (event) ->
                     result = event.target.result
                     result = result.replace(/\\"/g,'"')
-                    #result = result.replace(/\\\\n/g,"\n")
-                    result = result.replace(/^"/,"").replace(/"$/,"")#.replace(/\#/g,"\\#")
-
-                    console.log result
-
-                    console.log result.charAt(114)
-                    console.log result.charAt(115)
-                    console.log result.charAt(116)
-                    console.log result.charAt(117)
-                    console.log result.charAt(118)
-                    console.log result.charAt(119)
+                    result = result.replace(/^"/,"").replace(/"$/,"")
 
                     saved = JSON.parse( result )
 
-                    console.log saved
+                    document = new Documnent(saved['name'])
+                    document.setUserMetaData( saved['userMetaData'] )
 
+                    controler.loadBoxes(saved['boxes']) 
+                    controler.selectBox( saved['boxSelect'] )
 
-                    
-
-                    console.log "name doc #{saved['name']}"
-                    console.log "selected Box #{saved['boxSelect']}"
-
-                    #document = @document = new Documnent(saved['name'])
-                    #document.setUserMetaData( saved['userMetaData'] )
-
-                    console.log saved['boxes']
-
-                    for box in saved['boxes']
-                        console.log "ID #{box['id']}"
-                        #myBox = controler.appendBoxSaved( box['id'],box['content'],box['mode'],box['userMetaData'],box['type'] )
-
-                        #data = 
-                        #    order: "ADD_BOX"
-                        #    position:"END"
-                        #    result : backendManager[myBox.getType()].chew(myBox)
-
-                        #presentor.emitEvent("update_view",[data])
-
-                    #controler.selectBox( saved['boxSelect'] )
-
-                reader.readAsText(file) 
+                reader.readAsText(file)
             catch e
                 console.log e
+
+        loadBoxes : (boxes) ->
+            for box in boxes
+                myBox = this.appendBoxSaved( box['id'],box['content'],box['mode'],box['userMetaData'],box['type'] )
+
+                data = 
+                    order: "LOAD_BOX"
+                    theBox : @backendManager[myBox.getType()].chew(myBox)
+
+                if box['mode'] is "COMMIT" 
+                    console.log "loadBoxes in commit"
+                    data['theMeta'] = this.getStandardCommitOrder(myBox)
+                else if box['mode'] isnt "EDIT_USER_META" then data['theMeta'] = this.getStandardCommitOrder(myBox)
+                else data['theMeta'] = this.getUserMetaDataCommitOrder(myBox)
+
+                @presentor.emitEvent("update_view",[data])
 
         #@method[getStandardCommitOrder]:
         #@arg[box][Box]:
