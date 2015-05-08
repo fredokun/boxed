@@ -74,7 +74,7 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
                 when "LOAD_BOX"
                     $('#document #boxes').append this.drawBox(data['theBox'])
-                    @callback.emitEvent("putEditor",[ data['theBox']['id'], this.drawEditor(data['theBox']['id'],data['theBox']['mime'],data['theBox']['content']), true ])
+                    @callback.emitEvent("putEditor",[data['theBox']['id'], this.drawEditor(data['theBox']['id'],data['theBox']['mime'],data['theBox']['content']), true ])
 
                     if data['theMeta']['result']['mode'] is "EDIT_CONTENT" then this.editContent(data['theMeta']['result'])
                     else if data['theMeta']['result']['mode'] is "COMMIT" then this.editCommit(data['theMeta']['result'])
@@ -161,7 +161,6 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             else if result['type'] is "TEXT" then this.getCommitText(result)
 
         getCommitText : (result) ->
-            console.log " getCommitText function #{result['result']}"
             $("#resultPanel_#{result['id']}").append result['result']
 
         getCommitCode: (result) ->

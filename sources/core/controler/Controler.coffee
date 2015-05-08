@@ -106,15 +106,18 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
             this.selectBox(id)
             try
                 @document.removeBox(id)
-                delete @contentEditors["#{id}"] 
+                delete @contentEditors["#{id}"]
+
+                if id of @userMetaEditors then delete @userMetaEditors["#{id}"]
+
                 data = 
                     order: "REMOVE_BOX"
                     id : id
 
                 @presentor.emitEvent("update_view",[data])
             catch e
-                console.log e.toString()
-        
+                console.log e
+                
         #@operation[setModeBox]: [Controler] x String x String -> [Controler]
         #@method[setModeBox]: 
         #@arg[id][String]:
@@ -194,6 +197,10 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@method[loadDocument]: 
         #@arg[file]:
         loadDocument : (file) ->
+            for id of @contentEditors
+                console.log "ID #{id}"
+                this.removeBox(id)
+
             controler = this
             document = @document
             backendManager = @backendManager
@@ -216,7 +223,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
                 reader.readAsText(file)
             catch e
-                console.log e
+                console.log e            
 
         loadBoxes : (boxes) ->
             for box in boxes
@@ -226,9 +233,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
                     order: "LOAD_BOX"
                     theBox : @backendManager[myBox.getType()].chew(myBox)
 
-                if box['mode'] is "COMMIT" 
-                    console.log "loadBoxes in commit"
-                    data['theMeta'] = this.getStandardCommitOrder(myBox)
+                if box['mode'] is "COMMIT" then data['theMeta'] = this.getStandardCommitOrder(myBox)
                 else if box['mode'] isnt "EDIT_USER_META" then data['theMeta'] = this.getStandardCommitOrder(myBox)
                 else data['theMeta'] = this.getUserMetaDataCommitOrder(myBox)
 
