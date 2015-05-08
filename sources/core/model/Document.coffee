@@ -65,20 +65,17 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                 console.log e1
                 return null
 
-         #@operator[appendBoxEnd]: [Document] -> [Box]
-        #@method[appendBox]: Method adding a box at the end of the document.
-        #@param[type][String]: The type of the add box.
-        #@param[Box]: The newly added box.
-        appendBoxEnd: (type) ->
-            try 
-                box = null 
+        appendSavedBox : (id,type) ->
+            myBox = null
+            try  
                 switch type
-                    when "JAVASCRIPT" then box = new JavascriptBox( this.genId() )
-                    when "MARKDOWN" then box = new MarkdownBox( this.genId() )
+                    when "JAVASCRIPT" then myBox = new JavascriptBox(id )
+                    when "MARKDOWN" then myBox = new MarkdownBox( id )
                     else
-                        throw new NotDefineObject("Document","appendBoxEnd",type)
+                        console.log "Box type Unknow '#{type}'"
+                        return null
 
-                link = new DoublyChainedList(box)
+                link = new DoublyChainedList(myBox)
                 if @boxesOrder is null then @boxesOrder = link
 
                 link.setNext(@boxesOrder)
@@ -87,14 +84,15 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                 if @boxesOrder.getPrevious() isnt null then @boxesOrder.getPrevious().setNext(link) ;
                 @boxesOrder.setPrevious(link)
 
-                @boxesMap["#{box.getId()}"] = link
-                @boxSelect = box
+                @boxesMap["#{myBox.getId()}"] = link
+                @boxSelect = myBox
 
-                return box
+                return myBox
 
             catch e1
                 console.log e1
                 return null
+
 
         #@operator[appendBoxEnd]: [Document] x String x Boolean -> [Box]
         #@pre appendBox(D,t,b) boxesMap own id

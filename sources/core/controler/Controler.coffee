@@ -70,16 +70,13 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             @presentor.emitEvent("update_view",[data])
 
-        appendBoxSaved : ( id,content,mode,userMetaData,type ) ->
-            box = @document.appendBoxEnd(type)
+        appendBoxSaved : (id,content,mode,userMetaData,type) ->
+            box = @document.appendSavedBox(id,type)
             if box is null then return null
 
-            box.setId(id)
-            newContent = content.replace(/\\+n/g,"\n").replace(/\\+t/g,"\t")
-
-            box.setContent( newContent )
-            box.setMode(mode)
             box.setUserMetaData(userMetaData)
+            box.setMode(mode) 
+            box.setContent( content.replace(/\\+n/g,"\n").replace(/\\+t/g,"\t") )
 
             return box
 
@@ -97,12 +94,14 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
                 @presentor.emitEvent("update_view",[data])
             catch e1
-                console.log e1.toString()
+                console.log e1
 
         #@opeation[removeBox] : [Controler] x String -> [Controler]
         #@method[removeBox] : 
         #@arg[id][String] :
         removeBox: (id) ->
+            console.log id
+
             this.selectBox(id)
             try
                 @document.removeBox(id)
@@ -117,7 +116,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
                 @presentor.emitEvent("update_view",[data])
             catch e
                 console.log e
-                
+
         #@operation[setModeBox]: [Controler] x String x String -> [Controler]
         #@method[setModeBox]: 
         #@arg[id][String]:
@@ -146,7 +145,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
                 @presentor.emitEvent("update_view",[data])
             catch e
-                console.log e.toString() 
+                console.log e
 
         #@operation[init] : [Controler] x String ->
         #@method[init] : Method for initializing the application, by implementing UserMetaData publisher of the document.
@@ -198,7 +197,6 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@arg[file]:
         loadDocument : (file) ->
             for id of @contentEditors
-                console.log "ID #{id}"
                 this.removeBox(id)
 
             controler = this
@@ -227,6 +225,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
         loadBoxes : (boxes) ->
             for box in boxes
+                console.log box['id']
                 myBox = this.appendBoxSaved( box['id'],box['content'],box['mode'],box['userMetaData'],box['type'] )
 
                 data = 
@@ -281,6 +280,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@method[updateBox] : Method that update the content of the box.
         #@arg[box][Box] : The box to update content.
         updateBox : (box) ->
+            console.log box
             if box isnt null
                 if @contentEditors[box.getId()].isClean() == false
                         switch box.getMode() 
