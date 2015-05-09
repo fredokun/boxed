@@ -70,6 +70,14 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             @presentor.emitEvent("update_view",[data])
 
+        #@operator[appendBoxSaved]: [Controler] x String x String x String x JSONObject x String -> [Controler]
+        #@method[appendBoxSaved]: Private method to create a box, and add to the document.
+        #@arg[id][String] : Name of the Box to load.
+        #@arg[content][String] : The contents of the box.
+        #@arg[mode][String] : The mode of the box.
+        #@arg[userMetaData][JSONObject] : Meta-users of the box.
+        #@arg[type][String] : The type of the box.
+        #@return[Box] : The new box and added newly created.
         appendBoxSaved : (id,content,mode,userMetaData,type) ->
             box = @document.appendSavedBox(id,type)
             if box is null then return null
@@ -81,8 +89,8 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
             return box
 
         #@operation[selectBox]: [Controler] x String -> [Controler]
-        #@method[selectBox]: 
-        #@param[id][String]:
+        #@method[selectBox]: Method to select a mailbox on the model.
+        #@param[id][String]: 
         selectBox: (id) ->
             this.updateBox( @document.getSelectBox() )
             try
@@ -100,8 +108,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@method[removeBox] : 
         #@arg[id][String] :
         removeBox: (id) ->
-            console.log id
-
+            this.updateBox( @document.getSelectBox() )
             this.selectBox(id)
             try
                 @document.removeBox(id)
@@ -122,6 +129,8 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@arg[id][String]:
         #@iarg[mode][String]:
         setModeBox: (id,mode) ->
+            this.updateBox( @document.getSelectBox() )
+            
             this.selectBox(id)
             try
                 box = @document.getBox(id)
