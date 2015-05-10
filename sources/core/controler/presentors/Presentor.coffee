@@ -4,9 +4,9 @@
 
 define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown","cm/mode/javascript/javascript"],(($,EventEmitter,CodeMirror) ->
 
-    #@class[presntor]
+    #@class[Presentor]
     #@service[Presentor]
-    #refine[Presentor]EventEmitter
+    #refine[Presentor]: EventEmitter
     class Presentor extends EventEmitter
 
         #@constructor[init] -> [EventEmitter] -> [Presentor]
@@ -67,7 +67,7 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                     blob = new Blob([ JSON.stringify( data['result'] ) ], {type: "text/plain"})
                     url = window.URL.createObjectURL(blob) ;
 
-                    a.attr "href", url;
+                    a.attr "href", url
                     a.attr "download", data['fileName']
 
                     window.URL.revokeObjectURL(url+".json")
@@ -128,6 +128,9 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
             return editorJSON
 
+        #@operator[editContent]: [Presnetor] x [JSONObject] -> [JSONObject]
+        #@method[editContent] : Method to set up the display of the editor of the box.
+        #@arg[result][JSONObject] : The data to show the data of the box.
         editContent: (result) ->
             $("#editorPanel_#{result['id']}").removeClass "contentHidden"
             $("#editorPanel_#{result['id']}").addClass "contentVisible"
@@ -141,7 +144,9 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
                 $("#message_compil_userMeta_#{result['id']}").empty()
 
-
+        #@operator[editCommit]: [Presentor] x [JSONObject] -> [Presentor]
+        #@method[editCommit] : Private method for displaying commit the box.
+        #@arg[result][JSONObject] : The data to show the data of the box.
         editCommit : (result) ->
             $("#editorPanel_#{result['id']}").removeClass "contentVisible"
             $("#editorPanel_#{result['id']}").addClass "contentHidden"
@@ -160,9 +165,15 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             if result['type'] is "CODE" then this.getCommitCode(result)
             else if result['type'] is "TEXT" then this.getCommitText(result)
 
+        #@operator[getCommitText]: [Presentor] x [JSONObject] -> [Presentor]
+        #@method[getCommitText]: Method for inserting the result of a box type TEXT in its view box.
+        #@arg[result]: The data to show the data of the box.
         getCommitText : (result) ->
             $("#resultPanel_#{result['id']}").append result['result']
 
+        #@operator[getCommitCode]: [Presentor] x [JSONObject] -> [Presentor]
+        #@method[getCommitCode]: Method for inserting the result of a box type CODE in its view box.
+        #@arg[result]: The data to show the data of the box.
         getCommitCode: (result) ->
             codebox = $ "<section class='codeBox'>"
             textbox = $ "<section class='textBox'>"
@@ -171,7 +182,9 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             textbox.append result['result']
             $("#resultPanel_#{result['id']}").append codebox
             $("#resultPanel_#{result['id']}").append textbox
-
+        
+        #@operator[unSelectBox]: [Presentor] -> [Presentor]
+        #@method[unSelectBox]: Method for unselecting a box on the view.
         unSelectBox: () ->
             selectedMenu =  $(".visible")
             selectedContent =  $(".select")
@@ -183,6 +196,9 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
                         
             if selectedContent.length isnt 0 then selectedContent.removeClass 'select'
 
+        #@operator[unSelectBox]: [Presentor] -> [Presentor]
+        #@method[unSelectBox]: Method for selecting a box on the view.
+        #@arg[id][String] : The identifier of the box to select.
         selectBox: (id) ->
             if id is null then return null
             $("#box_menu_#{id}").removeClass 'unvisible'
@@ -190,6 +206,10 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
             $("#box_content_#{id}").addClass 'select'
 
+        #@operator[drawBox]: [Prensentor] x [JSONObject] -> [Presentor]
+        #@method[drawBox]: Method generates a box that can be added to the view.
+        #@arg[data][JSONObject]: The necessary data to generate a box.
+        #@return[JSONObject]: The new box generated to add to the view.
         drawBox: (data) ->
             container = $ "<section class='box' id='#{data['id']}'>"
             menu = this.drawBoxMenu(data['id'])
@@ -204,6 +224,10 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
             return container
 
+        #@operator[drawBoxMenu]: [Presentor] x String -> [JSONObject]
+        #@method[drawBoxMenu]: Method drawing the menu of the box in question.
+        #@arg[id][String]: The identifier of the box.
+        #@return[JSONObject]: The menu of the generated box.
         drawBoxMenu: (id) ->
             box = $ "<section class='boxMenu' id='box_menu_#{id}'>"
             listMenu = $ "<ul class='listerMenu'>"
@@ -235,6 +259,10 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
             return box
 
+        #@operator[drawBoxMenu]: [Presentor] x String -> [JSONObject]
+        #@method[drawBoxSubMenu]: Generating method as a menu item menu.
+        #@arg[String]: The identifier of the box.
+        #@return[JSONObject]: The menu of the generated box.
         drawBoxSubMenu: (id,position) ->
             subMenu = $ "<section class='subMenu' >"
             listMenu = $ "<ul class='listerMenu'>"
@@ -250,8 +278,11 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             subMenu.append listMenu
             return subMenu
 
-        #
-        #
+        #@operator[drawItemMenu] x String x String x String x fun x String -> [JSONObject]
+        #@method[drawItemMenu]: Method generating menu item.
+        #@arg[id]: The identifier of the box.
+        #@arg[name]: The label of the menu element.
+        #@arg[fun]: The function to execute the model when clicking on the link.
         drawItemMenu: (id,name,img,fun,style) ->
             element = $ "<li class='#{style}'>"
             link = $ "<a href='#'>"
@@ -266,6 +297,10 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
             return element
 
+        #@operator[drawBoxContainer]: [Presentor] x [JSONObject] -> [Presentor]
+        #@method[drawBoxContainer]: Method that draws the contents of a box at its inception.
+        #@arg[data][JSONObject]: Data for displaying the contents of the box.
+        #@return[JSONObject]: The contents of the box.
         drawBoxContainer: (data) ->
             container = $ "<section class='boxContent' id='box_content_#{data['id']}'>"
 
@@ -280,6 +315,12 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
 
             return container
 
+        #@operator[drawEditor]: [Presentor] x String x String x String -> [CodeMirrorEditor]
+        #@operator[drawEditor]: Method generates an editor for the newly created box.
+        #@arg[id][String]: The identifier of the box.
+        #@arg[mime][String]: The mime editor to create.
+        #@arg[value][String]: The content of the editor if you want to initialize.
+        #@return[JSONObject]: The text editor to create the new box.
         drawEditor: (id,mime,value) ->
             editor = CodeMirror.fromTextArea(document.getElementById("textarea_#{id}"), {
                 mode: mime
@@ -288,6 +329,12 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
             editor.setValue(value)
             return editor 
 
+        #@operator[drawUserMetaEditor]: [Presentor] x String x String x String -> [CodeMirrorEditor]
+        #@operator[drawUserMetaEditor]: Method for generating publisher meta data of a box.
+        #@arg[String]: The identifier of the box.
+        #@arg[mime][String]: The mime editor to create.
+        #@arg[value][String]: The content of the editor if you want to initialize.
+        #@return[JSONObject]: The text editor to create the new box.
         drawUserMetaEditor: (id,mime,value) ->
             editor = CodeMirror.fromTextArea(document.getElementById("userMeta_#{id}"), {
                 mode : mime

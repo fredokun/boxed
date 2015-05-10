@@ -1,7 +1,7 @@
 ##
 # Class defining the architecture of a backend.
 ##
-define(["NotDefineFunction"],((NotDefineFunction)->
+define([],(()->
     #@service[Backend]
     #@class[Backend]
     class Backend
@@ -15,7 +15,7 @@ define(["NotDefineFunction"],((NotDefineFunction)->
         #@method[chew]: Method taking a box and returning the contents of the box 'compiled'.
         #@return[JSONObject]: The contents of the compiled box.
         chew: (box) ->
-            throw new NotDefineFunction("Backend","chew")
+            throw new Error("Method not define. You must extend Backend.")
 
     return Backend
 ))

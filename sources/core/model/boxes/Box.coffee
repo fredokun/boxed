@@ -1,7 +1,7 @@
 ##
 # Class representing a 'Box' editing.
 ##
-define(["NotDefineFunction","NotDefineObject"],((NotDefineFunction,NotDefineObject) ->
+define([],(() ->
 
   #@service[Box]
   #@class[Box]
@@ -65,7 +65,7 @@ define(["NotDefineFunction","NotDefineObject"],((NotDefineFunction,NotDefineObje
     setMode : (data) -> 
       switch data
         when "EDIT_CONTENT", "COMMIT", "EDIT_USER_META" then @mode = data
-        else throw new NotDefineObject("Box","setMode",data)
+        else throw new Error("The mode '@{data}' is unknown.")
 
     #@observator[setUserMetaData] : [Box] -> String
     #@method[setUserMetaData] : Class method that sets the value of 'userMetaData' attribute.
@@ -77,7 +77,7 @@ define(["NotDefineFunction","NotDefineObject"],((NotDefineFunction,NotDefineObje
     #@method[getType] : Method that returns the type of the box.
     #@return[String] : The type of the box.
     getType : ->
-      throw new NotDefineFunction("Box","getType")
+      throw new Error("Method undefined! You must extend this class and redefine it.")
 
     #@operator[toString] : [Box] -> [Box]
     #@method[toString] : Method printing on the standard output value of the object.

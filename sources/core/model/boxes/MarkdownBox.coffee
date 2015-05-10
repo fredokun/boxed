@@ -20,6 +20,9 @@ define(["DocumentBox"],((DocumentBox) ->
         getType : ->
             return "MARKDOWN"
 
+        #@operator[exportJSON] -> [JSONObject]
+        #@method[exportJSON]: Method that returns the value of the document in JSON format.
+        #@return[JSONObject]: The box in JSON format.
         exportJSON: ->
             myBox = 
                 id : @id
@@ -27,8 +30,6 @@ define(["DocumentBox"],((DocumentBox) ->
                 mode : @mode
                 userMetaData : @userMetaData
                 type: "MARKDOWN"
-
-            console.log myBox
 
             return myBox
             

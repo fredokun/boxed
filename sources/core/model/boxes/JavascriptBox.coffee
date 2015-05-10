@@ -19,7 +19,10 @@ define(["CodeBox"],((CodeBox)->
         #@return[String] : The type of the box.
         getType : ->
             return "JAVASCRIPT"
-
+        
+        #@operator[exportJSON] -> [JSONObject]
+        #@method[exportJSON]: Method that returns the value of the document in JSON format.
+        #@return[JSONObject]: The box in JSON format.
         exportJSON: ->
             myBox = 
                 id : @id
@@ -27,8 +30,6 @@ define(["CodeBox"],((CodeBox)->
                 mode : @mode
                 userMetaData : @userMetaData
                 type: "JAVASCRIPT"
-
-            console.log myBox
 
             return myBox
 

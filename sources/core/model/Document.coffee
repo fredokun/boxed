@@ -1,7 +1,7 @@
 ##
 # The main element of the model, the Document. The container of all the boxes.
 ##
-define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdAlreadyExists"],((JavascriptBox,MarkdownBox,DoublyChainedList,NotDefineObject,IdAlreadyExists)->
+define(["JavascriptBox","MarkdownBox","DoublyChainedList"],((JavascriptBox,MarkdownBox,DoublyChainedList)->
 
     #@service[Document]
     #@class[Document]
@@ -45,7 +45,7 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                     when "JAVASCRIPT" then box = new JavascriptBox( this.genId() )
                     when "MARKDOWN" then box = new MarkdownBox( this.genId() )
                     else 
-                        throw new NotDefineObject("Document","appendBoxEnd",type)
+                        throw new Error("Unknown type box: '@{type}'")
 
                 link = new DoublyChainedList(box)
                 if @boxesOrder is null then @boxesOrder = link
@@ -65,6 +65,11 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                 console.log e1
                 return null
 
+        #@operator[appendSavedBox]: [Document] x String x String -> [Box]
+        #@method[appendSavedBox]: Method loading a box at the end of the view.
+        #@arg[id][String]: The identifier of the box to add.
+        #@arg[type][String]: The type of the add box.
+        #@arg[Box]: The newly added box.
         appendSavedBox : (id,type) ->
             myBox = null
             try  
@@ -108,9 +113,9 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                     when "JAVASCRIPT" then box = new JavascriptBox( this.genId() )
                     when "MARKDOWN" then box = new MarkdownBox( this.genId() )
                     else 
-                        throw new NotDefineObject("Document","appendBoxPosition",type)
+                        throw new Error("Unknown type box: '#{type}'.")
 
-                if! ( id of @boxesMap) then throw new BoxNotFound("Document","appendBoxAPosition",id)
+                if! ( id of @boxesMap) then throw new Error("Unknown box identifier : '#{id}'.")
 
                 anchor = @boxesMap["#{id}"]
                 link = new DoublyChainedList(box)
@@ -137,15 +142,15 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
                 @boxesMap["#{box.getId()}"] = link
                 return box
 
-            catch e1
-                console.log e1.toString()
+            catch e
+                console.log e
                 return null
 
         #@operator[removeBox]: [Document] x String -> [Document]
         #@method[removeBox]: Method of removing a paper box.
         #@arg[id][String]: The identifier of the box to remove.
         removeBox: (id) ->
-            if! (id of @boxesMap) then throw new NotDefineObject("Document","removeBox",id)
+            if! (id of @boxesMap) then throw new Error("Unknown box identifier : '#{id}'.")
             
             if id is @boxesOrder.getElement().getId() 
                 if @boxesOrder.getNext().getElement().getId() is id then @boxesOrder = null
@@ -161,7 +166,7 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
         setSelectBox: (id) ->
             if id is null then @boxSelect = null
             else 
-                if! (id of @boxesMap) then throw new NotDefineObject("Document","setSelectBox",id)
+                if! (id of @boxesMap) then throw new  Error("Unknown box identifier : '#{id}'.")
                 else @boxSelect = @boxesMap["#{id}"].getElement()
 
         #@operator[setUserMetaData]: [Document] x String -> [Document]
@@ -171,24 +176,29 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
 
         #@observator[getBox]: [Document] x String -> [Box]
         #@pre getBox(D,i) @boxMap own i
-        #@method[getBox]: 
-        #@arg[id][String]:
-        #@return[Box]:
+        #@method[getBox]: Returns an existing box in the model.
+        #@arg[id][String]: The identifier of the box.
+        #@return[Box]: The box for the ID parameter.
         getBox: (id) ->
-            if! (id of @boxesMap) then throw new NotDefineObject("Document","getBox",id)
+            if! (id of @boxesMap) then throw new Error("The box of id '#{id}' does not exist.")
             return @boxesMap["#{id}"].getElement() 
 
-        #@operator[setName] : 
-        #@method[setName] :
-        #@arg[String] :
+        #@operator[setName] : [Document] x String -> [Document]
+        #@method[setName] : Method changing the name of the document.
+        #@arg[String] : The new document name.
         setName: (name) ->
             @name = name
 
         #@observator[getUserMetaData]: [Document] -> [JSONObject]
-        getUserMetaData : () ->
+        #@method[getUserMetaData]: Accessor class parameter to 'userMetaData'.
+        #@return[JSONObject]: The value of the class parameter 'userMetaData'.
+        getUserMetaData : ->
             return @userMetaData
 
-        exportJSON: () ->
+        #@operator[exportJSON]: [Document] -> [JSONObject]
+        #@method[exportJSON]: Method that returns the value of the document in JSON format.
+        #@return[JSONObject]: The document in JSON format.
+        exportJSON: ->
             doc = 
                 name : @name
                 userMetaData : @userMetaData
@@ -203,7 +213,8 @@ define(["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdA
 
         #@operator[genId]: [Document] -> int
         #@pre require genId() not_own boxeMap.
-        #@return[int]: Method generates a unique identifier for a box.
+        #@method[gentId]: Method generates a unique identifier for a box.
+        #@return[int]: The identifier for the new box.
         genId: ->
             while "#{@name}_#{@idGenerator}" of @boxesMap
                 @idGenerator++

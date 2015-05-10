@@ -105,8 +105,8 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
                 console.log e1
 
         #@opeation[removeBox] : [Controler] x String -> [Controler]
-        #@method[removeBox] : 
-        #@arg[id][String] :
+        #@method[removeBox] : Public method to delete a document box.
+        #@arg[id][String] : The id of the box to be delete.
         removeBox: (id) ->
             this.updateBox( @document.getSelectBox() )
             this.selectBox(id)
@@ -125,9 +125,9 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
                 console.log e
 
         #@operation[setModeBox]: [Controler] x String x String -> [Controler]
-        #@method[setModeBox]: 
-        #@arg[id][String]:
-        #@iarg[mode][String]:
+        #@method[setModeBox]: Méthod for changing the mode of the box and save the metadata in a box.
+        #@arg[id][String]: The id of the box to set the mode.
+        #@arg[mode][String]: The future mode if the box.
         setModeBox: (id,mode) ->
             this.updateBox( @document.getSelectBox() )
             
@@ -201,9 +201,9 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             @presentor.emitEvent("update_view",[data])
 
-        #@operator[operator][loadDocument]: 
-        #@method[loadDocument]: 
-        #@arg[file]:
+        #@operator[operator][loadDocument]: [Controler] x String -> Controler
+        #@method[loadDocument]: Method to load a doument from a file.
+        #@arg[file]: The name of the file to load.
         loadDocument : (file) ->
             for id of @contentEditors
                 this.removeBox(id)
@@ -232,6 +232,9 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
             catch e
                 console.log e            
 
+        #@operator[operator][loadBoxes] : Private method to load a list of boxes recovered from a file.
+        #@method[loadBox]: Private method to load a list of boxes recovered from a file.
+        #@args[box][LinkedList<Box>] : The list of the box to be loaded.
         loadBoxes : (boxes) ->
             for box in boxes
                 console.log box['id']
@@ -247,9 +250,10 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
                 @presentor.emitEvent("update_view",[data])
 
-        #@method[getStandardCommitOrder]:
-        #@arg[box][Box]:
-        #@return[JSONObject] :
+        #@operato[getStandardCommitOrder]: [Controler] x Box -> [JSONObject]
+        #@method[getStandardCommitOrder]: Private method of providinf a JSONobject containing the necessary information to be able ro deliver either Presentor a box mode commit ot editable mode.
+        #@arg[box][Box]: The box of which is to obtain the display.
+        #@return[JSONObject]: The necessary data to permit a propoer display of the box.
         getStandardCommitOrder: (box) ->
             data = 
                 order : "SET_BOX"
@@ -271,7 +275,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
 
             return data
 
-        #@operation[addEditor] : [Controler] x [CMEditor] x [String] -> [Controler]
+        #@operator[addEditor] : [Controler] x [CMEditor] x [String] -> [Controler]
         ##pre[addEditor(i,CM,w)] : require s not_own editors or userMetaEditors
         #@method[addEditor] : Add a box's CodeMirror editor to the param class editor.
         addContentEditor:(id,editor,wichEditor) ->

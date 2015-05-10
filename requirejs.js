@@ -1,25 +1,19 @@
 requirejs.config({
     shim : {
-    "NotDefineFunction": [],
-    "NotDefineObject": [],
-    "IdAlreadyExists":[],
-    "Box" : ["NotDefineFunction","NotDefineObject"],
+    "Box" : [],
     "CodeBox" : ["Box"],
-    "Backend" : ["NotDefineFunction"],
+    "Backend" : [],
     "DoublyChainedList" : [],
     "Presentor" : ["jquery","EventEmitter","cm/lib/CodeMirror"],
     "MarkdownBox" : ["DocumentBox"],
     "JavascriptBox" : ["CodeBox"],
-    "Document":["JavascriptBox","MarkdownBox","DoublyChainedList","NotDefineObject","IdAlreadyExists"],
+    "Document":["JavascriptBox","MarkdownBox","DoublyChainedList"],
     "MarkdownBackend" : ["Backend","commonmark"],
     "JavascriptBackend" : ["Backend"],
     "Controler" : ["Documnent","JavascriptBackend","MarkdownBackend","Presentor","EventEmitter"],
     "Boxed" : ["Controler"]
     },
     paths : {
-    "NotDefineFunction": "NotDefineFunction",
-    "NotDefineObject": "NotDefineObject",
-    "IdAlreadyExists": "IdAlreadyExists",
     "jquery" : "./../bower_components/jquery/dist/jquery",
     "Box" : "Box",
     "DocumentBox":"DocumentBox",
