@@ -18,8 +18,8 @@ define(["Backend"],((Backend)->
         #@return[JSONObject]: The contents of the compiled box.
         chew: (box) ->
             result = ""
-            #console.log = (message) ->
-            #    result = "#{result}#{message}<br/>"
+            console.log = (message) ->
+                result = "#{result}#{message}<br/>"
 
             try
                 result = eval(box.getContent())

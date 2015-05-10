@@ -24,18 +24,13 @@ module.exports = function(grunt){
                 './scripts/MarkdownBox.js':'./sources/core/model/boxes/MarkdownBox.coffee',
 
                 './scripts/DoublyChainedList.js':'./sources/core/utils/DoublyChainedList.coffee',
-                './final/scripts/MouseListenner.js':'./sources/domListenner/MouseListenner.coffee',
-
-                './scripts/NotDefineFunction.js':'./sources/core/utils/errors/NotDefineFunction.coffee',
-                './scripts/NotDefineObject.js':'./sources/core/utils/errors/NotDefineObject.coffee',
-                './scripts/IdAlreadyExists.js':'./sources/core/utils/errors/IdAlreadyExists.coffee'
+                './final/scripts/MouseListenner.js':'./sources/domListenner/MouseListenner.coffee'
             }
         }
     },
     jade : {
         compile : {
             files : {
-                "./final/testView.html":"./sources/view/testView.jade",
                 "./final/BoxedIndex.html":"./sources/view/BoxedIndex.jade"
             }
         },
