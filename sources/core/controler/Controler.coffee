@@ -237,7 +237,6 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@args[box][LinkedList<Box>] : The list of the box to be loaded.
         loadBoxes : (boxes) ->
             for box in boxes
-                console.log box['id']
                 myBox = this.appendBoxSaved( box['id'],box['content'],box['mode'],box['userMetaData'],box['type'] )
 
                 data = 
@@ -293,7 +292,6 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         #@method[updateBox] : Method that update the content of the box.
         #@arg[box][Box] : The box to update content.
         updateBox : (box) ->
-            console.log box
             if box isnt null
                 if @contentEditors[box.getId()].isClean() == false
                         switch box.getMode() 
