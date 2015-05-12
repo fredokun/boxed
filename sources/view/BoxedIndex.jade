@@ -1,0 +1,77 @@
+doctype html
+
+html(lang="eng")
+  head
+    title=Boxed
+    
+    meta(charset='UTF-8')
+
+    link(rel='stylesheet' type='text/css' href='./css/BoxedStyle.css')
+    link(rel='stylesheet' type='text/css' href='./../bower_components/codemirror/lib/codemirror.css')
+
+    script(src='../node_modules/grunt-contrib-requirejs/node_modules/requirejs/require.js' data-main='./scripts/Boxed' type='text/javascript')
+    
+    script(src='./../bower_components/jquery/dist/jquery.js' type='text/javascript')
+    script(src='./scripts/MouseListenner.js' type='text/javascript')
+
+  body
+    
+    section#shadeCover
+        section#userMetaData_document.shadeElement
+            section#message_compil_userMeta_document
+            textarea#userMeta_document
+            section.boxMenu
+                 ul.listerMenu
+                    li.elemMenuId
+                        a#setDocumentUserMetaData(href='#') 
+                          img.menuIcon(src='./../sources/img/save.svg')
+                          div.commandName Save
+
+        section#saveFileShade.shadeElement
+            section.titleShade
+              Please insert the file name:
+            input#fileNameSave.inputText(type='text')
+            br
+            a#save(href="#")
+              img.menuIcon(src='./../sources/img/save.svg')
+              div.commandName Save document
+            br
+
+        section#loadFileShade.shadeElement
+            input#the-photo-file-field(type="file")
+
+    header#globalMenu
+        section#menuContainer
+            ul.listerMenu
+                li.elemMenu
+                    a(href='#') 
+                        img.menuIcon(src='./../sources/img/plus.svg')
+                        div.commandName Add Box
+                    section.subMenu
+                        ul.listerMenu
+                            li.subElemMenu
+                                a#addBoxEndMarkdown(href='#') 
+                                    img.menuIcon(src='./../sources/img/box.svg')
+                                    div.commandName Markdown Box
+                            li.subElemMenu
+                                a#addBoxEndJavascript(href='#') 
+                                    img.menuIcon(src='./../sources/img/box.svg')
+                                    div.commandName Javascript Box
+
+                li.elemMenu
+                    a#saveDocument(href='#')
+                        img.menuIcon(src='./../sources/img/save.svg')
+                        div.commandName Save document
+
+                li.elemMenu
+                    a#loadDocument(href='#')
+                        img.menuIcon(src='./../sources/img/archive.svg')
+                        div.commandName Load document
+
+                li.elemMenu
+                    a#setUserMetaDataDocument(href="#")
+                        img.menuIcon(src='./../sources/img/code.svg')
+                        div.commandName Edit the document MataData
+
+    section#document
+      section#boxes

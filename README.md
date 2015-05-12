@@ -1,4 +1,2 @@
-boxed
-=====
-
+# boxed
 Structured editing on the web
