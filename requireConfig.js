@@ -29,7 +29,7 @@ requirejs.config({
     "Controler" : "Controler",
     "Boxed" : "Boxed",
     
-    "cm" : "./../bower_components/codemirror",
+    "cm" : "./../bower_components/CodeMirror",
     "commonmark" : "./../bower_components/commonmark/dist/commonmark",
     "EventEmitter" : "./../bower_components/eventEmitter/EventEmitter"
     }
