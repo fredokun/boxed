@@ -1,2 +1,5 @@
 # boxed
-Structured editing on the web
+## Structured editing on the web
+
+### Instalation
+* 
