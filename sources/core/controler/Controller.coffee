@@ -162,7 +162,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         result :
           id : id
           result : JSON.stringify( @document.getUserMetaData() )
-          mime : "json"
+          mime : "application/json"
       @presentor.emitEvent("update_view",[data])
 
     #@operation[setDocumentUserMetaData]: [Controler] x String -> [Controler]
@@ -173,7 +173,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         order : "SET_BOX"
         result :
           id : id 
-          mime : "json"
+          mime : "application/json"
           mode : "EDIT_USER_META"
 
       try
@@ -265,7 +265,7 @@ define(["Document","JavascriptBackend","MarkdownBackend","Presentor","EventEmitt
         result : 
           id : box.getId()
           result : JSON.stringify( box.getUserMetaData() )
-          mime : "json"
+          mime : "application/json"
           mode : box.getMode()
 
       return data
