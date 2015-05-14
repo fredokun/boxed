@@ -49,9 +49,9 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
           else if data['result']['mode'] is "EDIT_USER_META" 
             if this.editUser(data['result']) is true 
               @callback.emitEvent("putEditor",[ data['result']['id'], this.drawUserMetaEditor(data['result']['id'],data['result']['mime'],data['result']['result']), false ])            
-            else 
-              console.log "COMMAND '#{data['result']['mode']}' not manage!"
-              return null
+          else 
+            console.log "COMMAND '#{data['result']['mode']}' not manage!"
+            return null
 
           this.unSelectBox()
           this.selectBox( "#{data['result']['id']}" )
@@ -133,6 +133,10 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
     #@method[editContent] : Method to set up the display of the editor of the box.
     #@arg[result][JSONObject] : The data to show the data of the box.
     editContent: (result) ->
+      $("##{result['id']} .boxMenu .listerMenu .elemMenu").last().replaceWith( this.drawItemMenu(result['id'],"Commit","./../sources/img/pencil.svg", (()->
+        Boxed.setModeBox(result['id'],"COMMIT")
+      ),"elemMenu") )
+
       $("#editorPanel_#{result['id']}").removeClass "contentHidden"
       $("#editorPanel_#{result['id']}").addClass "contentVisible"
 
@@ -149,6 +153,10 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
     #@method[editCommit] : Private method for displaying commit the box.
     #@arg[result][JSONObject] : The data to show the data of the box.
     editCommit : (result) ->
+      $("##{result['id']} .boxMenu .listerMenu .elemMenu").last().replaceWith( this.drawItemMenu(result['id'],"Edit","./../sources/img/pencil.svg", (()->
+        Boxed.setModeBox(result['id'],"EDIT_CONTENT")
+      ),"elemMenu") )
+
       $("#editorPanel_#{result['id']}").removeClass "contentVisible"
       $("#editorPanel_#{result['id']}").addClass "contentHidden"
 
@@ -176,12 +184,14 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
     #@method[getCommitCode]: Method for inserting the result of a box type CODE in its view box.
     #@arg[result]: The data to show the data of the box.
     getCommitCode: (result) ->
-      codebox = $ "<section class='codeBox'>"
+      #codebox = $ "<section class='codeBox'>"
+      $("#editorPanel_#{result['id']}").removeClass "contentHidden"
+      $("#editorPanel_#{result['id']}").addClass "contentVisible"
       textbox = $ "<section class='textBox'>"
 
-      codebox.append result['content'] 
+      #codebox.append result['content'] 
       textbox.append result['result']
-      $("#resultPanel_#{result['id']}").append codebox
+      #$("#resultPanel_#{result['id']}").append codebox
       $("#resultPanel_#{result['id']}").append textbox
         
     #@operator[unSelectBox]: [Presentor] -> [Presentor]
@@ -249,15 +259,15 @@ define(["jquery","EventEmitter","cm/lib/codemirror","cm/mode/markdown/markdown",
       listMenu.append this.drawItemMenu(id,"MetaData","./../sources/img/code.svg",(() -> 
         Boxed.setModeBox(id,"EDIT_USER_META")
       ),"elemMenu")
-      listMenu.append this.drawItemMenu(id,"Edit","./../sources/img/pencil.svg", (()->
-        Boxed.setModeBox(id,"EDIT_CONTENT")
-      ),"elemMenu")
       listMenu.append this.drawItemMenu(id,"Remove","./../sources/img/cross.svg", (()->
         Boxed.removeBox(id)
       ),"elemMenu")
       listMenu.append this.drawItemMenu(id,"Commit","./../sources/img/flash.svg", (()->
         Boxed.setModeBox(id,"COMMIT")
       ),"elemMenu")
+#      listMenu.append this.drawItemMenu(id,"Edit","./../sources/img/pencil.svg", (()->
+#        Boxed.setModeBox(id,"EDIT_CONTENT")
+#      ),"elemMenu")
       listMenu.append this.drawItemMenu(id,"#{id}","./../sources/img/shareable.svg",null,"elemMenuId")
 
       box.append listMenu

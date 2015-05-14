@@ -7,7 +7,7 @@ module.exports = function(grunt){
                 bare: true
             },
             files : {
-                './scripts/Controler.js':'./sources/core/controler/Controler.coffee',
+                './scripts/Controller.js':'./sources/core/controler/Controller.coffee',
                 './scripts/Boxed.js':'./sources/core/Boxed.coffee',
 
                 './scripts/Presentor.js':'./sources/core/controler/presentors/Presentor.coffee',

@@ -10,8 +10,8 @@ requirejs.config({
     "Document":["JavascriptBox","MarkdownBox","DoublyChainedList"],
     "MarkdownBackend" : ["Backend","commonmark"],
     "JavascriptBackend" : ["Backend"],
-    "Controler" : ["jquery","Document","MarkdownBackend","JavascriptBackend","Presentor","EventEmitter"],
-    "Boxed" : ["Controler"]
+    "Controller" : ["jquery","Document","MarkdownBackend","JavascriptBackend","Presentor","EventEmitter"],
+    "Boxed" : ["Controller"]
     },
     paths : {
     "jquery" : "./../bower_components/jquery/dist/jquery",
@@ -26,7 +26,7 @@ requirejs.config({
     "Document" : "Document",
     "MarkdownBackend" : "MarkdownBackend",
     "JavascriptBackend" : "JavascriptBackend",
-    "Controler" : "Controler",
+    "Controller" : "Controller",
     "Boxed" : "Boxed",
     
     "cm" : "./../bower_components/CodeMirror",

@@ -5,6 +5,6 @@
 Boxed = { }
 
 #Defining a new Controler named Boxed available for the View.
-define(['Controler'], ((Controler) ->      
-  Boxed = new Controler() 
+define(['Controller'], ((Controller) ->      
+  Boxed = new Controller() 
 ))
