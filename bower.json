@@ -1,0 +1,19 @@
+{
+  "name": "boxed",
+  "version": "0.0.0",
+  "homepage": "https://github.com/gitSeed/boxed",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "~2.1.3",
+    "CodeMirror": "~5.0",
+    "commonmark": "~0.17.1",
+    "eventEmitter": "~4.2.11"
+  }
+}
